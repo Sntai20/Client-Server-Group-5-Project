@@ -51,13 +51,17 @@ int main(int argc, char* argv[])
 
     write(newsockfd, "You are connected!", MSG_REPLY_LENGTH);
 
-    std::string buffer(MAX_BUFFER, 0);
-    if (read(newsockfd, &buffer[0], MAX_BUFFER - 1) < 0)
+    // This loop keeps the connection open.
+    while (true)
     {
-        std::cerr << "read from socket error" << std::endl;
-        return 4;
+        std::string buffer(MAX_BUFFER, 0);
+        if (read(newsockfd, &buffer[0], MAX_BUFFER - 1) < 0)
+        {
+            std::cerr << "read from socket error" << std::endl;
+            return 4;
+        }
+        std::cout << "Got the message:" << buffer << std::endl;
     }
-    std::cout << "Got the message:" << buffer << std::endl;
 
     close(newsockfd);
     close(sockfd);
