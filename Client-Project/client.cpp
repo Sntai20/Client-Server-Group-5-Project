@@ -53,17 +53,19 @@ int main(int argc, char* argv[])
     }
     std::cout << readBuffer << std::endl;
 
-    std::string writeBuffer(MAX_BUFFER, 0);
-    std::cout << "What message for the server? : ";
-    getline(std::cin, writeBuffer);
-    if (write(sockfd, writeBuffer.c_str(), strlen(writeBuffer.c_str())) < 0)
+    // This loop keeps the connection open.
+    while (true)
     {
-        std::cerr << "write to socket" << std::endl;
-        return 4;
+        std::string writeBuffer(MAX_BUFFER, 0);
+        std::cout << "What message for the server? : ";
+        getline(std::cin, writeBuffer);
+        if (write(sockfd, writeBuffer.c_str(), strlen(writeBuffer.c_str())) < 0)
+        {
+            std::cerr << "write to socket" << std::endl;
+            return 4;
+        }
     }
 
     close(sockfd);
     return 0;
-    /*cout << "Hello CMake." << endl;
-    return 0;*/
 }
