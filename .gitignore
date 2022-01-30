@@ -45,7 +45,7 @@ ipch/
 # Visual Studio cache/options directory
 .vs/
 .out/
-.Server-Project/.vs/
-.Client-Project/.vs/
-.Server-Project/.out/
-.Client-Project/.out/
+/Server-Project/vs
+/Client-Project/vs
+/Server-Project/out
+/Client-Project/out
