@@ -1,3 +1,0 @@
-C:/Users/ansantan/source/repos/Client-Server-Group-5-Project/ClientProject/out/build/windows-default/CMakeFiles/ClientProject.dir
-C:/Users/ansantan/source/repos/Client-Server-Group-5-Project/ClientProject/out/build/windows-default/CMakeFiles/edit_cache.dir
-C:/Users/ansantan/source/repos/Client-Server-Group-5-Project/ClientProject/out/build/windows-default/CMakeFiles/rebuild_cache.dir
