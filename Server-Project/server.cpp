@@ -12,32 +12,52 @@ constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
 constexpr unsigned int MSG_REPLY_LENGTH = 18;
 
+class ServerClass
+{
+public:
+    ServerClass();
+    ~ServerClass();
+    int sockfd;
+
+private:
+
+};
+
+ServerClass::ServerClass()
+{
+}
+
+ServerClass::~ServerClass()
+{
+}
+
 int main(int argc, char* argv[])
 {
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
+    ServerClass myServer;
+    myServer.sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (myServer.sockfd < 0)
     {
         std::cerr << "open socket error" << std::endl;
         return 1;
     }
 
     int optval = 1;
-    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void*)&optval, sizeof(int));
+    setsockopt(myServer.sockfd, SOL_SOCKET, SO_REUSEADDR, (const void*)&optval, sizeof(int));
 
     struct sockaddr_in serv_addr, cli_addr;
     bzero((char*)&serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     serv_addr.sin_port = htons(SERVER_PORT);
-    if (bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
+    if (bind(myServer.sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
     {
         std::cerr << "bind error" << std::endl;
         return 2;
     }
 
-    listen(sockfd, 5);
+    listen(myServer.sockfd, 5);
     socklen_t clilen = sizeof(cli_addr);
-    int newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &clilen);
+    int newsockfd = accept(myServer.sockfd, (struct sockaddr*)&cli_addr, &clilen);
     if (newsockfd < 0)
     {
         std::cerr << "accept error" << std::endl;
@@ -64,6 +84,6 @@ int main(int argc, char* argv[])
     }
 
     close(newsockfd);
-    close(sockfd);
+    close(myServer.sockfd);
     return 0;
 }
