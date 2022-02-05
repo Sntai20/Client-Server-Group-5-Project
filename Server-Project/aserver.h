@@ -6,20 +6,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iostream>
-#include <netdb.h>
 #include <arpa/inet.h>
-#include "../Common/Socket.cpp"
+#include "../Common/socket.cpp"
 
-constexpr unsigned int SERVER_PORT = 50544;
-constexpr unsigned int MAX_BUFFER = 128;
-
-using namespace std;
-
-class Client : Socket
+class Server : Socket
 {
 public:
-	Client();
-	~Client();
+	Server();
+	~Server();
 	Socket clientServerConnection;
 	bool Start();
 	bool Stop();

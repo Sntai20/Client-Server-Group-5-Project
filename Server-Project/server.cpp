@@ -1,4 +1,4 @@
-#include "Server.h"
+#include "server.h"
 
 unsigned int SERVER_PORT = 50544;
 unsigned int MAX_BUFFER = 128;
