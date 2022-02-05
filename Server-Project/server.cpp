@@ -1,9 +1,8 @@
-
 #include "Server.h"
 
-constexpr unsigned int SERVER_PORT = 50544;
-constexpr unsigned int MAX_BUFFER = 128;
-constexpr unsigned int MSG_REPLY_LENGTH = 18;
+unsigned int SERVER_PORT = 50544;
+unsigned int MAX_BUFFER = 128;
+unsigned int MSG_REPLY_LENGTH = 18;
 
 Server::Server() 
 {

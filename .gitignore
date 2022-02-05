@@ -50,3 +50,6 @@ ipch/
 /Server-Project/out
 /Client-Project/out
 /out/
+
+# Cmake for Mac
+/build/
