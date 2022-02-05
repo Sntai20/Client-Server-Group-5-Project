@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -7,57 +7,54 @@
 #include <netinet/in.h>
 #include <iostream>
 #include <arpa/inet.h>
+#include "Socket.cpp"
 
 constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
 constexpr unsigned int MSG_REPLY_LENGTH = 18;
 
-class ServerClass
+class Server : Socket
 {
 public:
-    ServerClass();
-    ~ServerClass();
-    int sockfd;
+	Server();
+	~Server();
+    Socket clientServerConnection;
+	bool Start();
+    bool Stop();
 
 private:
 
 };
 
-ServerClass::ServerClass()
+Server::Server() 
 {
+
 }
 
-ServerClass::~ServerClass()
+Server::~Server() 
 {
+
 }
 
-int main(int argc, char* argv[])
+bool Server::Start() 
 {
-    ServerClass myServer;
-    myServer.sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (myServer.sockfd < 0)
-    {
-        std::cerr << "open socket error" << std::endl;
-        return 1;
-    }
-
-    int optval = 1;
-    setsockopt(myServer.sockfd, SOL_SOCKET, SO_REUSEADDR, (const void*)&optval, sizeof(int));
+	
+    clientServerConnection.CreateSocket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in serv_addr, cli_addr;
     bzero((char*)&serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     serv_addr.sin_port = htons(SERVER_PORT);
-    if (bind(myServer.sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
+    if (bind(clientServerConnection.SocketFileDescriptor, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
     {
         std::cerr << "bind error" << std::endl;
         return 2;
     }
 
-    listen(myServer.sockfd, 5);
+    listen(clientServerConnection.SocketFileDescriptor, 5);
     socklen_t clilen = sizeof(cli_addr);
-    int newsockfd = accept(myServer.sockfd, (struct sockaddr*)&cli_addr, &clilen);
+    int newsockfd = accept(clientServerConnection.SocketFileDescriptor, (struct sockaddr*)&cli_addr, &clilen);
     if (newsockfd < 0)
     {
         std::cerr << "accept error" << std::endl;
@@ -82,8 +79,9 @@ int main(int argc, char* argv[])
         }
         std::cout << "Got the message:" << buffer << std::endl;
     }
+}
 
-    close(newsockfd);
-    close(myServer.sockfd);
-    return 0;
+bool Server::Stop() 
+{
+    return close(Server::clientServerConnection.SocketFileDescriptor);
 }

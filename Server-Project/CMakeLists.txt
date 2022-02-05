@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 3.8)
 project ("Server-Project")
 
 # Add source to this project's executable.
-add_executable (server "server.cpp")
+add_executable (server "main.cpp")
 
 # TODO: Add tests and install targets if needed.
 # GoogleTest requires at least C++11
@@ -25,7 +25,8 @@ enable_testing()
 add_executable(
   basic_test
   "basic_test.cpp"
-)
+  "Socket.cpp" 
+  "Server.cpp")
 target_link_libraries(
   basic_test
   gtest_main
