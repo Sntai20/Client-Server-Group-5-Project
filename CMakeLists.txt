@@ -3,10 +3,11 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-project ("Server-Project")
+project ("Client-Server-Group-5-Project")
 
 # Add source to this project's executable.
-add_executable (server "main.cpp")
+add_subdirectory ("Server-Project")
+add_subdirectory ("Client-Project")
+add_subdirectory ("Test-Project")
 
 # TODO: Add tests and install targets if needed.
-

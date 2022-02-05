@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <iostream>
 #include <arpa/inet.h>
-#include "Socket.cpp"
+#include "../Common/Socket.cpp"
 
 constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
