@@ -9,5 +9,3 @@ project ("Client-Server-Group-5-Project")
 add_subdirectory ("Server-Project")
 add_subdirectory ("Client-Project")
 add_subdirectory ("Test-Project")
-
-# TODO: Add tests and install targets if needed.

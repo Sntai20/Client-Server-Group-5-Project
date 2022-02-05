@@ -6,7 +6,4 @@ cmake_minimum_required (VERSION 3.8)
 project ("Server-Project")
 
 # Add source to this project's executable.
-add_executable (server "main.cpp")
-
-# TODO: Add tests and install targets if needed.
-
+add_executable (Server "main.cpp" "Server.h")
