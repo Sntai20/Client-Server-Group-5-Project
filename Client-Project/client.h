@@ -10,9 +10,6 @@
 #include <arpa/inet.h>
 #include "../Common/socket.cpp"
 
-unsigned int SERVER_PORT = 50544;
-unsigned int MAX_BUFFER = 128;
-
 using namespace std;
 
 class Client : Socket

@@ -4,19 +4,12 @@ unsigned int SERVER_PORT = 50544;
 unsigned int MAX_BUFFER = 128;
 unsigned int MSG_REPLY_LENGTH = 18;
 
-Server::Server() 
-{
+Server::Server() {}
 
-}
-
-Server::~Server() 
-{
-
-}
+Server::~Server() {}
 
 bool Server::Start() 
 {
-	
     clientServerConnection.CreateSocket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in serv_addr, cli_addr;

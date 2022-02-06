@@ -1,17 +1,17 @@
 #include "client.h"
 
-Client::Client()
-{
-}
+unsigned int SERVER_PORT = 50544;
+unsigned int MAX_BUFFER = 128;
 
-Client::~Client()
-{
-}
+Client::Client(){}
+
+Client::~Client(){}
 
 bool Client::Start()
 {
     clientServerConnection.CreateSocket(AF_INET, SOCK_STREAM, 0);
     
+    // TODO: Replace hardcoded hostname value.
     struct hostent* server = gethostbyname("ansantan");
     if (server == nullptr)
     {
@@ -53,6 +53,7 @@ bool Client::Start()
             return 4;
         }
     }
+
 	return false;
 }
 
