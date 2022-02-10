@@ -28,3 +28,7 @@ The client connects to the server.
 ## Coming Soon
 - Working unit tests for the socket class.
 - Authentication
+- setBoard
+- markBoard
+- setTime
+- setMaxNum
