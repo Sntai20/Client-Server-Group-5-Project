@@ -60,7 +60,7 @@ bool ConnectToServer(const char* serverAddress, int port, int& sock)
 int main(int argc, char* argv[])
 {
     int sock = 0;
-    //struct sockaddr_in serv_addr{};
+    
     const char* connectRPC = "connect;MIKE;MIKE;";
     //const char* statusRPC = "status;";
     const char* logoffRPC = "disconnect;";

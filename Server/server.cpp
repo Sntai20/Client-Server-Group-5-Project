@@ -89,7 +89,8 @@ bool RPCServer::StartServer()
     }
 
     // Forcefully attaching socket to the port
-    if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+    if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+    // if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
     {
         perror("\nsetsockopt\n");
         exit(EXIT_FAILURE);

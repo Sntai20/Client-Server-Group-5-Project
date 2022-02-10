@@ -16,13 +16,18 @@ The bingo simulator will have the following Remote Procedure Calls (RPCs):
 
 •	Disconnect
 
+## Build
+To build, navigate to the Client-Server-Group-5-Project/ 
+cmake -S . -B build
+
+cmake --build build
 
 ## Run the Code 
 To run the code provided by the professor use the Server and Client Folders. Start the server first, then the client.
 
-To run the server './server 127.0.0.1 10320'
+To run the server './build/server 127.0.0.1 10320'
 
-To run the client './client 127.0.0.1 10320'
+To run the client './build/client 127.0.0.1 10320'
 
 ## Release 1.0.0
 The server listens on port 10320.
