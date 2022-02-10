@@ -40,6 +40,9 @@ public:
 
     // Creating the Bingo board
     bool setBoard(string inputString);
+    
+    // Checks if the current number displayed by the system matches a number in the player's bingo board.
+    bool markBoard(string inputString);
 
     // Sets the number of seconds the server will wait between each bingo
     // number re-roll for the rest of the game
@@ -56,9 +59,6 @@ private:
     char* m_serverIP;
     int m_port;
     struct sockaddr_in m_address;
-
-    // Checks if the current number displayed by the system matches a number in the player's bingo board.
-    string markBoard(string inputTrigger);
 
     // First one in this function should be a connect, and it
     // will continue try to process RPC's until a Disconnect happens
@@ -191,16 +191,27 @@ bool RPCServer::ProcessRPC()
             const char* message = "\nYou are now connected to the server!\n";
             send(this->m_socket, message, strlen(message) + 1, 0);
 
+            // Call hard-coded RPC functions with set values until they are implemented
+            
             // After client is connected, Set the board
-            bool board = true;
-            board = setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11"
-                ",35,32,23,24,25,26,28,39,37,46,50");
+            
+            while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11"
+                ",35,32,23,24,25,26,28,39,37,46,50")) {
+                // Board not succesfully set: prompt user for new input (mandatory valid input required)
+                
+            }
+            
+            if (markBoard("X")) {
+                // Board is marked!
+            }
 
-            bool maxNum = true;
-            maxNum = setMaxNum("5");
+            while (!setMaxNum("5")) {
+                // max num not succesfully set: prompt user for new input (mandatory valid input required)
+            }
 
-            bool changes = true;
-            changes = setTime("5");
+            while (!setTime("5")) {
+                // Time not succesfully set: prompt user for new input (mandatory valid input required)
+            }
 
             // Get the client response
             read(this->m_socket, buffer, sizeof(buffer));
@@ -239,8 +250,7 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
     string passwordString = arrayTokens[PASSWORDTOKEN];
     char szBuffer[80];
 
-    // Our Authentication Logic. Looks like MIKE/MIKE is the only valid
-    // combination
+    // Authentication Logic. MIKE/MIKE is the only valid combination
     if ((userNameString == "MIKE") && (passwordString == "MIKE"))
     {
         strcpy(szBuffer, "1;"); // Connected
@@ -283,19 +293,17 @@ bool RPCServer::Disconnect()
 bool RPCServer::setBoard(string inputString) 
 {
     printf("\nFunction setBoard is not implemented yet!");
-    string mark = markBoard("5");
-    cout << mark;
- 
+
     // TODO: Implement.
     return true;
 }
 
-string RPCServer::markBoard(string inputTrigger) 
+bool RPCServer::markBoard(string inputTrigger) 
 {
-    string output = "\nFunction markBoard is not implemented yet!";
+    printf("\nFunction markBoard is not implemented yet!");
     
     // TODO: Implement.
-    return output;
+    return true;
 }
 
 bool RPCServer::setTime(string inputString) 
