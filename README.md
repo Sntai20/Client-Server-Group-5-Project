@@ -11,7 +11,8 @@ The bingo simulator will have the following Remote Procedure Calls (RPCs):
 •	Disconnect
 
 ## Run the Code 
-To run the code provided by the professor use the Server and Client Folders.
+To run the code provided by the professor use the Server and Client Folders. Start the server first, then the client.
+
 To run the server './server 127.0.0.1 10320'
 
 To run the client './client 127.0.0.1 10320'
