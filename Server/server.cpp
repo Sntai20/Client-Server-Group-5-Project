@@ -30,11 +30,11 @@ public:
     //ListenForClient accepts a new connection by listening on it's address
     bool ListenForClient();
 
-    //ProcessRPC examines buffer and will essentially controls
+    // ProcessRPC examines buffer and will essentially controls
     // connect/disconnect/status
     bool ProcessRPC();
 
-    //ParseTokens populates a String vector with tokens extracted from the
+    // ParseTokens populates a String vector with tokens extracted from the
     // string the client sent.
     void ParseTokens(char* buffer, vector<string>& a);
 
@@ -123,6 +123,7 @@ bool RPCServer::ListenForClient()
         exit(EXIT_FAILURE);
     }
     this->ProcessRPC();
+
     return true;
 }
 
@@ -207,7 +208,7 @@ bool RPCServer::ProcessRPC()
 
         else if ((bConnected == true) && (aString == "disconnect"))
         {
-            //Terminating the endless loop
+            // Terminating the endless loop
             bStatusOk = Disconnect();
             printf("\nClient is disconnected now!\n");
             // We are going to leave this loop, as we are done
