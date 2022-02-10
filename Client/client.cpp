@@ -1,7 +1,7 @@
-// PROGRAM: client.cpp
-// DATE:    2.6.2022
-// PURPOSE: Client side C/C++ program to demonstrate Socket programming for
-//          Bingo game
+/*
+* PROGRAM: client.cpp
+* PURPOSE: Client side C/C++ program to demonstrate Socket programming for Bingo game.
+*/
 #include <cstdio>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -32,6 +32,7 @@ bool ConnectToServer(const char* serverAddress, int port, int& sock)
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\nSocket creation error, please try again. \n");
+
         return false;
     }
 
@@ -41,17 +42,18 @@ bool ConnectToServer(const char* serverAddress, int port, int& sock)
     // Convert IPv4 and IPv6 addresses from text to binary form.
     if (inet_pton(AF_INET, serverAddress, &serv_addr.sin_addr) <= 0)
     {
-        printf("\nInvalid address or Server address not supported, "
-            "please try again. \n");
+        printf("\nInvalid address or Server address not supported, please try again. \n");
+
         return false;
     }
 
     if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        printf("\nConnection Failed. Please make sure that server is "
-            "connected.\n");
+        printf("\nConnection Failed. Please make sure that server is connected.\n");
+
         return false;
     }
+
     return true;
 }
 

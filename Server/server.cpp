@@ -1,6 +1,6 @@
-// DATE:    2.6.2022
-// PURPOSE: Server side C/C++ program to demonstrate Socket programming for
-//          Bingo game
+/*
+* PURPOSE: Server side C/C++ program to demonstrate Socket programming for Bingo game
+*/         
 #include <cstdio>
 #include <unistd.h>
 #include <stdio.h>
@@ -57,8 +57,7 @@ private:
     int m_port;
     struct sockaddr_in m_address;
 
-    // Checks if the current number displayed by the system matches a number in
-    // the player's bingo board
+    // Checks if the current number displayed by the system matches a number in the player's bingo board.
     string markBoard(string inputTrigger);
 
     // First one in this function should be a connect, and it
@@ -90,8 +89,7 @@ bool RPCServer::StartServer()
     }
 
     // Forcefully attaching socket to the port
-    if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
-        &opt, sizeof(opt)))
+    if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
     {
         perror("\nsetsockopt\n");
         exit(EXIT_FAILURE);
@@ -102,8 +100,7 @@ bool RPCServer::StartServer()
     m_address.sin_port = htons(m_port);
 
     // Forcefully attaching socket to the port 8080
-    if (bind(m_server_fd, (struct sockaddr*)&m_address,
-        sizeof(m_address)) < 0)
+    if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)) < 0)
     {
         perror("\nBind failed.\n");
         exit(EXIT_FAILURE);
@@ -120,8 +117,7 @@ bool RPCServer::ListenForClient()
 {
     int addrlen = sizeof(m_address);
 
-    if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address,
-        (socklen_t*)&addrlen)) < 0)
+    if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
     {
         perror("\nAccept\n");
         exit(EXIT_FAILURE);
@@ -224,8 +220,10 @@ bool RPCServer::ProcessRPC()
         else
         {
             // Not in our list, perhaps, print out what was sent
+            // TODO: Log or throw an exception.
         }
     }
+
     return true;
 }
 
@@ -264,7 +262,7 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
 
 bool RPCServer::StatusRPC()
 {
-    //TBD
+    // TODO: Implement.
     return true;
 }
 
@@ -276,45 +274,48 @@ bool RPCServer::Disconnect()
     int nlen = strlen(szBuffer);
     szBuffer[nlen] = 0;
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
+
     return true;
 }
 
-bool RPCServer::setBoard(string inputString) {
-    //TBD
-
+bool RPCServer::setBoard(string inputString) 
+{
     printf("\nFunction setBoard is not implemented yet!");
     string mark = markBoard("5");
     cout << mark;
+ 
+    // TODO: Implement.
     return true;
 }
 
-string RPCServer::markBoard(string inputTrigger) {
-
+string RPCServer::markBoard(string inputTrigger) 
+{
     string output = "\nFunction markBoard is not implemented yet!";
-    //TBD
-
+    
+    // TODO: Implement.
     return output;
 }
 
-bool RPCServer::setTime(string inputString) {
-
+bool RPCServer::setTime(string inputString) 
+{
     printf("\nFunction setTime is not implemented yet!\n\n");
-    //TBD
+
+    // TODO: Implement.
     return true;
 }
 
 
-bool RPCServer::setMaxNum(string inputString) {
-
+bool RPCServer::setMaxNum(string inputString) 
+{
     printf("\nFunction setMaxNum is not implemented yet!");
-    //TBD
+    
+    // TODO: Implement.
     return true;
 }
 
 
 int main(int argc, char* argv[])
 {
-
     const char* serverIP = argv[1];
     int port = atoi(argv[2]);
     bool statusOk = true;

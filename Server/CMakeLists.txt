@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-project ("Server-Project-2")
+project ("Server")
 
 # Add source to this project's executable.
-add_executable (Server2 "server.cpp")
+add_executable (server "server.cpp")

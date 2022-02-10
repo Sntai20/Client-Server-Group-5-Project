@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-project ("Client-Project-2")
+project ("Client")
 
 # Add source to this project's executable.
-add_executable (Client2 "client.cpp")
+add_executable (client "client.cpp")

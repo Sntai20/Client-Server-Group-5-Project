@@ -6,8 +6,8 @@ cmake_minimum_required (VERSION 3.8)
 project ("Client-Server-Group-5-Project")
 
 # Add source to this project's executable.
+add_subdirectory ("Server")
+add_subdirectory ("Client")
 add_subdirectory ("Server-Project")
-add_subdirectory ("Server-Project-2")
 add_subdirectory ("Client-Project")
-add_subdirectory ("Client-Project-2")
 add_subdirectory ("Test-Project")
