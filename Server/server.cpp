@@ -42,7 +42,7 @@ public:
     bool setBoard(string inputString);
     
     // Checks if the current number displayed by the system matches a number in the player's bingo board.
-    bool markBoard(string inputString);
+    void markBoard();
 
     // Sets the number of seconds the server will wait between each bingo
     // number re-roll for the rest of the game
@@ -201,9 +201,9 @@ bool RPCServer::ProcessRPC()
                 
             }
             
-            if (markBoard("X")) {
-                // Board is marked!
-            }
+            markBoard();
+            // Board is marked if the current number in the server is valid
+            
 
             while (!setMaxNum("5")) {
                 // max num not succesfully set: prompt user for new input (mandatory valid input required)
@@ -298,12 +298,12 @@ bool RPCServer::setBoard(string inputString)
     return true;
 }
 
-bool RPCServer::markBoard(string inputTrigger) 
+void RPCServer::markBoard() 
 {
     printf("\nFunction markBoard is not implemented yet!");
     
     // TODO: Implement.
-    return true;
+    
 }
 
 bool RPCServer::setTime(string inputString) 
