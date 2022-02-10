@@ -28,7 +28,7 @@ void ParseTokens(char* buffer, std::vector<std::string>& a)
 // ConnectToServer will connect to the Server based on command line.
 bool ConnectToServer(const char* serverAddress, int port, int& sock)
 {
-    struct sockaddr_in serv_addr {};
+    struct sockaddr_in serv_addr;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\nSocket creation error, please try again. \n");
