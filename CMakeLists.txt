@@ -7,5 +7,7 @@ project ("Client-Server-Group-5-Project")
 
 # Add source to this project's executable.
 add_subdirectory ("Server-Project")
+add_subdirectory ("Server-Project-2")
 add_subdirectory ("Client-Project")
+add_subdirectory ("Client-Project-2")
 add_subdirectory ("Test-Project")
