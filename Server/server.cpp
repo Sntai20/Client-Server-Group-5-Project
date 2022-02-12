@@ -80,7 +80,6 @@ bool RPCServer::StartServer()
 {
     int opt = 1;
     const int BACKLOG = 10;
-
     
     try
     {
@@ -134,7 +133,6 @@ bool RPCServer::StartServer()
 
 bool RPCServer::ListenForClient()
 {
-    
     int addrlen = sizeof(m_address);
 
     try
@@ -216,11 +214,9 @@ bool RPCServer::ProcessRPC()
             send(this->m_socket, message, strlen(message) + 1, 0);
 
             // Call hard-coded RPC functions with set values until they are implemented
-            
             // After client is connected, Set the board
-            
-            while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11"
-                ",35,32,23,24,25,26,28,39,37,46,50")) {
+            while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
+            {
                 // Board not succesfully set: prompt user for new input (mandatory valid input required)
                 
             }
@@ -229,11 +225,13 @@ bool RPCServer::ProcessRPC()
             // Board is marked if the current number in the server is valid
             
 
-            while (!setMaxNum("5")) {
+            while (!setMaxNum("5")) 
+            {
                 // max num not succesfully set: prompt user for new input (mandatory valid input required)
             }
 
-            while (!setTime("5")) {
+            while (!setTime("5")) 
+            {
                 // Time not succesfully set: prompt user for new input (mandatory valid input required)
             }
 
@@ -241,7 +239,6 @@ bool RPCServer::ProcessRPC()
             read(this->m_socket, buffer, sizeof(buffer));
             printf("A message from connected client: %s\n", buffer);
         }
-
         else if ((bConnected == true) && (aString == "disconnect"))
         {
             // Terminating the endless loop
@@ -250,10 +247,11 @@ bool RPCServer::ProcessRPC()
             // We are going to leave this loop, as we are done
             bContinue = false;
         }
-
         else if ((bConnected == true) && (aString == "status"))
-            bStatusOk = StatusRPC();   // Status RPC
-
+        {
+            // Status RPC
+            bStatusOk = StatusRPC();
+        }
         else
         {
             // Not in our list, perhaps, print out what was sent
@@ -290,7 +288,6 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
     read(this->m_socket, szBuffer, sizeof(szBuffer) <= 0);
-    //printf("%s\n",szBuffer);
 
     return true;
 }
@@ -327,7 +324,6 @@ void RPCServer::markBoard()
     printf("\nFunction markBoard is not implemented yet!");
     
     // TODO: Implement.
-    
 }
 
 bool RPCServer::setTime(string inputString) 
