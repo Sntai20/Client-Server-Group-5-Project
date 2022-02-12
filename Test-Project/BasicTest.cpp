@@ -60,11 +60,11 @@
 //
 // </TechnicalDetails>
 
-#include "sample3-inl.h"
+#include "sampleServer.h"
 #include "gtest/gtest.h"
 namespace {
     // To use a test fixture, derive a class from testing::Test.
-    class QueueTestSmpl3 : public testing::Test {
+    class ServerTest : public testing::Test {
     protected:  // You should make the members protected s.t. they can be
                 // accessed from sub-classes.
 
@@ -117,13 +117,13 @@ namespace {
     // instead of TEST.
 
     // Tests the default c'tor.
-    TEST_F(QueueTestSmpl3, DefaultConstructor) {
+    TEST_F(ServerTest, DefaultConstructor) {
         // You can access data in the test fixture here.
         EXPECT_EQ(0u, q0_.Size());
     }
 
     // Tests Dequeue().
-    TEST_F(QueueTestSmpl3, Dequeue) {
+    TEST_F(ServerTest, Dequeue) {
         int* n = q0_.Dequeue();
         EXPECT_TRUE(n == nullptr);
 
@@ -141,7 +141,7 @@ namespace {
     }
 
     // Tests the Queue::Map() function.
-    TEST_F(QueueTestSmpl3, Map) {
+    TEST_F(ServerTest, Map) {
         MapTester(&q0_);
         MapTester(&q1_);
         MapTester(&q2_);
