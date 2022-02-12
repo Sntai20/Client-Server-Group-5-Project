@@ -81,57 +81,72 @@ bool RPCServer::StartServer()
     int opt = 1;
     const int BACKLOG = 10;
 
-    // Creating socket file descriptor
-    if ((m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
+    
+    try
     {
+        // Creating socket file descriptor
+        (m_server_fd = socket(AF_INET, SOCK_STREAM, 0));
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
         perror("\nSocket failed!\n");
-        exit(EXIT_FAILURE);
-    }
+    } // end try-catch
 
-    /*
-    * This might be a good place to catch exceptions.
-    */
-    // Forcefully attaching socket to the port
-    if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-    // if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
-    {
-        perror("\nsetsockopt\n");
-        exit(EXIT_FAILURE);
-    }
+   try
+   {
+       // Forcefully attaching socket to the port
+       setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
+   }
+   catch(const std::exception& e)
+   {
+       std::cerr << e.what() << '\n';
+       perror("\nsetsockopt\n");
+   } // end try-catch
 
     m_address.sin_family = AF_INET;
     m_address.sin_addr.s_addr = INADDR_ANY;
     m_address.sin_port = htons(m_port);
 
-    /*
-    * This might be a good place to catch exceptions.
-    */
-    // Forcefully attaching socket to the port 8080
-    if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)) < 0)
+    try
     {
+        // Forcefully attaching socket to the port 8080
+        bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address));
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
         perror("\nBind failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (listen(m_server_fd, BACKLOG) < 0)
+    } // end try-catch
+    
+    try
     {
-        perror("\nListen\n");
-        exit(EXIT_FAILURE);
+        listen(m_server_fd, BACKLOG);
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        perror("\nListen\n");
+    } // end try-catch
+    
     return true;
 }
 
 bool RPCServer::ListenForClient()
 {
+    
     int addrlen = sizeof(m_address);
 
-    /*
-    * This might be a good place to catch exceptions.
-    */
-    if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
+    try
     {
-        perror("\nAccept\n");
-        exit(EXIT_FAILURE);
+        (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        perror("\nAccept\n");
+    } // end try-catch
+    
     this->ProcessRPC();
 
     return true;
