@@ -1,6 +1,10 @@
-/*
-* PURPOSE: Server side C/C++ program to demonstrate Socket programming for Bingo game
-*/         
+/**
+ * @file server.cpp
+ * @author Group 5
+ * @brief Server side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @version 0.1
+ * @date 2022-02-11
+ */  
 #include <cstdio>
 #include <unistd.h>
 #include <stdio.h>
@@ -14,6 +18,14 @@
 
 using namespace std;
 
+/**
+ * @brief This RPCServer class contains all the methods to use the server, 
+ * including the RPCs.
+ * 
+ * @param serverIP The IP addressed assigned to the server.
+ * @param port The destination port used to listen on.
+ * @return An instance of an RPCServer.
+ */
 class RPCServer
 {
 public:
@@ -76,6 +88,12 @@ RPCServer::RPCServer(const char* serverIP, int port)
 
 RPCServer::~RPCServer() {};
 
+/**
+ * @brief This method starts the server with an intialized socket.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::StartServer()
 {
     int opt = 1;
@@ -131,6 +149,12 @@ bool RPCServer::StartServer()
     return true;
 }
 
+/**
+ * @brief This method is used to listen for incoming requests.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::ListenForClient()
 {
     int addrlen = sizeof(m_address);
@@ -150,6 +174,12 @@ bool RPCServer::ListenForClient()
     return true;
 }
 
+/**
+ * @brief This method is used to parse the tokens sent by the client.
+ * 
+ * @param buffer 
+ * @param a 
+ */
 void RPCServer::ParseTokens(char* buffer, std::vector<std::string>& a)
 {
     char* token;
@@ -162,6 +192,12 @@ void RPCServer::ParseTokens(char* buffer, std::vector<std::string>& a)
     }
 }
 
+/**
+ * @brief This method is used to process RPCs from a client.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::ProcessRPC()
 {
     const char* rpcs[] = { "connect", "disconnect", "status" };
@@ -221,9 +257,8 @@ bool RPCServer::ProcessRPC()
                 
             }
             
-            markBoard();
             // Board is marked if the current number in the server is valid
-            
+            markBoard();
 
             while (!setMaxNum("5")) 
             {
@@ -262,6 +297,14 @@ bool RPCServer::ProcessRPC()
     return true;
 }
 
+/**
+ * @brief This method is used to connect and authenticate 
+ * the incomming requests.
+ * 
+ * @param arrayTokens 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
 {
     const int USERNAMETOKEN = 1;
@@ -292,13 +335,24 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
     return true;
 }
 
-
+/**
+ * @brief This method provides the RPC status.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::StatusRPC()
 {
     // TODO: Implement.
     return true;
 }
 
+/**
+ * @brief This method is used to disconnect the connection.
+ * 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::Disconnect()
 {
     char szBuffer[16];
@@ -311,6 +365,13 @@ bool RPCServer::Disconnect()
     return true;
 }
 
+/**
+ * @brief This method is used to set the board values.
+ * 
+ * @param inputString 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::setBoard(string inputString) 
 {
     printf("\nFunction setBoard is not implemented yet!");
@@ -319,6 +380,10 @@ bool RPCServer::setBoard(string inputString)
     return true;
 }
 
+/**
+ * @brief This method is used to mark the board values.
+ * 
+ */
 void RPCServer::markBoard() 
 {
     printf("\nFunction markBoard is not implemented yet!");
@@ -326,6 +391,13 @@ void RPCServer::markBoard()
     // TODO: Implement.
 }
 
+/**
+ * @brief This method is used to set the time.
+ * 
+ * @param inputString 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::setTime(string inputString) 
 {
     printf("\nFunction setTime is not implemented yet!\n\n");
@@ -334,7 +406,13 @@ bool RPCServer::setTime(string inputString)
     return true;
 }
 
-
+/**
+ * @brief This method is used to set the maximum number.
+ * 
+ * @param inputString 
+ * @return true 
+ * @return false 
+ */
 bool RPCServer::setMaxNum(string inputString) 
 {
     printf("\nFunction setMaxNum is not implemented yet!");
@@ -343,7 +421,13 @@ bool RPCServer::setMaxNum(string inputString)
     return true;
 }
 
-
+/**
+ * @brief This is the entry for the server program.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char* argv[])
 {
     const char* serverIP = argv[1];
