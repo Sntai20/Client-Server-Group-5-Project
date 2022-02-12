@@ -79,6 +79,12 @@ private:
     bool Disconnect();
 };
 
+/**
+ * @brief Construct a new RPCServer::RPCServer object
+ * 
+ * @param serverIP 
+ * @param port 
+ */
 RPCServer::RPCServer(const char* serverIP, int port)
 {
     m_rpcCount = 0;
@@ -86,6 +92,9 @@ RPCServer::RPCServer(const char* serverIP, int port)
     m_port = port;
 };
 
+/**
+ * @brief Destroy the RPCServer::RPCServer object
+ */
 RPCServer::~RPCServer() {};
 
 /**
@@ -233,8 +242,7 @@ bool RPCServer::ProcessRPC()
         }
         */
 
-        // string statements are not supported with a switch,
-        // so using if/else logic to dispatch
+        // string statements are not supported with a switch, so using if/else logic to dispatch
         string aString = arrayTokens[RPCTOKEN];
 
         if ((bConnected == false) && (aString == "connect"))
@@ -254,7 +262,6 @@ bool RPCServer::ProcessRPC()
             while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
             {
                 // Board not succesfully set: prompt user for new input (mandatory valid input required)
-                
             }
             
             // Board is marked if the current number in the server is valid
@@ -444,7 +451,6 @@ int main(int argc, char* argv[])
     // Print when server is working
     statusOk = serverObj->StartServer();
     printf("\nServer is up!\n");
-
 
     while (statusOk)
     {
