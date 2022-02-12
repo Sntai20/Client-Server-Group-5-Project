@@ -1,7 +1,10 @@
-/*
-* PROGRAM: client.cpp
-* PURPOSE: Client side C/C++ program to demonstrate Socket programming for Bingo game.
-*/
+/**
+ * @file client.cpp
+ * @author Group 5
+ * @brief Client side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @version 0.1
+ * @date 2022-02-11
+ */  
 #include <cstdio>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -11,6 +14,12 @@
 #include <iterator>
 #include <iostream>
 
+/**
+ * @brief This method is used to parse the tokens sent by the client.
+ * 
+ * @param buffer 
+ * @param a 
+ */
 void ParseTokens(char* buffer, std::vector<std::string>& a)
 {
     char* token;
@@ -23,7 +32,15 @@ void ParseTokens(char* buffer, std::vector<std::string>& a)
     }
 }
 
-// ConnectToServer will connect to the Server based on command line.
+/**
+ * @brief ConnectToServer will connect to the Server based on command line.
+ * 
+ * @param serverAddress 
+ * @param port 
+ * @param sock 
+ * @return true 
+ * @return false 
+ */
 bool ConnectToServer(const char* serverAddress, int port, int& sock)
 {
     struct sockaddr_in serv_addr;
@@ -67,6 +84,13 @@ bool ConnectToServer(const char* serverAddress, int port, int& sock)
     return true;
 }
 
+/**
+ * @brief This is the entry for the client program.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char* argv[])
 {
     int sock = 0;
