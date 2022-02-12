@@ -60,7 +60,7 @@
 //
 // </TechnicalDetails>
 #include "../Common/socket.h"
-#include "sampleServer.h"
+#include "../Server-Project/sampleServer.h"
 #include "gtest/gtest.h"
 
 namespace {
