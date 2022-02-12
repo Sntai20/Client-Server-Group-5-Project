@@ -53,3 +53,6 @@ ipch/
 
 # Cmake for Mac
 /build/
+
+# Visual Studio Code
+/.vscode/
