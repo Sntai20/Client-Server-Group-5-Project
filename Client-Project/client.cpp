@@ -1,63 +1,154 @@
-#include "client.h"
+/**
+ * @file client.cpp
+ * @author Group 5
+ * @brief Client side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @version 0.1
+ * @date 2022-02-11
+ */  
+#include <cstdio>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <cstring>
+#include <vector>
+#include <iterator>
+#include <iostream>
 
-unsigned int SERVER_PORT = 50544;
-unsigned int MAX_BUFFER = 128;
-
-Client::Client(){}
-
-Client::~Client(){}
-
-bool Client::Start()
+/**
+ * @brief This method is used to parse the tokens sent by the client.
+ * 
+ * @param buffer 
+ * @param a 
+ */
+void ParseTokens(char* buffer, std::vector<std::string>& a)
 {
-    clientServerConnection.CreateSocket(AF_INET, SOCK_STREAM, 0);
-    
-    // TODO: Replace hardcoded hostname value.
-    struct hostent* server = gethostbyname("ansantan");
-    if (server == nullptr)
+    char* token;
+    char* rest = (char*)buffer;
+
+    while ((token = strtok_r(rest, ";", &rest)))
     {
-        std::cerr << "gethostbyname, no such host" << std::endl;
-        return 2;
+        //printf("%s\n", token);
+        a.push_back(token);
     }
-
-    struct sockaddr_in serv_addr;
-    bzero((char*)&serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char*)server->h_addr,
-        (char*)&serv_addr.sin_addr.s_addr,
-        server->h_length);
-
-    serv_addr.sin_port = htons(SERVER_PORT);
-    if (connect(clientServerConnection.SocketFileDescriptor, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
-    {
-        std::cerr << "connect error" << std::endl;
-        return 3;
-    }
-
-    std::string readBuffer(MAX_BUFFER, 0);
-    if (read(clientServerConnection.SocketFileDescriptor, &readBuffer[0], MAX_BUFFER - 1) < 0)
-    {
-        std::cerr << "read from socket failed" << std::endl;
-        return 5;
-    }
-    std::cout << readBuffer << std::endl;
-
-    // This loop keeps the connection open.
-    while (true)
-    {
-        std::string writeBuffer(MAX_BUFFER, 0);
-        std::cout << "What message for the server? : ";
-        getline(std::cin, writeBuffer);
-        if (write(clientServerConnection.SocketFileDescriptor, writeBuffer.c_str(), strlen(writeBuffer.c_str())) < 0)
-        {
-            std::cerr << "write to socket" << std::endl;
-            return 4;
-        }
-    }
-
-	return false;
 }
 
-bool Client::Stop()
+/**
+ * @brief ConnectToServer will connect to the Server based on command line.
+ * 
+ * @param serverAddress 
+ * @param port 
+ * @param sock 
+ * @return true 
+ * @return false 
+ */
+bool ConnectToServer(const char* serverAddress, int port, int& sock)
 {
-	return close(clientServerConnection.SocketFileDescriptor);
+    struct sockaddr_in serv_addr;
+    try
+    {
+        (sock = socket(AF_INET, SOCK_STREAM, 0));
+    }
+    catch(const std::exception& e)
+    {
+        printf("\nSocket creation error, please try again. \n");
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port);
+
+    try
+    {
+        // Convert IPv4 and IPv6 addresses from text to binary form.
+        inet_pton(AF_INET, serverAddress, &serv_addr.sin_addr);
+    }
+    catch(const std::exception& e)
+    {
+        printf("\nInvalid address or Server address not supported, please try again. \n");
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+
+    try
+    {
+        connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+    }
+    catch(const std::exception& e)
+    {
+        printf("\nConnection Failed. Please make sure that server is connected.\n");
+        std::cerr << e.what() << '\n';
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * @brief This is the entry for the client program.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
+int main(int argc, char* argv[])
+{
+    int sock = 0;
+    
+    const char* connectRPC = "connect;MIKE;MIKE;";
+    //const char* statusRPC = "status;";
+    const char* logoffRPC = "disconnect;";
+    char buffer[1024] = { 0 };
+    const char* serverAddress = argv[1];
+    const int port = atoi(argv[2]);
+
+    bool bConnect = ConnectToServer(serverAddress, port, sock);
+
+    if (bConnect)
+    {
+        strcpy(buffer, connectRPC);
+        int nlen = strlen(buffer);
+        buffer[nlen] = 0;   // Put the null terminator
+
+        send(sock, buffer, strlen(buffer) + 1, 0);
+        read(sock, buffer, 1024);
+
+        read(sock, buffer, 1024);
+        printf("%s\n", buffer);
+
+        printf("What is your message for the server? ");
+        char message[80];
+        std::cin.getline(message, sizeof message);
+        send(sock, message, strlen(message) + 1, 0);
+    }
+    else
+    {
+        printf("\nExit without calling RPC.\n");
+    }
+
+    // Sleep 1 to 10 seconds randomly
+    int seconds = 1 + (rand() % static_cast<int>(10));
+    printf("\nSleeping...\n");
+    sleep(seconds);
+
+    // Disconnect Message
+    if (bConnect)
+    {
+        strcpy(buffer, logoffRPC);
+        int nlen = strlen(buffer);
+        buffer[nlen] = 0;   // Put the null terminator
+        send(sock, buffer, strlen(buffer) + 1, 0);
+        read(sock, buffer, 1024);
+
+        printf("\nDisconnected.\n");
+    }
+    else
+    {
+        printf("\nExit without calling RPC.\n");
+    }
+
+    // Terminate connection.
+    close(sock);
+
+    return 0;
 }

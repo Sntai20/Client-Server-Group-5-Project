@@ -11,14 +11,30 @@ Socket::~Socket(){}
 
 bool Socket::CreateSocket(int domain, int type, int protocal)
 {
-    Socket::SocketFileDescriptor = socket(domain, type, protocal);
-    if (Socket::SocketFileDescriptor < 0)
+    int opt = 1;
+    const int BACKLOG = 10;
+    
+    try
     {
-        std::cerr << "open socket error" << std::endl;
-        return 1;
+        // Creating socket file descriptor
+        Socket::SocketFileDescriptor = socket(domain, type, protocal);
     }
-
-    setsockopt(Socket::SocketFileDescriptor, SOL_SOCKET, SO_REUSEADDR, (const void*)&optionValue, sizeof(int));
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        perror("\nSocket failed! open socket error\n");
+    } // end try-catch
+    
+    try
+    {
+        // Forcefully attaching socket to the port
+        setsockopt(Socket::SocketFileDescriptor, SOL_SOCKET, SO_REUSEADDR | SO_REUSEADDR, (const void*)&optionValue, sizeof(int));
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        perror("\nsetsockopt\n");
+    } // end try-catch
 
     return 0;
 }
