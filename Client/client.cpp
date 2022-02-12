@@ -11,7 +11,6 @@
 #include <iterator>
 #include <iostream>
 
-/**
 void ParseTokens(char* buffer, std::vector<std::string>& a)
 {
     char* token;
@@ -23,34 +22,45 @@ void ParseTokens(char* buffer, std::vector<std::string>& a)
         a.push_back(token);
     }
 }
-*/
 
 // ConnectToServer will connect to the Server based on command line.
 bool ConnectToServer(const char* serverAddress, int port, int& sock)
 {
     struct sockaddr_in serv_addr;
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    try
+    {
+        (sock = socket(AF_INET, SOCK_STREAM, 0));
+    }
+    catch(const std::exception& e)
     {
         printf("\nSocket creation error, please try again. \n");
-
+        std::cerr << e.what() << '\n';
         return false;
     }
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(port);
 
-    // Convert IPv4 and IPv6 addresses from text to binary form.
-    if (inet_pton(AF_INET, serverAddress, &serv_addr.sin_addr) <= 0)
+    try
+    {
+        // Convert IPv4 and IPv6 addresses from text to binary form.
+        inet_pton(AF_INET, serverAddress, &serv_addr.sin_addr);
+    }
+    catch(const std::exception& e)
     {
         printf("\nInvalid address or Server address not supported, please try again. \n");
-
+        std::cerr << e.what() << '\n';
         return false;
     }
 
-    if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0)
+    try
+    {
+        connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+    }
+    catch(const std::exception& e)
     {
         printf("\nConnection Failed. Please make sure that server is connected.\n");
-
+        std::cerr << e.what() << '\n';
         return false;
     }
 

@@ -4,30 +4,26 @@ Group 5 is designing a bingo simulator project for milestone 1 and 2. To play th
 When the server generates a random number, it will show on the screen/console for the client. To make the game more interactive, users must send a trigger input, such as an "X” to indicate that they wish to mark off a number on their board. If they do not type the trigger within a certain time frame (such as 5 seconds), they will lose the chance to mark that number from their board and not be allowed to cross off the specific number. For 2-player mode, the users will share one client screen, and sending a trigger will attempt to mark a number from both the player’s boards. Players will not be penalized for attempting to mark off a number that is not on their board.
 The bingo simulator will have the following Remote Procedure Calls (RPCs):
 
-•	setBoard
-
-•	markBoard
-
-•	setTime
-
-•	setMaxNum
-
-•	Connect
-
-•	Disconnect
+-	setBoard
+-	markBoard
+-	setTime
+-	setMaxNum
+-	Connect
+-	Disconnect
 
 ## Build
 To build, navigate to the Client-Server-Group-5-Project/ 
-cmake -S . -B build
 
-cmake --build build
+`cmake -S . -B build`
+
+`cmake --build build`
 
 ## Run the Code 
 To run the code provided by the professor use the Server and Client Folders. Start the server first, then the client.
 
-To run the server './build/server 127.0.0.1 10320'
+To run the server `./build/server 127.0.0.1 10320`
 
-To run the client './build/client 127.0.0.1 10320'
+To run the client `./build/client 127.0.0.1 10320`
 
 ## Release 1.0.0
 The server listens on port 10320.
@@ -36,6 +32,7 @@ The client connects to the server.
 # Features
 - Connect RPC.
 - Disconnect RPC.
+- Simple Exception Handling
 
 ## Coming Soon
 - Working unit tests for the socket class

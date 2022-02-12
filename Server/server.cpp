@@ -80,37 +80,54 @@ bool RPCServer::StartServer()
 {
     int opt = 1;
     const int BACKLOG = 10;
-
-    // Creating socket file descriptor
-    if ((m_server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
+    
+    try
     {
+        // Creating socket file descriptor
+        (m_server_fd = socket(AF_INET, SOCK_STREAM, 0));
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
         perror("\nSocket failed!\n");
-        exit(EXIT_FAILURE);
-    }
+    } // end try-catch
 
-    // Forcefully attaching socket to the port
-    if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-    // if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
-    {
-        perror("\nsetsockopt\n");
-        exit(EXIT_FAILURE);
-    }
+   try
+   {
+       // Forcefully attaching socket to the port
+       setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
+   }
+   catch(const std::exception& e)
+   {
+       std::cerr << e.what() << '\n';
+       perror("\nsetsockopt\n");
+   } // end try-catch
 
     m_address.sin_family = AF_INET;
     m_address.sin_addr.s_addr = INADDR_ANY;
     m_address.sin_port = htons(m_port);
 
-    // Forcefully attaching socket to the port 8080
-    if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)) < 0)
+    try
     {
+        // Forcefully attaching socket to the port 8080
+        bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address));
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
         perror("\nBind failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (listen(m_server_fd, BACKLOG) < 0)
+    } // end try-catch
+    
+    try
     {
-        perror("\nListen\n");
-        exit(EXIT_FAILURE);
+        listen(m_server_fd, BACKLOG);
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        perror("\nListen\n");
+    } // end try-catch
+    
     return true;
 }
 
@@ -118,11 +135,16 @@ bool RPCServer::ListenForClient()
 {
     int addrlen = sizeof(m_address);
 
-    if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
+    try
     {
-        perror("\nAccept\n");
-        exit(EXIT_FAILURE);
+        (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        perror("\nAccept\n");
+    } // end try-catch
+    
     this->ProcessRPC();
 
     return true;
@@ -192,11 +214,9 @@ bool RPCServer::ProcessRPC()
             send(this->m_socket, message, strlen(message) + 1, 0);
 
             // Call hard-coded RPC functions with set values until they are implemented
-            
             // After client is connected, Set the board
-            
-            while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11"
-                ",35,32,23,24,25,26,28,39,37,46,50")) {
+            while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
+            {
                 // Board not succesfully set: prompt user for new input (mandatory valid input required)
                 
             }
@@ -205,11 +225,13 @@ bool RPCServer::ProcessRPC()
             // Board is marked if the current number in the server is valid
             
 
-            while (!setMaxNum("5")) {
+            while (!setMaxNum("5")) 
+            {
                 // max num not succesfully set: prompt user for new input (mandatory valid input required)
             }
 
-            while (!setTime("5")) {
+            while (!setTime("5")) 
+            {
                 // Time not succesfully set: prompt user for new input (mandatory valid input required)
             }
 
@@ -217,7 +239,6 @@ bool RPCServer::ProcessRPC()
             read(this->m_socket, buffer, sizeof(buffer));
             printf("A message from connected client: %s\n", buffer);
         }
-
         else if ((bConnected == true) && (aString == "disconnect"))
         {
             // Terminating the endless loop
@@ -226,10 +247,11 @@ bool RPCServer::ProcessRPC()
             // We are going to leave this loop, as we are done
             bContinue = false;
         }
-
         else if ((bConnected == true) && (aString == "status"))
-            bStatusOk = StatusRPC();   // Status RPC
-
+        {
+            // Status RPC
+            bStatusOk = StatusRPC();
+        }
         else
         {
             // Not in our list, perhaps, print out what was sent
@@ -266,7 +288,6 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
     read(this->m_socket, szBuffer, sizeof(szBuffer) <= 0);
-    //printf("%s\n",szBuffer);
 
     return true;
 }
@@ -303,7 +324,6 @@ void RPCServer::markBoard()
     printf("\nFunction markBoard is not implemented yet!");
     
     // TODO: Implement.
-    
 }
 
 bool RPCServer::setTime(string inputString) 
