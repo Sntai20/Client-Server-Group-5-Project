@@ -59,12 +59,13 @@
 // in a test fixture.
 //
 // </TechnicalDetails>
-
-#include "sample3-inl.h"
+#include "../Common/socket.h"
+#include "../Server-Project/sampleServer.h"
 #include "gtest/gtest.h"
+
 namespace {
     // To use a test fixture, derive a class from testing::Test.
-    class QueueTestSmpl3 : public testing::Test {
+    class ServerTest : public testing::Test {
     protected:  // You should make the members protected s.t. they can be
                 // accessed from sub-classes.
 
@@ -111,19 +112,22 @@ namespace {
         Queue<int> q0_;
         Queue<int> q1_;
         Queue<int> q2_;
+
+        // Declares the variables your tests want to use.
+		// Socket s_;
     };
 
     // When you have a test fixture, you define a test using TEST_F
     // instead of TEST.
 
     // Tests the default c'tor.
-    TEST_F(QueueTestSmpl3, DefaultConstructor) {
+    TEST_F(ServerTest, DefaultConstructor) {
         // You can access data in the test fixture here.
         EXPECT_EQ(0u, q0_.Size());
     }
 
     // Tests Dequeue().
-    TEST_F(QueueTestSmpl3, Dequeue) {
+    TEST_F(ServerTest, Dequeue) {
         int* n = q0_.Dequeue();
         EXPECT_TRUE(n == nullptr);
 
@@ -141,49 +145,18 @@ namespace {
     }
 
     // Tests the Queue::Map() function.
-    TEST_F(QueueTestSmpl3, Map) {
+    TEST_F(ServerTest, Map) {
         MapTester(&q0_);
         MapTester(&q1_);
         MapTester(&q2_);
     }
+    
+    // Tests my understanding of gtests.
+    TEST_F(ServerTest, Socket) {
+		EXPECT_EQ(0, 0);
+	}
 }  
 
-//#include <gtest/gtest.h>
-//#include "../Common/socket.h"
-//
-//namespace {
-//	// To use a test fixture, derive a class from testing::Test.
-//	class SocketTest : public ::testing::Test {
-//	protected:  // You should make the members protected s.t. they can be
-//				// accessed from sub-classes.
-//
-//	 // virtual void SetUp() will be called before each test is run.  You
-//	 // should define it if you need to initialize the variables.
-//	 // Otherwise, this can be skipped.
-//		/*void SetUp() override {
-//
-//			q1_.Enqueue(1);
-//			q2_.Enqueue(2);
-//			q2_.Enqueue(3);
-//		}*/
-//
-//		// Declares the variables your tests want to use.
-//		Socket s_;
-//	};
-//
-//	TEST_F(SocketTest, CanReallyTest)
-//	{
-//		EXPECT_EQ(0, 0);
-//	}
-//
-//	//// Demonstrate some basic assertions.
-//	//TEST(BasicTest, BasicAssertions)
-//	//{
-//	//	// Expect two strings not to be equal.
-//	//	EXPECT_STRNE("hello", "world");
-//	//}
-//} // namespace
-//
 int main(int argc, char** argv) 
 {
 	::testing::InitGoogleTest(&argc, argv);

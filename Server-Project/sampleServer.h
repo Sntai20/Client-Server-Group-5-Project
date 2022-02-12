@@ -34,7 +34,6 @@
 
 #include <stddef.h>
 
-
 // Queue is a simple queue implemented as a singled-linked list.
 //
 // The element type must support copy constructor.
