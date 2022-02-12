@@ -59,9 +59,10 @@
 // in a test fixture.
 //
 // </TechnicalDetails>
-
+#include "../Common/socket.h"
 #include "sampleServer.h"
 #include "gtest/gtest.h"
+
 namespace {
     // To use a test fixture, derive a class from testing::Test.
     class ServerTest : public testing::Test {
@@ -111,6 +112,9 @@ namespace {
         Queue<int> q0_;
         Queue<int> q1_;
         Queue<int> q2_;
+
+        // Declares the variables your tests want to use.
+		// Socket s_;
     };
 
     // When you have a test fixture, you define a test using TEST_F
@@ -146,44 +150,13 @@ namespace {
         MapTester(&q1_);
         MapTester(&q2_);
     }
+    
+    // Tests my understanding of gtests.
+    TEST_F(ServerTest, Socket) {
+		EXPECT_EQ(0, 0);
+	}
 }  
 
-//#include <gtest/gtest.h>
-//#include "../Common/socket.h"
-//
-//namespace {
-//	// To use a test fixture, derive a class from testing::Test.
-//	class SocketTest : public ::testing::Test {
-//	protected:  // You should make the members protected s.t. they can be
-//				// accessed from sub-classes.
-//
-//	 // virtual void SetUp() will be called before each test is run.  You
-//	 // should define it if you need to initialize the variables.
-//	 // Otherwise, this can be skipped.
-//		/*void SetUp() override {
-//
-//			q1_.Enqueue(1);
-//			q2_.Enqueue(2);
-//			q2_.Enqueue(3);
-//		}*/
-//
-//		// Declares the variables your tests want to use.
-//		Socket s_;
-//	};
-//
-//	TEST_F(SocketTest, CanReallyTest)
-//	{
-//		EXPECT_EQ(0, 0);
-//	}
-//
-//	//// Demonstrate some basic assertions.
-//	//TEST(BasicTest, BasicAssertions)
-//	//{
-//	//	// Expect two strings not to be equal.
-//	//	EXPECT_STRNE("hello", "world");
-//	//}
-//} // namespace
-//
 int main(int argc, char** argv) 
 {
 	::testing::InitGoogleTest(&argc, argv);
