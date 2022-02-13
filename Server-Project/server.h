@@ -15,6 +15,7 @@
 #include <vector>
 #include <iterator>
 #include <iostream>
+#include "../BingoGame/binggame.h"
 
 using namespace std;
 
@@ -47,19 +48,8 @@ public:
     // Extracts tokens from a string vector sent by the client.
     void ParseTokens(char* buffer, vector<string>& a);
 
-    // Creating the Bingo board.
-    bool setBoard(string inputString);
-    
-    // Checks if the current number displayed by the system matches a number in the player's bingo board.
-    void markBoard();
-
-    // Sets the number of seconds the server will wait between each bingo
-    // number re-roll for the rest of the game.
-    bool setTime(string inputString);
-
-    // Takes in a string and sets the max number the server will call for the
-    // rest of the game.
-    bool setMaxNum(string inputString);
+    // Setups up the Bingo Game.
+    BingoGame Bingo;
 
 private:
     int m_rpcCount;

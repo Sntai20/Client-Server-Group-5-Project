@@ -187,20 +187,20 @@ bool RPCServer::ProcessRPC()
 
             // Call hard-coded RPC functions with set values until they are implemented
             // After client is connected, Set the board
-            while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
+            while (!Bingo.setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
             {
                 // Board not succesfully set: prompt user for new input (mandatory valid input required)
             }
             
             // Board is marked if the current number in the server is valid
-            markBoard();
+            Bingo.markBoard();
 
-            while (!setMaxNum("5")) 
+            while (!Bingo.setMaxNum("5")) 
             {
                 // max num not succesfully set: prompt user for new input (mandatory valid input required)
             }
 
-            while (!setTime("5")) 
+            while (!Bingo.setTime("5")) 
             {
                 // Time not succesfully set: prompt user for new input (mandatory valid input required)
             }
@@ -297,61 +297,5 @@ bool RPCServer::Disconnect()
     szBuffer[nlen] = 0;
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
-    return true;
-}
-
-/**
- * @brief This method is used to set the board values.
- * 
- * @param inputString 
- * @return true 
- * @return false 
- */
-bool RPCServer::setBoard(string inputString) 
-{
-    printf("\nFunction setBoard is not implemented yet!");
-
-    // TODO: Implement.
-    return true;
-}
-
-/**
- * @brief This method is used to mark the board values.
- * 
- */
-void RPCServer::markBoard() 
-{
-    printf("\nFunction markBoard is not implemented yet!");
-    
-    // TODO: Implement.
-}
-
-/**
- * @brief This method is used to set the time.
- * 
- * @param inputString 
- * @return true 
- * @return false 
- */
-bool RPCServer::setTime(string inputString) 
-{
-    printf("\nFunction setTime is not implemented yet!\n\n");
-
-    // TODO: Implement.
-    return true;
-}
-
-/**
- * @brief This method is used to set the maximum number.
- * 
- * @param inputString 
- * @return true 
- * @return false 
- */
-bool RPCServer::setMaxNum(string inputString) 
-{
-    printf("\nFunction setMaxNum is not implemented yet!");
-    
-    // TODO: Implement.
     return true;
 }
