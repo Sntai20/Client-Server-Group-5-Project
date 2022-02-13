@@ -19,8 +19,8 @@ public:
     // Returns an intialized socket.
     Socket(int domain, int type, int protocal);
 
-    // Destructor.
-    ~Socket();
+    // Destructor. Breaks the unit test.
+    // ~Socket();
 
     // Returns the file handle value as an int.
     int SocketFileDescriptor;

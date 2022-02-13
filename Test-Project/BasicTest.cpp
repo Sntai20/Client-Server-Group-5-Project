@@ -63,35 +63,38 @@
 #include "../Server-Project/sampleServer.h"
 #include "gtest/gtest.h"
 
-namespace {
+namespace 
+{
     // To use a test fixture, derive a class from testing::Test.
-    class ServerTest : public testing::Test {
-    protected:  // You should make the members protected s.t. they can be
-                // accessed from sub-classes.
+    class ServerTest : public testing::Test 
+    {
+    protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
 
-     // virtual void SetUp() will be called before each test is run.  You
-     // should define it if you need to initialize the variables.
-     // Otherwise, this can be skipped.
-        void SetUp() override {
+     // virtual void SetUp() will be called before each test is run.  You should define
+     // it if you need to initialize the variables. Otherwise, this can be skipped.
+        void SetUp() override 
+        {
             q1_.Enqueue(1);
             q2_.Enqueue(2);
             q2_.Enqueue(3);
         }
 
-        // virtual void TearDown() will be called after each test is run.
-        // You should define it if there is cleanup work to do.  Otherwise,
-        // you don't have to provide it.
-        //
+        /* virtual void TearDown() will be called after each test is run. You should define 
+         * it if there is cleanup work to do.  Otherwise, you don't have to provide it.
+         */ 
+        
         // virtual void TearDown() {
         // }
 
         // A helper function that some test uses.
-        static int Double(int n) {
+        static int Double(int n) 
+        {
             return 2 * n;
         }
 
         // A helper function for testing Queue::Map().
-        void MapTester(const Queue<int>* q) {
+        void MapTester(const Queue<int>* q) 
+        {
             // Creates a new queue, where each element is twice as big as the
             // corresponding one in q.
             const Queue<int>* const new_q = q->Map(Double);
@@ -101,7 +104,8 @@ namespace {
 
             // Verifies the relationship between the elements of the two queues.
             for (const QueueNode<int>* n1 = q->Head(), *n2 = new_q->Head();
-                n1 != nullptr; n1 = n1->next(), n2 = n2->next()) {
+                n1 != nullptr; n1 = n1->next(), n2 = n2->next()) 
+                {
                 EXPECT_EQ(2 * n1->element(), n2->element());
             }
 
@@ -114,20 +118,21 @@ namespace {
         Queue<int> q2_;
 
         // Declares the variables your tests want to use.
-		// Socket s_;
+		Socket s_;
     };
 
-    // When you have a test fixture, you define a test using TEST_F
-    // instead of TEST.
+    // When you have a test fixture, you define a test using TEST_F instead of TEST.
 
     // Tests the default c'tor.
-    TEST_F(ServerTest, DefaultConstructor) {
+    TEST_F(ServerTest, DefaultConstructor) 
+    {
         // You can access data in the test fixture here.
         EXPECT_EQ(0u, q0_.Size());
     }
 
     // Tests Dequeue().
-    TEST_F(ServerTest, Dequeue) {
+    TEST_F(ServerTest, Dequeue) 
+    {
         int* n = q0_.Dequeue();
         EXPECT_TRUE(n == nullptr);
 
@@ -145,18 +150,27 @@ namespace {
     }
 
     // Tests the Queue::Map() function.
-    TEST_F(ServerTest, Map) {
+    TEST_F(ServerTest, Map) 
+    {
         MapTester(&q0_);
         MapTester(&q1_);
         MapTester(&q2_);
     }
     
     // Tests my understanding of gtests.
-    TEST_F(ServerTest, Socket) {
-		EXPECT_EQ(0, 0);
+    TEST_F(ServerTest, optionValue) 
+    {
+		EXPECT_EQ(0, s_.optionValue);
 	}
 }  
 
+/**
+ * @brief This is the main entry to initialize the Google test framework and run all the tests.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char** argv) 
 {
 	::testing::InitGoogleTest(&argc, argv);
