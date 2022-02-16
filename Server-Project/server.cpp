@@ -5,79 +5,7 @@
  * @version 0.1
  * @date 2022-02-11
  */  
-#include <cstdio>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <string.h>
-#include <vector>
-#include <iterator>
-#include <iostream>
-
-using namespace std;
-
-/**
- * @brief This RPCServer class contains all the methods to use the server, 
- * including the RPCs.
- * 
- * @param serverIP The IP addressed assigned to the server.
- * @param port The destination port used to listen on.
- * @return An instance of an RPCServer.
- */
-class RPCServer
-{
-public:
-    // Constructor
-    RPCServer(const char* serverIP, int port);
-
-    // Destructor
-    ~RPCServer();
-
-    // StartServer creates a server on a Port that was passed in, and creates
-    // a socket
-    bool StartServer();
-
-    //ListenForClient accepts a new connection by listening on it's address
-    bool ListenForClient();
-
-    // ProcessRPC examines buffer and will essentially controls
-    // connect/disconnect/status
-    bool ProcessRPC();
-
-    // ParseTokens populates a String vector with tokens extracted from the
-    // string the client sent.
-    void ParseTokens(char* buffer, vector<string>& a);
-
-    // Creating the Bingo board
-    bool setBoard(string inputString);
-    
-    // Checks if the current number displayed by the system matches a number in the player's bingo board.
-    void markBoard();
-
-    // Sets the number of seconds the server will wait between each bingo
-    // number re-roll for the rest of the game
-    bool setTime(string inputString);
-
-    // Takes in a string and sets the max number the server will call for the
-    // rest of the game
-    bool setMaxNum(string inputString);
-
-private:
-    int m_rpcCount;
-    int m_server_fd;
-    int m_socket;
-    char* m_serverIP;
-    int m_port;
-    struct sockaddr_in m_address;
-
-    // First one in this function should be a connect, and it
-    // will continue try to process RPC's until a Disconnect happens
-    bool Connect(std::vector<std::string>& arrayTokens);
-    bool StatusRPC();
-    bool Disconnect();
-};
+#include "server.h"
 
 /**
  * @brief Construct a new RPCServer::RPCServer object
@@ -259,20 +187,20 @@ bool RPCServer::ProcessRPC()
 
             // Call hard-coded RPC functions with set values until they are implemented
             // After client is connected, Set the board
-            while (!setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
+            while (!Bingo.setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
             {
                 // Board not succesfully set: prompt user for new input (mandatory valid input required)
             }
             
             // Board is marked if the current number in the server is valid
-            markBoard();
+            Bingo.markBoard();
 
-            while (!setMaxNum("5")) 
+            while (!Bingo.setMaxNum("5")) 
             {
                 // max num not succesfully set: prompt user for new input (mandatory valid input required)
             }
 
-            while (!setTime("5")) 
+            while (!Bingo.setTime("5")) 
             {
                 // Time not succesfully set: prompt user for new input (mandatory valid input required)
             }
@@ -370,95 +298,4 @@ bool RPCServer::Disconnect()
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
     return true;
-}
-
-/**
- * @brief This method is used to set the board values.
- * 
- * @param inputString 
- * @return true 
- * @return false 
- */
-bool RPCServer::setBoard(string inputString) 
-{
-    printf("\nFunction setBoard is not implemented yet!");
-
-    // TODO: Implement.
-    return true;
-}
-
-/**
- * @brief This method is used to mark the board values.
- * 
- */
-void RPCServer::markBoard() 
-{
-    printf("\nFunction markBoard is not implemented yet!");
-    
-    // TODO: Implement.
-}
-
-/**
- * @brief This method is used to set the time.
- * 
- * @param inputString 
- * @return true 
- * @return false 
- */
-bool RPCServer::setTime(string inputString) 
-{
-    printf("\nFunction setTime is not implemented yet!\n\n");
-
-    // TODO: Implement.
-    return true;
-}
-
-/**
- * @brief This method is used to set the maximum number.
- * 
- * @param inputString 
- * @return true 
- * @return false 
- */
-bool RPCServer::setMaxNum(string inputString) 
-{
-    printf("\nFunction setMaxNum is not implemented yet!");
-    
-    // TODO: Implement.
-    return true;
-}
-
-/**
- * @brief This is the entry for the server program.
- * 
- * @param argc 
- * @param argv 
- * @return int 
- */
-int main(int argc, char* argv[])
-{
-    const char* serverIP = argv[1];
-    int port = atoi(argv[2]);
-    bool statusOk = true;
-
-    RPCServer* serverObj = new RPCServer(serverIP, port);
-
-#if 0
-    std::vector<std::string> tokArray;
-    char buffer[128] = { "connect;MIKE;MIKE" };
-    serverObj->ParseTokens(buffer, tokArray);
-#endif
-    // Print when server is working
-    statusOk = serverObj->StartServer();
-    printf("\nServer is up!\n");
-
-    while (statusOk)
-    {
-        statusOk = serverObj->ListenForClient();
-        printf("\nServer is waiting!\n");
-        statusOk = serverObj->ProcessRPC(); // Launch thread
-    }
-
-    delete serverObj;
-    return 0;
 }
