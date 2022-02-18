@@ -171,7 +171,7 @@ bool RPCServer::ListenForClient()
         int socket = m_socket;
         pthread_create(&thread_id, NULL, myThreadFun, (void*)&socket);
         // TODO Probably should save thread_id into some type of array
-        //this->ProcessRPC();
+        this->ProcessRPC();
     }
 
     return true;
