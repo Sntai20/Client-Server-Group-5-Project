@@ -33,6 +33,8 @@ public:
     // Constructor
     RPCServer(const char* serverIP, int port);
 
+    RPCServer(int socket);
+
     // Destructor
     ~RPCServer();
 

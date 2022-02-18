@@ -22,6 +22,7 @@ The client connects to the server.
 - Connect RPC.
 - Disconnect RPC.
 - Simple Exception Handling
+- Multi-threaded Server
 
 ## Coming Soon
 

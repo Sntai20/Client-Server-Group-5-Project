@@ -6,6 +6,40 @@
  * @date 2022-02-11
  */  
 #include "server.h"
+#include "LocalContext.h"
+
+/**
+ * @brief Struct to maintain the global context for threads.
+ * 
+ */
+typedef struct _GlobalContext 
+{
+    int g_rpcCount;
+} GlobalContext;
+
+GlobalContext globalObj; // We need to protect this, as we don't want bad data
+
+/**
+ * @brief A normal C function that is executed as a thread
+ * when its name is specified in pthread_create()
+ * 
+ * @param vargp 
+ * @return void* 
+ */
+void* myThreadFun(void* vargp)
+{
+
+    sleep(1);
+
+    int socket = *(int *) vargp;
+    printf("Printing GeeksQuiz from Thread \n");
+    RPCServer *rpcImplObj = new RPCServer(socket);
+    rpcImplObj->ProcessRPC();   // This will go until client disconnects;
+    printf("Done with Thread");
+
+    return NULL;
+
+}
 
 /**
  * @brief Construct a new RPCServer::RPCServer object
@@ -18,6 +52,17 @@ RPCServer::RPCServer(const char* serverIP, int port)
     m_rpcCount = 0;
     m_serverIP = (char*)serverIP;
     m_port = port;
+};
+
+/**
+ * @brief Construct a new RPCServer::RPCServer object
+ * 
+ * @param socket 
+ */
+RPCServer::RPCServer(int socket)
+{
+    m_socket = socket;
+    m_rpcCount = 0;
 };
 
 /**
@@ -96,17 +141,38 @@ bool RPCServer::ListenForClient()
 {
     int addrlen = sizeof(m_address);
 
-    try
-    {
-        (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        perror("\nAccept\n");
-    } // end try-catch
     
-    this->ProcessRPC();
+    
+    // this->ProcessRPC();
+
+    for (;;) // Endless loop. Probably good to have some type of controlled shutdown
+    {
+        try
+        {
+            (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            perror("\nAccept\n");
+        } // end try-catch
+
+        // if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
+        // {
+        //     perror("accept");
+        //     exit(EXIT_FAILURE);
+        // }
+
+        // Launch Thread to Process RPC
+        // We will hold the thread ID into an array. Who know's we might want to join on them later
+
+        pthread_t thread_id;
+        printf("Launching Thread\n");
+        int socket = m_socket;
+        pthread_create(&thread_id, NULL, myThreadFun, (void*)&socket);
+        // TODO Probably should save thread_id into some type of array
+        //this->ProcessRPC();
+    }
 
     return true;
 }
