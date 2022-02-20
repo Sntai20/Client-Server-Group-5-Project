@@ -34,17 +34,17 @@ using namespace std;
  * @param buffer 
  * @param a 
  */
-// void ParseTokens(char* buffer, vector<string>& a)
-// {
-//     char* token;
-//     char* rest = (char*)buffer;
+void ParseTokens(char* buffer, vector<string>& a)
+{
+    char* token;
+    char* rest = (char*)buffer;
 
-//     while ((token = strtok_r(rest, ";", &rest)))
-//     {
-//         //printf("%s\n", token);
-//         a.push_back(token);
-//     }
-// }
+    while ((token = strtok_r(rest, ";", &rest)))
+    {
+        cout << token << endl;
+        a.push_back(token);
+    }
+}
 
 /**
  * @brief ConnectToServer will connect to the Server based on command line.
