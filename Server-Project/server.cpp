@@ -6,6 +6,40 @@
  * @date 2022-02-11
  */  
 #include "server.h"
+#include "LocalContext.h"
+
+/**
+ * @brief Struct to maintain the global context for threads.
+ * 
+ */
+typedef struct _GlobalContext 
+{
+    int g_rpcCount;
+} GlobalContext;
+
+GlobalContext globalObj; // We need to protect this, as we don't want bad data
+
+/**
+ * @brief A normal C function that is executed as a thread
+ * when its name is specified in pthread_create()
+ * 
+ * @param vargp 
+ * @return void* 
+ */
+void* myThreadFun(void* vargp)
+{
+
+    sleep(1);
+
+    int socket = *(int *) vargp;
+    cout << "Printing GeeksQuiz from Thread \n" << endl;
+    RPCServer *rpcImplObj = new RPCServer(socket);
+    rpcImplObj->ProcessRPC();   // This will go until client disconnects;
+    cout << "Done with Thread" << endl;
+
+    return NULL;
+
+}
 
 /**
  * @brief Construct a new RPCServer::RPCServer object
@@ -18,6 +52,17 @@ RPCServer::RPCServer(const char* serverIP, int port)
     m_rpcCount = 0;
     m_serverIP = (char*)serverIP;
     m_port = port;
+};
+
+/**
+ * @brief Construct a new RPCServer::RPCServer object
+ * 
+ * @param socket 
+ */
+RPCServer::RPCServer(int socket)
+{
+    m_socket = socket;
+    m_rpcCount = 0;
 };
 
 /**
@@ -43,8 +88,8 @@ bool RPCServer::StartServer()
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        perror("\nSocket failed!\n");
+        std::cerr << e.what() << endl;
+        // perror("\nSocket failed!\n");
     } // end try-catch
 
    try
@@ -54,8 +99,8 @@ bool RPCServer::StartServer()
    }
    catch(const std::exception& e)
    {
-       std::cerr << e.what() << '\n';
-       perror("\nsetsockopt\n");
+       std::cerr << e.what() << endl;
+    //    stderr("\nsetsockopt\n");
    } // end try-catch
 
     m_address.sin_family = AF_INET;
@@ -69,8 +114,8 @@ bool RPCServer::StartServer()
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        perror("\nBind failed.\n");
+        std::cerr << e.what() << endl;
+        // perror("\nBind failed.\n");
     } // end try-catch
     
     try
@@ -79,8 +124,8 @@ bool RPCServer::StartServer()
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        perror("\nListen\n");
+        std::cerr << e.what() << endl;
+        // perror("\nListen\n");
     } // end try-catch
     
     return true;
@@ -95,18 +140,37 @@ bool RPCServer::StartServer()
 bool RPCServer::ListenForClient()
 {
     int addrlen = sizeof(m_address);
+    // this->ProcessRPC();
 
-    try
+    for (;;) // Endless loop. Probably good to have some type of controlled shutdown
     {
-        (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
+        try
+        {
+            (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << endl;
+            // perror("\nAccept\n");
+        } // end try-catch
+
+        // if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
+        // {
+        //     perror("accept");
+        //     exit(EXIT_FAILURE);
+        // }
+
+        // Launch Thread to Process RPC
+        // We will hold the thread ID into an array. Who know's we might want to join on them later
+
+        // std::thread thread1 (myThreadFun);
+        // (&thread_id, NULL, myThreadFun, (void*)&socket);
+        cout << "Launching Thread" << endl;
+        // int socket = m_socket;
+        // thread_id(&thread_id, NULL, myThreadFun, (void*)&socket);
+        // TODO Probably should save thread_id into some type of array
+        this->ProcessRPC();
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        perror("\nAccept\n");
-    } // end try-catch
-    
-    this->ProcessRPC();
 
     return true;
 }
@@ -179,7 +243,7 @@ bool RPCServer::ProcessRPC()
             bStatusOk = Connect(arrayTokens);
             if (bStatusOk == true)
                 bConnected = true;
-            printf("\nClient is connected!\n");
+            cout << "\nClient is connected!" << endl;
 
             // Let the client know about connection
             const char* message = "\nYou are now connected to the server!\n";
@@ -206,14 +270,14 @@ bool RPCServer::ProcessRPC()
             }
 
             // Get the client response
-            read(this->m_socket, buffer, sizeof(buffer));
-            printf("A message from connected client: %s\n", buffer);
+            // TODO: Replace with c++ version. read(this->m_socket, buffer, sizeof(buffer));
+            cout << "A message from connected client: " << buffer << endl;
         }
         else if ((bConnected == true) && (aString == "disconnect"))
         {
             // Terminating the endless loop
             bStatusOk = Disconnect();
-            printf("\nClient is disconnected now!\n");
+            cout << "\nClient is disconnected now!" << endl;
             // We are going to leave this loop, as we are done
             bContinue = false;
         }
@@ -265,7 +329,7 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
     szBuffer[nlen] = 0;
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
-    read(this->m_socket, szBuffer, sizeof(szBuffer) <= 0);
+    // TODO: Replace with c++ version. read(this->m_socket, szBuffer, sizeof(szBuffer) <= 0);
 
     return true;
 }

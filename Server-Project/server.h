@@ -5,16 +5,16 @@
  * @version 0.1
  * @date 2022-02-11
  */  
-#include <cstdio>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <string.h>
-#include <vector>
-#include <iterator>
-#include <iostream>
+// #include <cstdio>
+// #include <unistd.h>
+// #include <stdio.h>
+// #include <sys/socket.h>
+// #include <stdlib.h>
+// #include <netinet/in.h>
+// #include <string.h>
+// #include <vector>
+// #include <iterator>
+// #include <iostream>
 #include "../BingoGame/binggame.h"
 
 using namespace std;
@@ -32,6 +32,8 @@ class RPCServer
 public:
     // Constructor
     RPCServer(const char* serverIP, int port);
+
+    RPCServer(int socket);
 
     // Destructor
     ~RPCServer();

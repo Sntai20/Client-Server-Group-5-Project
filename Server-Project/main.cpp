@@ -30,12 +30,12 @@ int main(int argc, char* argv[])
 #endif
     // Print when server is working
     statusOk = serverObj->StartServer();
-    printf("\nServer is up!\n");
+    cout << "\nServer is up!\n" << endl;
 
     while (statusOk)
     {
         statusOk = serverObj->ListenForClient();
-        printf("\nServer is waiting!\n");
+        cout << "\nServer is waiting!\n" << endl;
         statusOk = serverObj->ProcessRPC(); // Launch thread
     }
 
