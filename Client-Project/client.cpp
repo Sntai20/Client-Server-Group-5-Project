@@ -1,7 +1,7 @@
 /**
  * @file client.cpp
  * @author Group 5
- * @brief Client side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @brief Client side C++ 17 program to demonstrate Socket programming for Bingo game.
  * @version 0.1
  * @date 2022-02-11
  */  
@@ -20,6 +20,7 @@
 #include <thread>         // std::this_thread::sleep_for
 #include "../Common/socket.h"
 
+// TODO: Make sure we can remove these.
 // #include <cstdio>
 // #include <sys/socket.h>
 // #include <arpa/inet.h>
@@ -55,7 +56,6 @@ void ParseTokens(char* buffer, vector<string>& a)
  * @return true 
  * @return false 
  */
-// bool ConnectToServer()
 bool ConnectToServer(const char* serverAddress, int port, int& sock)
 {
     struct sockaddr_in serv_addr;
@@ -65,8 +65,8 @@ bool ConnectToServer(const char* serverAddress, int port, int& sock)
     }
     catch(const exception& e)
     {
-        cout << "\nSocket creation error, please try again. \n" << endl;
-        std::cerr << e.what() << '\n';
+        cout << "\nSocket creation error, please try again." << endl;
+        std::cerr << e.what() << endl;
         return false;
     }
 
@@ -80,8 +80,8 @@ bool ConnectToServer(const char* serverAddress, int port, int& sock)
     }
     catch(const std::exception& e)
     {
-        cout << "\nInvalid address or Server address not supported, please try again. \n" << endl;
-        std::cerr << e.what() << '\n';
+        cout << "\nInvalid address or Server address not supported, please try again." << endl;
+        std::cerr << e.what() << endl;
         return false;
     }
 
@@ -91,7 +91,7 @@ bool ConnectToServer(const char* serverAddress, int port, int& sock)
     }
     catch(const std::exception& e)
     {
-        cout << "\nConnection Failed. Please make sure that server is connected.\n" << endl;
+        cout << "\nConnection Failed. Please make sure that server is connected." << endl;
         std::cerr << e.what() << '\n';
         return false;
     }

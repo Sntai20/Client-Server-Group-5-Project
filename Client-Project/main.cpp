@@ -1,12 +1,11 @@
 /**
  * @file main.cpp
  * @author Group 5
- * @brief Client side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @brief Client side C++ 17 program to demonstrate Socket programming for Bingo game.
  * @version 0.1
  * @date 2022-02-11
  */  
 #include "client.cpp"
-
 
 /**
  * @brief This is the entry for the client program.
@@ -20,7 +19,7 @@ int main(int argc, char* argv[])
     int sock = 0;
     
     const char* connectRPC = "connect;MIKE;MIKE;";
-    //const char* statusRPC = "status;";
+    // TODO: const char* statusRPC = "status;";
     const char* logoffRPC = "disconnect;";
     char buffer[1024] = { 0 };
     const char* serverAddress = argv[1];
@@ -29,8 +28,6 @@ int main(int argc, char* argv[])
      * https://www.techiedelight.com/convert-string-to-int-cpp/
      */
     const int port = std::stoi(argv[2]);
-
-    // bool bConnect = ConnectToServer();
     bool bConnect = ConnectToServer(serverAddress, port, sock);
 
     if (bConnect)
@@ -53,19 +50,16 @@ int main(int argc, char* argv[])
     }
     else
     {
-        cout << "\nExit without calling RPC.\n" << endl;
+        cout << "\nExit without calling RPC." << endl;
     }
 
     /**
-     * @brief sleep_for
+     * @brief sleep_for 1 to 10 seconds randomly
      * https://www.cplusplus.com/reference/thread/this_thread/sleep_for/
-     */
-
-    // std::this_thread::sleep_for 1 to 10 seconds randomly
+     */ 
     int seconds = 1 + (rand() % static_cast<int>(10));
-    cout << "\nSleeping...\n" << endl;
+    cout << "\nSleeping..." << endl;
     std::this_thread::sleep_for(std::chrono::seconds(seconds));
-    // std::this_thread::sleep_for ();
 
     // Disconnect Message
     if (bConnect)
@@ -74,9 +68,9 @@ int main(int argc, char* argv[])
         int nlen = strlen(buffer);
         buffer[nlen] = 0;   // Put the null terminator
         send(sock, buffer, strlen(buffer) + 1, 0);
-        // read(sock, buffer, 1024);
+        // TODO: read(sock, buffer, 1024);
 
-        cout << "\nDisconnected.\n" << endl;
+        cout << "\nDisconnected." << endl;
     }
     else
     {
