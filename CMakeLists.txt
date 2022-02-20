@@ -16,7 +16,6 @@ add_subdirectory ("Test-Project")
 
 # Tests and install targets if needed.
 include(CTest)
-# add_test(first_and_only_test BasicTest)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -29,11 +28,4 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
-
-# target_link_libraries(
-#   BasicTest
-#   gtest_main
-# )
-
 include(GoogleTest)
-# gtest_discover_tests(BasicTest)
