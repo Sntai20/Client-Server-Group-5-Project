@@ -33,20 +33,20 @@ int main(int argc, char* argv[])
     if (bConnect)
     {
         std::cout << "connected" << endl;
-        strcpy(buffer, connectRPC);
-        int nlen = strlen(buffer);
-        buffer[nlen] = 0;   // Put the null terminator
+        // TODO: strcpy(buffer, connectRPC);
+        // TODO:int nlen = strlen(buffer);
+        // TODO:buffer[nlen] = 0;   // Put the null terminator
 
         send(sock, buffer, strlen(buffer) + 1, 0);
-        read(sock, buffer, 1024);
+        // TODO:read(sock, buffer, 1024);
 
-        read(sock, buffer, 1024);
+        // TODO:read(sock, buffer, 1024);
         cout << buffer << endl;
 
         cout << "What is your message for the server? " << endl;
         char message[80];
         std::cin.getline(message, sizeof message);
-        send(sock, message, strlen(message) + 1, 0);
+        // TODO:send(sock, message, strlen(message) + 1, 0);
     }
     else
     {
@@ -64,10 +64,10 @@ int main(int argc, char* argv[])
     // Disconnect Message
     if (bConnect)
     {
-        strcpy(buffer, logoffRPC);
-        int nlen = strlen(buffer);
-        buffer[nlen] = 0;   // Put the null terminator
-        send(sock, buffer, strlen(buffer) + 1, 0);
+        // TODO:strcpy(buffer, logoffRPC);
+        // TODO:int nlen = strlen(buffer);
+        // TODO:buffer[nlen] = 0;   // Put the null terminator
+        // TODO:send(sock, buffer, strlen(buffer) + 1, 0);
         // TODO: read(sock, buffer, 1024);
 
         cout << "\nDisconnected." << endl;
