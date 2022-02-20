@@ -243,7 +243,7 @@ bool RPCServer::ProcessRPC()
             bStatusOk = Connect(arrayTokens);
             if (bStatusOk == true)
                 bConnected = true;
-            printf("\nClient is connected!\n");
+            cout << "\nClient is connected!" << endl;
 
             // Let the client know about connection
             const char* message = "\nYou are now connected to the server!\n";
@@ -270,14 +270,14 @@ bool RPCServer::ProcessRPC()
             }
 
             // Get the client response
-            read(this->m_socket, buffer, sizeof(buffer));
-            printf("A message from connected client: %s\n", buffer);
+            // TODO: Replace with c++ version. read(this->m_socket, buffer, sizeof(buffer));
+            cout << "A message from connected client: " << buffer << endl;
         }
         else if ((bConnected == true) && (aString == "disconnect"))
         {
             // Terminating the endless loop
             bStatusOk = Disconnect();
-            printf("\nClient is disconnected now!\n");
+            cout << "\nClient is disconnected now!" << endl;
             // We are going to leave this loop, as we are done
             bContinue = false;
         }
@@ -329,7 +329,7 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
     szBuffer[nlen] = 0;
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
-    read(this->m_socket, szBuffer, sizeof(szBuffer) <= 0);
+    // TODO: Replace with c++ version. read(this->m_socket, szBuffer, sizeof(szBuffer) <= 0);
 
     return true;
 }
