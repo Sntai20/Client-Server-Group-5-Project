@@ -140,9 +140,6 @@ bool RPCServer::StartServer()
 bool RPCServer::ListenForClient()
 {
     int addrlen = sizeof(m_address);
-
-    
-    
     // this->ProcessRPC();
 
     for (;;) // Endless loop. Probably good to have some type of controlled shutdown
@@ -168,10 +165,10 @@ bool RPCServer::ListenForClient()
 
         pthread_t thread_id;
         printf("Launching Thread\n");
-        int socket = m_socket;
+        // int socket = m_socket;
         pthread_create(&thread_id, NULL, myThreadFun, (void*)&socket);
         // TODO Probably should save thread_id into some type of array
-        this->ProcessRPC();
+        // this->ProcessRPC();
     }
 
     return true;
