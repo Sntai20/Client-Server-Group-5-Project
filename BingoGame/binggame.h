@@ -1,20 +1,19 @@
 /**
  * @file BingoGame.h
  * @author Group 5
- * @brief C/C++ program to demonstrate Socket programming for Bingo game.
+ * @brief C++ program to demonstrate Socket programming for Bingo game.
  * @version 0.1
  * @date 2022-02-11
  */  
-#include <cstdio>
-#include <unistd.h>
 #include <stdio.h>
-#include <sys/socket.h>
 #include <stdlib.h>
-#include <netinet/in.h>
 #include <string.h>
-#include <vector>
-#include <iterator>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <iostream>
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -62,7 +61,7 @@ BingoGame::~BingoGame()
  */
 bool BingoGame::setBoard(string inputString) 
 {
-    printf("\nFunction setBoard is not implemented yet!");
+    cout << "\nFunction setBoard is not implemented yet!" << endl;
 
     // TODO: Implement.
     return true;
@@ -74,7 +73,7 @@ bool BingoGame::setBoard(string inputString)
  */
 void BingoGame::markBoard() 
 {
-    printf("\nFunction markBoard is not implemented yet!");
+    cout << "\nFunction markBoard is not implemented yet!" << endl;
     
     // TODO: Implement.
 }
@@ -88,7 +87,7 @@ void BingoGame::markBoard()
  */
 bool BingoGame::setTime(string inputString) 
 {
-    printf("\nFunction setTime is not implemented yet!\n\n");
+    cout << "\nFunction setTime is not implemented yet!\n\n" << endl;
 
     // TODO: Implement.
     return true;
@@ -103,7 +102,7 @@ bool BingoGame::setTime(string inputString)
  */
 bool BingoGame::setMaxNum(string inputString) 
 {
-    printf("\nFunction setMaxNum is not implemented yet!");
+    cout << "\nFunction setMaxNum is not implemented yet!" << endl;
     
     // TODO: Implement.
     return true;

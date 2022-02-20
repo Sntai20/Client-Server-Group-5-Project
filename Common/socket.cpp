@@ -1,5 +1,4 @@
 #include "socket.h"
-// #include <stdio.h>
 
 Socket::Socket(int domain, int type, int protocal)
 {

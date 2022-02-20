@@ -5,16 +5,17 @@
  * @version 0.1
  * @date 2022-02-11
  */  
-// #include <cstdio>
-// #include <unistd.h>
-// #include <stdio.h>
-// #include <sys/socket.h>
-// #include <stdlib.h>
-// #include <netinet/in.h>
-// #include <string.h>
-// #include <vector>
-// #include <iterator>
-// #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <iostream>
+#include <arpa/inet.h>
+#include <vector>
+#include <string>
 #include "../BingoGame/binggame.h"
 
 using namespace std;

@@ -23,10 +23,14 @@ int main(int argc, char* argv[])
     const char* logoffRPC = "disconnect;";
     char buffer[1024] = { 0 };
     const char* serverAddress = argv[1];
-    // const int port = atoi(argv[2]);
 
-    bool bConnect = ConnectToServer();
-    // bool bConnect = ConnectToServer(serverAddress, port, sock);
+    /* stoi Function for converting a string to an integer. 
+     * https://www.techiedelight.com/convert-string-to-int-cpp/
+     */
+    const int port = std::stoi(argv[2]);
+
+    // bool bConnect = ConnectToServer();
+    bool bConnect = ConnectToServer(serverAddress, port, sock);
 
     if (bConnect)
     {
@@ -73,7 +77,7 @@ int main(int argc, char* argv[])
     }
 
     // Terminate connection.
-    // close(sock);
+    close(sock);
 
     return 0;
 }
