@@ -1,6 +1,6 @@
 #include <iostream>
 #include <thread>
-#include <future>
+// #include <future>
 
 using namespace std;
 
@@ -23,7 +23,7 @@ void threadFunction1();
 // }; // End of class thread_object
 
 // Part of Example 3
-int asyncFunction ();
+// int asyncFunction ();
 
 /**
  * @brief This program uses the std::thread class provided by C++ for portability.
@@ -64,8 +64,8 @@ int main()
     // t2.join();
 
     // Example 3
-    std::future<int> fut = std::async(asyncFunction);
-    std::cout << "max = " << fut.get() << std::endl;
+    // std::future<int> fut = std::async(asyncFunction);
+    // std::cout << "max = " << fut.get() << std::endl;
 
     return 0;
 }
@@ -90,14 +90,14 @@ void threadFunction1()
  * 
  * @return int 
  */
-int asyncFunction()
-{
-    std::cout << "starting asyncFunction ... " << std::endl;
-    int max = 0;
-    for (int i = 0; i < 100000; ++i)
-    {
-        max += i;
-    }
-    std::cout << " Finished asyncFunction ..." << std::endl;
-    return max;
-}
+// int asyncFunction()
+// {
+//     std::cout << "starting asyncFunction ... " << std::endl;
+//     int max = 0;
+//     for (int i = 0; i < 100000; ++i)
+//     {
+//         max += i;
+//     }
+//     std::cout << " Finished asyncFunction ..." << std::endl;
+//     return max;
+// }
