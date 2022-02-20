@@ -32,10 +32,10 @@ void* myThreadFun(void* vargp)
     sleep(1);
 
     int socket = *(int *) vargp;
-    printf("Printing GeeksQuiz from Thread \n");
+    cout << "Printing GeeksQuiz from Thread \n" << endl;
     RPCServer *rpcImplObj = new RPCServer(socket);
     rpcImplObj->ProcessRPC();   // This will go until client disconnects;
-    printf("Done with Thread");
+    cout << "Done with Thread" << endl;
 
     return NULL;
 
@@ -88,8 +88,8 @@ bool RPCServer::StartServer()
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        perror("\nSocket failed!\n");
+        std::cerr << e.what() << endl;
+        // perror("\nSocket failed!\n");
     } // end try-catch
 
    try
@@ -99,8 +99,8 @@ bool RPCServer::StartServer()
    }
    catch(const std::exception& e)
    {
-       std::cerr << e.what() << '\n';
-       perror("\nsetsockopt\n");
+       std::cerr << e.what() << endl;
+    //    stderr("\nsetsockopt\n");
    } // end try-catch
 
     m_address.sin_family = AF_INET;
@@ -114,8 +114,8 @@ bool RPCServer::StartServer()
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        perror("\nBind failed.\n");
+        std::cerr << e.what() << endl;
+        // perror("\nBind failed.\n");
     } // end try-catch
     
     try
@@ -124,8 +124,8 @@ bool RPCServer::StartServer()
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        perror("\nListen\n");
+        std::cerr << e.what() << endl;
+        // perror("\nListen\n");
     } // end try-catch
     
     return true;
@@ -150,8 +150,8 @@ bool RPCServer::ListenForClient()
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
-            perror("\nAccept\n");
+            std::cerr << e.what() << endl;
+            // perror("\nAccept\n");
         } // end try-catch
 
         // if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
@@ -163,12 +163,13 @@ bool RPCServer::ListenForClient()
         // Launch Thread to Process RPC
         // We will hold the thread ID into an array. Who know's we might want to join on them later
 
-        pthread_t thread_id;
-        printf("Launching Thread\n");
+        // std::thread thread1 (myThreadFun);
+        // (&thread_id, NULL, myThreadFun, (void*)&socket);
+        cout << "Launching Thread" << endl;
         // int socket = m_socket;
-        pthread_create(&thread_id, NULL, myThreadFun, (void*)&socket);
+        // thread_id(&thread_id, NULL, myThreadFun, (void*)&socket);
         // TODO Probably should save thread_id into some type of array
-        // this->ProcessRPC();
+        this->ProcessRPC();
     }
 
     return true;
