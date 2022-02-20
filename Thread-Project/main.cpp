@@ -6,20 +6,20 @@ using namespace std;
 // Part of Example 1
 void threadFunction1(); 
 
-// Part of Example 2
-class thread_object 
-{
-public:
-    void operator()()
-    {
-        int count = 2;
-        for (size_t i = 0; i < count; i++)
-        {
-            cout << "Thread using function"
-                  " object as  callable\n";
-        }
-    }
-}; // End of class thread_object
+// // Part of Example 2
+// class thread_object 
+// {
+// public:
+//     void operator()()
+//     {
+//         int count = 2;
+//         for (size_t i = 0; i < count; i++)
+//         {
+//             cout << "Thread using function"
+//                   " object as  callable\n";
+//         }
+//     }
+// }; // End of class thread_object
 
 // Part of Example 3
 int asyncFunction ();
@@ -44,7 +44,7 @@ int main()
      * 
      * @return thread 
      */
-    thread t1 (threadFunction1);
+    std::thread t1 (threadFunction1);
 
     // Wait for t1 to finish.
     t1.join();
@@ -57,10 +57,10 @@ int main()
      * 
      * @return thread 
      */
-    thread t2 (( thread_object() ));
+    // thread t2 (( thread_object() ));
 
-    // Wait for t2 to finish.
-    t2.join();
+    // // Wait for t2 to finish.
+    // t2.join();
 
     // Example 3
     std::future<int> fut = std::async(asyncFunction);
