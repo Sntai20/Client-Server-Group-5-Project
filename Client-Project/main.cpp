@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
         // TODO:int nlen = strlen(buffer);
         // TODO:buffer[nlen] = 0;   // Put the null terminator
 
-        send(sock, buffer, strlen(buffer) + 1, 0);
+        // TODO:send(sock, buffer, strlen(buffer) + 1, 0);
         // TODO:read(sock, buffer, 1024);
 
         // TODO:read(sock, buffer, 1024);

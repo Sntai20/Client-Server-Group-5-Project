@@ -40,11 +40,11 @@ void ParseTokens(char* buffer, vector<string>& a)
     char* token;
     char* rest = (char*)buffer;
 
-    while ((token = strtok_r(rest, ";", &rest)))
-    {
+    // TODO:while ((token = strtok_r(rest, ";", &rest)))
+    // {
         cout << token << endl;
         a.push_back(token);
-    }
+    // }
 }
 
 /**
