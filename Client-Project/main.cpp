@@ -7,6 +7,7 @@
  */  
 #include "client.cpp"
 
+
 /**
  * @brief This is the entry for the client program.
  * 
@@ -35,38 +36,44 @@ int main(int argc, char* argv[])
     if (bConnect)
     {
         std::cout << "connected" << endl;
-        // strcpy(buffer, connectRPC);
-        // int nlen = strlen(buffer);
-        // buffer[nlen] = 0;   // Put the null terminator
+        strcpy(buffer, connectRPC);
+        int nlen = strlen(buffer);
+        buffer[nlen] = 0;   // Put the null terminator
 
-        // send(sock, buffer, strlen(buffer) + 1, 0);
-        // read(sock, buffer, 1024);
+        send(sock, buffer, strlen(buffer) + 1, 0);
+        read(sock, buffer, 1024);
 
-        // read(sock, buffer, 1024);
-        // cout << "%s\n", buffer) << endl;
+        read(sock, buffer, 1024);
+        cout << buffer << endl;
 
-        // cout << "What is your message for the server? " << endl;
-        // char message[80];
-        // std::cin.getline(message, sizeof message);
-        // send(sock, message, strlen(message) + 1, 0);
+        cout << "What is your message for the server? " << endl;
+        char message[80];
+        std::cin.getline(message, sizeof message);
+        send(sock, message, strlen(message) + 1, 0);
     }
     else
     {
         cout << "\nExit without calling RPC.\n" << endl;
     }
 
-    // Sleep 1 to 10 seconds randomly
-    // int seconds = 1 + (rand() % static_cast<int>(10));
-    // cout << "\nSleeping...\n" << endl;
-    // sleep(seconds);
+    /**
+     * @brief sleep_for
+     * https://www.cplusplus.com/reference/thread/this_thread/sleep_for/
+     */
+
+    // std::this_thread::sleep_for 1 to 10 seconds randomly
+    int seconds = 1 + (rand() % static_cast<int>(10));
+    cout << "\nSleeping...\n" << endl;
+    std::this_thread::sleep_for(std::chrono::seconds(seconds));
+    // std::this_thread::sleep_for ();
 
     // Disconnect Message
     if (bConnect)
     {
-        // strcpy(buffer, logoffRPC);
-        // int nlen = strlen(buffer);
-        // buffer[nlen] = 0;   // Put the null terminator
-        // send(sock, buffer, strlen(buffer) + 1, 0);
+        strcpy(buffer, logoffRPC);
+        int nlen = strlen(buffer);
+        buffer[nlen] = 0;   // Put the null terminator
+        send(sock, buffer, strlen(buffer) + 1, 0);
         // read(sock, buffer, 1024);
 
         cout << "\nDisconnected.\n" << endl;
