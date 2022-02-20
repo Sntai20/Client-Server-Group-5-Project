@@ -24,11 +24,6 @@ public:
 // Part of Example 3
 int asyncFunction ();
 
-// Part of Example 4
-void asyncProducer(std::promise<int> &prom); 
-// Part of Example 4
-void asyncConsumer(std::future<int> &fut); 
-
 /**
  * @brief This program uses the std::thread class provided by C++ for portability.
  * To run this program on Windows, Linux, and Mac the POSIX threads library or 
@@ -71,13 +66,6 @@ int main()
     std::future<int> fut = std::async(asyncFunction);
     std::cout << "max = " << fut.get() << std::endl;
 
-    // Example 4
-    std::promise<int> prom;
-    std::future<int> futureExample4 = prom.get_future();
-    std::async(asyncProducer, std::ref(prom));
-    std::async(asyncConsumer, std::ref(futureExample4));
-    std::cout << "Async Producer-Consumer ended!" << std::endl;
-
     return 0;
 }
 
@@ -111,26 +99,4 @@ int asyncFunction()
     }
     std::cout << " Finished asyncFunction ..." << std::endl;
     return max;
-}
-
-/** Part of Example 4
- * @brief 
- * 
- * @param fut 
- */
-void asyncConsumer(std::future<int> &fut)
-{
-    std::cout << "Got " << fut.get() << " from the producer ... "
-        << std::endl;
-}
-
-/** Part of Example 4
- * @brief 
- * 
- * @param prom 
- */
-void asyncProducer(std::promise<int> &prom)
-{
-    std::cout << " sending 5 to the consumer ... " << std::endl;
-    prom.set_value (5);
 }
