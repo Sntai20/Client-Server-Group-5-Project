@@ -14,7 +14,7 @@
 #include <arpa/inet.h>
 #include <iterator>
 #include <vector>
-#include <string>
+#include <string.h> // std::strtok uses this library.
 #include <algorithm>
 #include <thread>         // std::this_thread::sleep_for
 #include "../Common/socket.h"
