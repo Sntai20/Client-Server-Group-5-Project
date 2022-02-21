@@ -38,13 +38,16 @@ using namespace std;
 void ParseTokens(char* buffer, vector<string>& a)
 {
     char* token;
-    char* rest = (char*)buffer;
-
-    // TODO:while ((token = strtok_r(rest, ";", &rest)))
-    // {
+    string rest{buffer};
+    char const * const delimiter{";"};
+    char * psz_token{strtok(rest.data(), delimiter)};
+    while(nullptr != psz_token)
+    {
+        cout << psz_token << endl;
+        psz_token = strtok(nullptr, delimiter);
         cout << token << endl;
         a.push_back(token);
-    // }
+    }
 }
 
 /**
