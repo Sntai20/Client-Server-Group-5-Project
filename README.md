@@ -1,4 +1,4 @@
-# Client-Server-Group-5-Project
+# Client-Server-Group-5-Project [![CMake](https://github.com/Sntai20/Client-Server-Group-5-Project/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/Sntai20/Client-Server-Group-5-Project/actions/workflows/cmake.yml)
 
 Group 5 is designing a bingo simulator project for milestone 1 and 2. To play the game, the user will need to designate if they want a solo or 2-player experience. Then, the user would supply a comma separated list of 25 numbers between a certain range X (for example, 0 to 50) to "build" a bingo board. The numbers will be checked to see if they are in the correct range. The server will then randomly generate up to X unique numbers in a certain range (same as the range above). If the game is solo player, the server might generate 30-35 numbers. If the game is 2-player, the server might generate up to 50 numbers and the game will end when one player reaches a bingo. the game is 2-player, the server might generate up to 50 numbers and the game will end when one player reaches a bingo.
 
