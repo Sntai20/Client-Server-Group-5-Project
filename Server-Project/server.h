@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file server.h
  * @author Group 5

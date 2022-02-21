@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file client.h
  * @author Group 5

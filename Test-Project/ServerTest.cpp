@@ -31,6 +31,7 @@
 //
 // </TechnicalDetails>
 #include "../Server-Project/server.h"
+#include "../Server-Project/server.cpp"
 #include "gtest/gtest.h"
 
 // Start of ServerTest
@@ -57,13 +58,17 @@ namespace
     // Tests StartServer().
     TEST_F(ServerTest, StartServer) 
     {
-        EXPECT_EQ(0, myServer_.optionValue);
+        bool expectedResult;
+        expectedResult = myServer_.StartServer();
+        EXPECT_EQ(true, expectedResult);
     }
 
     // Tests the ListenForClient() function.
     TEST_F(ServerTest, ListenForClient) 
     {
-        EXPECT_EQ(0, myServer_.optionValue);
+        bool expectedResult;
+        expectedResult = myServer_.ListenForClient();
+        EXPECT_EQ(0, expectedResult);
     }
 
     // Tests my understanding of gtests.
