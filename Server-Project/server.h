@@ -32,12 +32,12 @@ class RPCServer
 {
 public:
     // Constructor
-    RPCServer(const char* serverIP, int port);
+    // RPCServer(const char* serverIP, int port);
 
-    RPCServer(int socket);
+    // RPCServer(int socket);
 
     // Destructor
-    ~RPCServer();
+    // ~RPCServer();
 
     // Creates a server on a Port that was passed in, and creates a socket.
     bool StartServer();
@@ -51,8 +51,14 @@ public:
     // Extracts tokens from a string vector sent by the client.
     void ParseTokens(char* buffer, vector<string>& a);
 
+    bool SetIPAddress(char* serverIP);
+
+    bool SetPort(int port);
+
     // Setups up the Bingo Game.
     BingoGame Bingo;
+
+    int optionValue = 0; // delete me after unit tests are complete.
 
 private:
     int m_rpcCount;

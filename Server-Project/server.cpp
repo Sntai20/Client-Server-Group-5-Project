@@ -33,8 +33,8 @@ void* myThreadFun(void* vargp)
 
     int socket = *(int *) vargp;
     cout << "Printing GeeksQuiz from Thread \n" << endl;
-    RPCServer *rpcImplObj = new RPCServer(socket);
-    rpcImplObj->ProcessRPC();   // This will go until client disconnects;
+    // TODO: RPCServer *rpcImplObj = new RPCServer(socket);
+    // TODO: rpcImplObj->ProcessRPC();   // This will go until client disconnects;
     cout << "Done with Thread" << endl;
 
     return NULL;
@@ -47,28 +47,28 @@ void* myThreadFun(void* vargp)
  * @param serverIP 
  * @param port 
  */
-RPCServer::RPCServer(const char* serverIP, int port)
-{
-    m_rpcCount = 0;
-    m_serverIP = (char*)serverIP;
-    m_port = port;
-};
+// RPCServer::RPCServer(const char* serverIP, int port)
+// {
+//     m_rpcCount = 0;
+//     m_serverIP = (char*)serverIP;
+//     m_port = port;
+// };
 
 /**
  * @brief Construct a new RPCServer::RPCServer object
  * 
  * @param socket 
  */
-RPCServer::RPCServer(int socket)
-{
-    m_socket = socket;
-    m_rpcCount = 0;
-};
+// RPCServer::RPCServer(int socket)
+// {
+//     m_socket = socket;
+//     m_rpcCount = 0;
+// };
 
 /**
  * @brief Destroy the RPCServer::RPCServer object
  */
-RPCServer::~RPCServer() {};
+// RPCServer::~RPCServer() {};
 
 /**
  * @brief This method starts the server with an intialized socket.
@@ -362,5 +362,17 @@ bool RPCServer::Disconnect()
     szBuffer[nlen] = 0;
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
+    return true;
+}
+
+bool RPCServer::SetIPAddress(char* serverIP)
+{
+    m_serverIP = serverIP;
+    return true;
+}
+
+bool RPCServer::SetPort(int port)
+{
+    m_port = port;
     return true;
 }

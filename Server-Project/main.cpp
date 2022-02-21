@@ -17,11 +17,14 @@
  */
 int main(int argc, char* argv[])
 {
-    const char* serverIP = argv[1];
+    char* serverIP = argv[1];
     int port = atoi(argv[2]);
     bool statusOk = true;
 
-    RPCServer* serverObj = new RPCServer(serverIP, port);
+    // RPCServer* serverObj = new RPCServer(serverIP, port);
+    RPCServer* serverObj = new RPCServer();
+    serverObj->SetIPAddress(serverIP);
+    serverObj->SetPort(port);
 
 #if 0
     std::vector<std::string> tokArray;
