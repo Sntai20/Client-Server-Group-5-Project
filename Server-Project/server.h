@@ -16,7 +16,7 @@
 // #include <arpa/inet.h>
 #include <vector>
 #include <string>
-#include "../BingoGame/binggame.h"
+#include "../BingoGame/bingoname.h"
 
 using namespace std;
 

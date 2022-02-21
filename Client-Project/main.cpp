@@ -16,7 +16,7 @@
  */
 int main(int argc, char* argv[])
 {
-    int sock = 0;
+    Client myClient;
     
     const char* connectRPC = "connect;MIKE;MIKE;";
     // TODO: const char* statusRPC = "status;";
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
      * https://www.techiedelight.com/convert-string-to-int-cpp/
      */
     const int port = std::stoi(argv[2]);
-    bool bConnect = ConnectToServer(serverAddress, port, sock);
+    bool bConnect = myClient.ConnectToServer(serverAddress, port);
 
     if (bConnect)
     {
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
     }
 
     // Terminate connection.
-    close(sock);
+    close(myClient.sock);
 
     return 0;
 }

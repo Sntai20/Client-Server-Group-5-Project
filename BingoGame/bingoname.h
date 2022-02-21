@@ -1,5 +1,5 @@
 /**
- * @file BingoGame.h
+ * @file bingogame.h
  * @author Group 5
  * @brief C++ program to demonstrate Socket programming for Bingo game.
  * @version 0.1

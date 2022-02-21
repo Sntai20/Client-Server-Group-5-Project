@@ -5,29 +5,7 @@
  * @version 0.1
  * @date 2022-02-11
  */  
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <iostream>
-#include <arpa/inet.h>
-#include <iterator>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <thread>         // std::this_thread::sleep_for
-#include "../Common/socket.h"
-
-// TODO: Make sure we can remove these.
-// #include <cstdio>
-// #include <sys/socket.h>
-// #include <arpa/inet.h>
-// #include <unistd.h>
-// #include <cstring>
-
-using namespace std;
+#include "client.h"
 
 /**
  * @brief This method is used to parse the tokens sent by the client.
@@ -35,7 +13,7 @@ using namespace std;
  * @param buffer 
  * @param a 
  */
-void ParseTokens(char* buffer, vector<string>& a)
+void Client::ParseTokens(char* buffer, vector<string>& a)
 {
     char* token;
     string rest{buffer};
@@ -59,7 +37,7 @@ void ParseTokens(char* buffer, vector<string>& a)
  * @return true 
  * @return false 
  */
-bool ConnectToServer(const char* serverAddress, int port, int& sock)
+bool Client::ConnectToServer(const char* serverAddress, int port)
 {
     struct sockaddr_in serv_addr;
     try
