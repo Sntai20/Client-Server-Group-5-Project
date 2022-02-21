@@ -1,21 +1,22 @@
 /**
  * @file server.h
  * @author Group 5
- * @brief Server side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @brief Server side C++ 17 program to demonstrate Socket programming for Bingo game.
  * @version 0.1
  * @date 2022-02-11
  */  
-// #include <cstdio>
-// #include <unistd.h>
 // #include <stdio.h>
-// #include <sys/socket.h>
 // #include <stdlib.h>
-// #include <netinet/in.h>
 // #include <string.h>
-// #include <vector>
-// #include <iterator>
-// #include <iostream>
-#include "../BingoGame/binggame.h"
+// #include <unistd.h>
+// #include <sys/types.h>
+// #include <sys/socket.h>
+// #include <netinet/in.h>
+#include <iostream>
+// #include <arpa/inet.h>
+#include <vector>
+#include <string>
+#include "../BingoGame/bingoname.h"
 
 using namespace std;
 

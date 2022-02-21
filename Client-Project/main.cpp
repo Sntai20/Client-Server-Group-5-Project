@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @author Group 5
- * @brief Client side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @brief Client side C++ 17 program to demonstrate Socket programming for Bingo game.
  * @version 0.1
  * @date 2022-02-11
  */  
@@ -16,56 +16,61 @@
  */
 int main(int argc, char* argv[])
 {
-    int sock = 0;
+    Client myClient;
     
     const char* connectRPC = "connect;MIKE;MIKE;";
-    //const char* statusRPC = "status;";
+    // TODO: const char* statusRPC = "status;";
     const char* logoffRPC = "disconnect;";
     char buffer[1024] = { 0 };
     const char* serverAddress = argv[1];
-    // const int port = atoi(argv[2]);
 
-    bool bConnect = ConnectToServer();
-    // bool bConnect = ConnectToServer(serverAddress, port, sock);
+    /* stoi Function for converting a string to an integer. 
+     * https://www.techiedelight.com/convert-string-to-int-cpp/
+     */
+    const int port = std::stoi(argv[2]);
+    bool bConnect = myClient.ConnectToServer(serverAddress, port);
 
     if (bConnect)
     {
         std::cout << "connected" << endl;
-        // strcpy(buffer, connectRPC);
-        // int nlen = strlen(buffer);
-        // buffer[nlen] = 0;   // Put the null terminator
+        // TODO: strcpy(buffer, connectRPC);
+        // TODO:int nlen = strlen(buffer);
+        // TODO:buffer[nlen] = 0;   // Put the null terminator
 
-        // send(sock, buffer, strlen(buffer) + 1, 0);
-        // read(sock, buffer, 1024);
+        // TODO:send(sock, buffer, strlen(buffer) + 1, 0);
+        // TODO:read(sock, buffer, 1024);
 
-        // read(sock, buffer, 1024);
-        // cout << "%s\n", buffer) << endl;
+        // TODO:read(sock, buffer, 1024);
+        cout << buffer << endl;
 
-        // cout << "What is your message for the server? " << endl;
-        // char message[80];
-        // std::cin.getline(message, sizeof message);
-        // send(sock, message, strlen(message) + 1, 0);
+        cout << "What is your message for the server? " << endl;
+        char message[80];
+        std::cin.getline(message, sizeof message);
+        // TODO:send(sock, message, strlen(message) + 1, 0);
     }
     else
     {
-        cout << "\nExit without calling RPC.\n" << endl;
+        cout << "\nExit without calling RPC." << endl;
     }
 
-    // Sleep 1 to 10 seconds randomly
-    // int seconds = 1 + (rand() % static_cast<int>(10));
-    // cout << "\nSleeping...\n" << endl;
-    // sleep(seconds);
+    /**
+     * @brief sleep_for 1 to 10 seconds randomly
+     * https://www.cplusplus.com/reference/thread/this_thread/sleep_for/
+     */ 
+    int seconds = 1 + (rand() % static_cast<int>(10));
+    cout << "\nSleeping..." << endl;
+    std::this_thread::sleep_for(std::chrono::seconds(seconds));
 
     // Disconnect Message
     if (bConnect)
     {
-        // strcpy(buffer, logoffRPC);
-        // int nlen = strlen(buffer);
-        // buffer[nlen] = 0;   // Put the null terminator
-        // send(sock, buffer, strlen(buffer) + 1, 0);
-        // read(sock, buffer, 1024);
+        // TODO:strcpy(buffer, logoffRPC);
+        // TODO:int nlen = strlen(buffer);
+        // TODO:buffer[nlen] = 0;   // Put the null terminator
+        // TODO:send(sock, buffer, strlen(buffer) + 1, 0);
+        // TODO: read(sock, buffer, 1024);
 
-        cout << "\nDisconnected.\n" << endl;
+        cout << "\nDisconnected." << endl;
     }
     else
     {
@@ -73,7 +78,7 @@ int main(int argc, char* argv[])
     }
 
     // Terminate connection.
-    // close(sock);
+    close(myClient.sock);
 
     return 0;
 }

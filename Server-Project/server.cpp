@@ -1,7 +1,7 @@
 /**
  * @file server.cpp
  * @author Group 5
- * @brief Server side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @brief Server side C++ 17 program to demonstrate Socket programming for Bingo game.
  * @version 0.1
  * @date 2022-02-11
  */  
@@ -89,7 +89,7 @@ bool RPCServer::StartServer()
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
-        // perror("\nSocket failed!\n");
+        // TODO: perror("\nSocket failed!\n");
     } // end try-catch
 
    try
@@ -100,7 +100,7 @@ bool RPCServer::StartServer()
    catch(const std::exception& e)
    {
        std::cerr << e.what() << endl;
-    //    stderr("\nsetsockopt\n");
+       // TODOL stderr("\nsetsockopt\n");
    } // end try-catch
 
     m_address.sin_family = AF_INET;
@@ -115,7 +115,7 @@ bool RPCServer::StartServer()
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
-        // perror("\nBind failed.\n");
+        // TODO: perror("\nBind failed.\n");
     } // end try-catch
     
     try
@@ -125,7 +125,7 @@ bool RPCServer::StartServer()
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
-        // perror("\nListen\n");
+        // TODO: perror("\nListen\n");
     } // end try-catch
     
     return true;
@@ -139,8 +139,8 @@ bool RPCServer::StartServer()
  */
 bool RPCServer::ListenForClient()
 {
+    // TODO: Add multi threading to the listener.
     int addrlen = sizeof(m_address);
-    // this->ProcessRPC();
 
     for (;;) // Endless loop. Probably good to have some type of controlled shutdown
     {
@@ -188,7 +188,7 @@ void RPCServer::ParseTokens(char* buffer, std::vector<std::string>& a)
 
     while ((token = strtok_r(rest, ";", &rest)))
     {
-        //printf("%s\n", token);
+        cout << token << endl;
         a.push_back(token);
     }
 }
@@ -215,7 +215,7 @@ bool RPCServer::ProcessRPC()
         // Should be blocked when a new RPC has not called us yet
         if ((valread = read(this->m_socket, buffer, sizeof(buffer))) <= 0)
         {
-            //printf("\nErrno is %d\n", errno);
+            // TODO: printf("\nErrno is %d\n", errno);
             break;
         }
         //printf("%s\n", buffer);
@@ -223,7 +223,7 @@ bool RPCServer::ProcessRPC()
         arrayTokens.clear();
         this->ParseTokens(buffer, arrayTokens);
 
-        /*
+        /* // TODO:
         // Enumerate through the tokens. The first token is always the
         // specific RPC
         for (vector<string>::iterator t = arrayTokens.begin(); t !=
@@ -306,6 +306,7 @@ bool RPCServer::ProcessRPC()
  */
 bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
 {
+    // TODO: Authentication
     const int USERNAMETOKEN = 1;
     const int PASSWORDTOKEN = 2;
 

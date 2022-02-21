@@ -1,5 +1,4 @@
 #include "socket.h"
-// #include <stdio.h>
 
 Socket::Socket(int domain, int type, int protocal)
 {
@@ -21,8 +20,8 @@ bool Socket::CreateSocket(int domain, int type, int protocal)
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        // std::cerr << "\nSocket failed! open socket error\n" << endl;
+        std::cerr << e.what() << endl;
+        // TODO: std::cerr << "\nSocket failed! open socket error\n" << endl;
     } // end try-catch
     
     try
@@ -32,8 +31,8 @@ bool Socket::CreateSocket(int domain, int type, int protocal)
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
-        // std::cerr << "\nsetsockopt\n" << endl;
+        std::cerr << e.what() << endl;
+        // TODO: std::cerr << "\nsetsockopt\n" << endl;
     } // end try-catch
 
     return 0;
