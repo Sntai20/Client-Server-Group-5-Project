@@ -16,7 +16,7 @@
 #include <vector>
 #include <string.h> // std::strtok uses this library.
 #include <algorithm>
-#include <thread>         // std::this_thread::sleep_for
+#include <thread> // std::this_thread::sleep_for.
 #include "../Common/socket.h"
 
 using namespace std;
