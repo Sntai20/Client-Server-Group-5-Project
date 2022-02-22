@@ -32,12 +32,9 @@ using namespace std;
 class RPCServer
 {
 public:
-    // Constructor
-    // RPCServer(const char* serverIP, int port);
+    // Empty default Constructor is not recommended.
 
-    // RPCServer(int socket);
-
-    // Destructor
+    // Destructor breaks the unit test.
     // ~RPCServer();
 
     // Creates a server on a Port that was passed in, and creates a socket.
@@ -50,16 +47,21 @@ public:
     bool ProcessRPC();
 
     // Extracts tokens from a string vector sent by the client.
-    void ParseTokens(char* buffer, vector<string>& a);
+    // void ParseTokens(char* buffer, vector<string>& a);
 
     bool SetIPAddress(char* serverIP);
 
     bool SetPort(int port);
 
+    bool GetServerStatus();
+    bool SetServerStatus(bool onOrOff);
+
+    int GetSocket();
+
+    int GetRPCCount();
+
     // Setups up the Bingo Game.
     BingoGame Bingo;
-
-    int optionValue = 0; // delete me after unit tests are complete.
 
 private:
     int m_rpcCount;
@@ -68,6 +70,7 @@ private:
     char* m_serverIP;
     int m_port;
     struct sockaddr_in m_address;
+    bool m_ServerStatus = false;
 
     // First one in this function should be a connect, and it
     // will continue try to process RPC's until a Disconnect happens

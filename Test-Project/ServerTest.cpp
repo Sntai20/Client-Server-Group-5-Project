@@ -34,6 +34,7 @@
 #include "../Server-Project/server.cpp"
 #include "gtest/gtest.h"
 
+
 // Start of ServerTest
 namespace 
 {
@@ -41,9 +42,8 @@ namespace
     class ServerTest : public testing::Test 
     {
         protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
-
         // Declares the variables your tests want to use.
-		RPCServer myServer_;
+		RPCServer* myServer_ = new RPCServer();
     };
 
     // When you have a test fixture, you define a test using TEST_F instead of TEST.
@@ -59,33 +59,57 @@ namespace
     TEST_F(ServerTest, StartServer) 
     {
         bool expectedResult;
-        expectedResult = myServer_.StartServer();
+        expectedResult = myServer_->StartServer();
         EXPECT_EQ(true, expectedResult);
+    }
+
+    // Tests GetServerStatus().
+    TEST_F(ServerTest, GetServerStatus) 
+    {
+        bool expectedResult;
+        myServer_->StartServer();
+        expectedResult = myServer_->GetServerStatus();
+        EXPECT_EQ(true, expectedResult);
+    }
+
+    // Tests GetRPCCount().
+    TEST_F(ServerTest, GetRPCCount) 
+    {
+        bool expectedResult;
+        expectedResult = myServer_->GetRPCCount();
+        EXPECT_EQ(false, expectedResult);
     }
 
     // Tests the ListenForClient() function.
     TEST_F(ServerTest, ListenForClient) 
     {
         bool expectedResult;
-        expectedResult = myServer_.ListenForClient();
-        EXPECT_EQ(0, expectedResult);
+        expectedResult = myServer_->ListenForClient();
+        EXPECT_EQ(true, expectedResult);
+        
+        // Terminate connection.
+        close(myServer_->GetSocket());
     }
 
-    // Tests my understanding of gtests.
+    // Tests the ProcessRPC function.
     TEST_F(ServerTest, ProcessRPC) 
     {
-		EXPECT_EQ(0, myServer_.optionValue);
+        bool expectedResult;
+        expectedResult = myServer_->ProcessRPC();
+		EXPECT_EQ(true, expectedResult);
 	}
 
     // Tests my understanding of gtests.
-    TEST_F(ServerTest, ParseTokens) 
-    {
-		EXPECT_EQ(0, myServer_.optionValue);
-	}
-    
-    // Tests my understanding of gtests.
-    TEST_F(ServerTest, optionValue) 
-    {
-		EXPECT_EQ(0, myServer_.optionValue);
-	}
+    // TEST_F(ServerTest, ParseTokens) 
+    // {
+    //     std::vector<std::string> arrayTokens;
+    //     // const char* connectRPC = "connect;MIKE;MIKE;";
+    //     // char buffer[1024] = { 0 };
+    //     char buffer{"connect;MIKE;MIKE;"};
+    //     // strcpy_s(buffer, 1024, connectRPC);
+
+    //     myServer_.ParseTokens(buffer, arrayTokens);
+        
+	// 	EXPECT_EQ("MIKE", arrayTokens.end);
+	// }
 }  // End of ServerTest

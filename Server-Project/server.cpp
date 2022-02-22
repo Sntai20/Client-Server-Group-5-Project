@@ -41,6 +41,11 @@ void* myThreadFun(void* vargp)
 
 }
 
+// RPCServer::RPCServer()
+// {
+//     RPCServer(const char* serverIP, int port);
+// };
+
 /**
  * @brief Construct a new RPCServer::RPCServer object
  * 
@@ -79,7 +84,6 @@ void* myThreadFun(void* vargp)
 bool RPCServer::StartServer()
 {
     int opt = 1;
-    const int BACKLOG = 10;
     
     try
     {
@@ -89,7 +93,6 @@ bool RPCServer::StartServer()
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
-        // TODO: perror("\nSocket failed!\n");
     } // end try-catch
 
    try
@@ -100,7 +103,6 @@ bool RPCServer::StartServer()
    catch(const std::exception& e)
    {
        std::cerr << e.what() << endl;
-       // TODOL stderr("\nsetsockopt\n");
    } // end try-catch
 
     m_address.sin_family = AF_INET;
@@ -117,16 +119,8 @@ bool RPCServer::StartServer()
         std::cerr << e.what() << endl;
         // TODO: perror("\nBind failed.\n");
     } // end try-catch
-    
-    try
-    {
-        listen(m_server_fd, BACKLOG);
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << endl;
-        // TODO: perror("\nListen\n");
-    } // end try-catch
+
+    this->SetServerStatus(true);
     
     return true;
 }
@@ -139,39 +133,52 @@ bool RPCServer::StartServer()
  */
 bool RPCServer::ListenForClient()
 {
-    // TODO: Add multi threading to the listener.
-    int addrlen = sizeof(m_address);
-
-    for (;;) // Endless loop. Probably good to have some type of controlled shutdown
+    const int BACKLOG = 10;
+    
+    try
     {
-        try
-        {
-            (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
-        }
-        catch(const std::exception& e)
-        {
-            std::cerr << e.what() << endl;
-            // perror("\nAccept\n");
-        } // end try-catch
-
-        // if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
-        // {
-        //     perror("accept");
-        //     exit(EXIT_FAILURE);
-        // }
-
-        // Launch Thread to Process RPC
-        // We will hold the thread ID into an array. Who know's we might want to join on them later
-
-        // std::thread thread1 (myThreadFun);
-        // (&thread_id, NULL, myThreadFun, (void*)&socket);
-        cout << "Launching Thread" << endl;
-        // int socket = m_socket;
-        // thread_id(&thread_id, NULL, myThreadFun, (void*)&socket);
-        // TODO Probably should save thread_id into some type of array
-        this->ProcessRPC();
+        listen(m_server_fd, BACKLOG);
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << endl;
+        // TODO: perror("\nListen\n");
+    } // end try-catch
 
+    // TODO: Add multi threading to the listener.
+    // int addrlen = sizeof(m_address);
+    // try
+    //     {
+    //         (m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
+    //     }
+    //     catch(const std::exception& e)
+    //     {
+    //         std::cerr << e.what() << endl;
+    //         // perror("\nAccept\n");
+    //     } // end try-catch
+
+    // for (;;) // Endless loop. Probably good to have some type of controlled shutdown
+    // {
+        
+
+    //     // if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen)) < 0)
+    //     // {
+    //     //     perror("accept");
+    //     //     exit(EXIT_FAILURE);
+    //     // }
+
+    //     // Launch Thread to Process RPC
+    //     // We will hold the thread ID into an array. Who know's we might want to join on them later
+
+    //     // std::thread thread1 (myThreadFun);
+    //     // (&thread_id, NULL, myThreadFun, (void*)&socket);
+    //     cout << "Launching Thread" << endl;
+    //     // int socket = m_socket;
+    //     // thread_id(&thread_id, NULL, myThreadFun, (void*)&socket);
+    //     // TODO Probably should save thread_id into some type of array
+        
+    // }
+    // this->ProcessRPC();
     return true;
 }
 
@@ -181,17 +188,38 @@ bool RPCServer::ListenForClient()
  * @param buffer 
  * @param a 
  */
-void RPCServer::ParseTokens(char* buffer, std::vector<std::string>& a)
-{
-    char* token;
-    char* rest = (char*)buffer;
+// void RPCServer::ParseTokens(char* buffer, std::vector<std::string>& arrayToken)
+// {
+//     char* token;
+//     char* rest = (char*)buffer;
 
-    while ((token = strtok_r(rest, ";", &rest)))
-    {
-        cout << token << endl;
-        a.push_back(token);
-    }
-}
+//     while ((token = strtok_r(rest, ";", &rest)))
+//     {
+//         cout << token << endl;
+//         arrayToken.push_back(token);
+//     }
+// }
+
+/**
+ * @brief This method is used to parse the tokens sent by the client.
+ * 
+ * @param buffer 
+ * @param a 
+ */
+// void RPCServer::ParseTokens(char* buffer, vector<string>& a)
+// {
+//     char* token;
+//     string rest{buffer};
+//     char const * const delimiter{";"};
+//     char * psz_token{strtok(rest.data(), delimiter)};
+//     while(nullptr != psz_token)
+//     {
+//         cout << psz_token << endl;
+//         psz_token = strtok(nullptr, delimiter);
+//         cout << token << endl;
+//         a.push_back(token);
+//     }
+// }
 
 /**
  * @brief This method is used to process RPCs from a client.
@@ -221,7 +249,7 @@ bool RPCServer::ProcessRPC()
         //printf("%s\n", buffer);
 
         arrayTokens.clear();
-        this->ParseTokens(buffer, arrayTokens);
+        // this->ParseTokens(buffer, arrayTokens);
 
         /* // TODO:
         // Enumerate through the tokens. The first token is always the
@@ -251,23 +279,23 @@ bool RPCServer::ProcessRPC()
 
             // Call hard-coded RPC functions with set values until they are implemented
             // After client is connected, Set the board
-            while (!Bingo.setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
-            {
-                // Board not succesfully set: prompt user for new input (mandatory valid input required)
-            }
+            // while (!Bingo.setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
+            // {
+            //     // Board not succesfully set: prompt user for new input (mandatory valid input required)
+            // }
             
-            // Board is marked if the current number in the server is valid
-            Bingo.markBoard();
+            // // Board is marked if the current number in the server is valid
+            // Bingo.markBoard();
 
-            while (!Bingo.setMaxNum("5")) 
-            {
-                // max num not succesfully set: prompt user for new input (mandatory valid input required)
-            }
+            // while (!Bingo.setMaxNum("5")) 
+            // {
+            //     // max num not succesfully set: prompt user for new input (mandatory valid input required)
+            // }
 
-            while (!Bingo.setTime("5")) 
-            {
-                // Time not succesfully set: prompt user for new input (mandatory valid input required)
-            }
+            // while (!Bingo.setTime("5")) 
+            // {
+            //     // Time not succesfully set: prompt user for new input (mandatory valid input required)
+            // }
 
             // Get the client response
             // TODO: Replace with c++ version. read(this->m_socket, buffer, sizeof(buffer));
@@ -343,6 +371,7 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
  */
 bool RPCServer::StatusRPC()
 {
+    
     // TODO: Implement.
     return true;
 }
@@ -375,4 +404,24 @@ bool RPCServer::SetPort(int port)
 {
     m_port = port;
     return true;
+}
+
+bool RPCServer::GetServerStatus(){
+    return this->m_ServerStatus;
+}
+
+bool RPCServer::SetServerStatus(bool onOrOff){
+    this->m_ServerStatus = onOrOff;
+    return true;
+}
+
+int RPCServer::GetSocket()
+{
+    return this->m_socket;
+}
+
+int RPCServer::GetRPCCount()
+{
+    return this->m_rpcCount;
+    
 }
