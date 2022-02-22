@@ -23,58 +23,20 @@ using namespace std;
 class RPCServer
 {
 public:
-    // Empty default Constructor is not recommended.
-    RPCServer();
-
-    // Destructor breaks the unit test.
-    // ~RPCServer();
-
-    // Creates a server on a Port that was passed in, and creates a socket.
-    bool StartServer();
-
-    // Accepts a new connection by listening on it's address.
-    bool ListenForClient();
-
-    // Examines the buffer and essentially controls connect/disconnect/status.
-    bool ProcessRPC();
-
-    /**
-     * @brief Extracts tokens from a string vector sent by the client.
-     * 
-     * @param buffer 
-     * @param a 
-     */
-    // void ParseTokens(char* buffer, vector<string>& a);
-
-    /**
-     * @brief The IP addressed assigned to the server.
-     * 
-     * @param serverIP 
-     * @return true 
-     * @return false 
-     */
+    RPCServer(); // Empty default Constructor is not recommended.
+    // ~RPCServer(); Destructor breaks the unit test.
+    bool StartServer(); // Creates a server on a Port that was passed in, and creates a socket.
+    bool ListenForClient(); // Accepts a new connection by listening on it's address.
+    bool ProcessRPC(); // Examines the buffer and essentially controls connect/disconnect/status.
+    // void ParseTokens(char* buffer, vector<string>& a); // Extracts tokens from a string vector sent by the client.
     bool SetIPAddress(char* serverIP);
-
-    /**
-     * @brief Set the destination port used to listen on.
-     * 
-     * @param port 
-     * @return true 
-     * @return false 
-     */
     bool SetPort(int port);
-
     bool GetServerStatus();
     bool SetServerStatus(bool onOrOff);
-
     int GetSocket();
-
     int GetRPCCount();
-
-    // Setups up the Bingo Game.
-    BingoGame Bingo;
-
-    Socket clientServerConnection;
+    BingoGame Bingo; // Abstracts the Bingo Game.
+    Socket clientServerConnection; // Abstracts the socket connection.
 
 private:
     int m_rpcCount;

@@ -161,7 +161,7 @@ bool RPCServer::ListenForClient()
 
 /**
  * @brief This method is used to parse the tokens sent by the client.
- * 
+ * Extracts tokens from a string vector sent by the client.
  * @param buffer 
  * @param a 
  */
@@ -284,6 +284,65 @@ bool RPCServer::ProcessRPC()
 }
 
 /**
+ * @brief This method provides the RPC status.
+ * 
+ * @return true 
+ * @return false 
+ */
+bool RPCServer::StatusRPC()
+{
+    
+    // TODO: Implement.
+    return true;
+}
+
+/**
+* @brief The IP addressed assigned to the server.
+* 
+* @param serverIP 
+* @return true 
+* @return false 
+*/
+bool RPCServer::SetIPAddress(char* serverIP)
+{
+    m_serverIP = serverIP;
+    return true;
+}
+
+/**
+ * @brief Set the destination port used to listen on.
+ * 
+ * @param port 
+ * @return true 
+ * @return false 
+ */
+bool RPCServer::SetPort(int port)
+{
+    m_port = port;
+    return true;
+}
+
+bool RPCServer::GetServerStatus(){
+    return this->m_ServerStatus;
+}
+
+bool RPCServer::SetServerStatus(bool onOrOff){
+    this->m_ServerStatus = onOrOff;
+    return true;
+}
+
+int RPCServer::GetSocket()
+{
+    return this->m_socket;
+}
+
+int RPCServer::GetRPCCount()
+{
+    return this->m_rpcCount;
+    
+}
+
+/**
  * @brief This method is used to connect and authenticate 
  * the incomming requests.
  * 
@@ -323,19 +382,6 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
 }
 
 /**
- * @brief This method provides the RPC status.
- * 
- * @return true 
- * @return false 
- */
-bool RPCServer::StatusRPC()
-{
-    
-    // TODO: Implement.
-    return true;
-}
-
-/**
  * @brief This method is used to disconnect the connection.
  * 
  * @return true 
@@ -351,36 +397,4 @@ bool RPCServer::Disconnect()
     send(this->m_socket, szBuffer, strlen(szBuffer) + 1, 0);
 
     return true;
-}
-
-bool RPCServer::SetIPAddress(char* serverIP)
-{
-    m_serverIP = serverIP;
-    return true;
-}
-
-bool RPCServer::SetPort(int port)
-{
-    m_port = port;
-    return true;
-}
-
-bool RPCServer::GetServerStatus(){
-    return this->m_ServerStatus;
-}
-
-bool RPCServer::SetServerStatus(bool onOrOff){
-    this->m_ServerStatus = onOrOff;
-    return true;
-}
-
-int RPCServer::GetSocket()
-{
-    return this->m_socket;
-}
-
-int RPCServer::GetRPCCount()
-{
-    return this->m_rpcCount;
-    
 }
