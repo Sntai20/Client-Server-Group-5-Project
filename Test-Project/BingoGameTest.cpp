@@ -1,4 +1,4 @@
-#include "../BingoGame/bingoname.h"
+#include "../BingoGame/bingogame.h"
 #include "gtest/gtest.h"
 
 // Start of BingoGameTest

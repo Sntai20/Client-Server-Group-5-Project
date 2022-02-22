@@ -11,7 +11,7 @@
 #include <string>
 #include <map>
 #include "../Common/socket.cpp"
-#include "../BingoGame/bingoname.h"
+#include "../BingoGame/bingogame.h"
 
 using namespace std;
 
