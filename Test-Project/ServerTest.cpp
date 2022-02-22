@@ -80,8 +80,8 @@ namespace
         expectedResult = myServer_->ListenForClient();
         EXPECT_EQ(true, expectedResult);
         
-        // Terminate connection.
-        close(myServer_->GetSocket());
+        close(myServer_->GetSocket()); // Close connection.
+        close(myServer_->clientServerConnection.SocketFileDescriptor); // Close handle.
     }
 
     // Tests the ProcessRPC function.

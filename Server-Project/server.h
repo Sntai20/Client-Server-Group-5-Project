@@ -41,7 +41,7 @@ public:
 private:
     int m_rpcCount;
     int m_server_fd;
-    int m_socket;
+    int incomingSock;
     char* m_serverIP;
     int m_port;
     struct sockaddr_in m_address;
