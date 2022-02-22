@@ -91,10 +91,27 @@ bool RPCServer::ProcessRPC()
 {
     cout << "Process all the RPCs" << endl;
     // Enumerate through the tokens. The first token is always the specific RPC
-    vector<string> data = { "connect", "disconnect", "status", "setBoard", "markBoard", "setTime", "setMaxNum" };
-    for (vector<string>::iterator t=data.begin(); t!=data.end(); ++t) 
+    // vector<string> data = { "connect", "disconnect", "status", "setBoard", "markBoard", "setTime", "setMaxNum" };
+    // for (vector<string>::iterator t=data.begin(); t!=data.end(); ++t) 
+    // {
+    //     cout<<*t<<endl;
+    // }
+
+    // Create a map of three (strings, int) pairs
+    std::map<std::string, int> rpcTable 
+    { 
+        {"connect", 10}, 
+        {"disconnect", 15}, 
+        {"status", 20}, 
+        {"markBoard", 25}, 
+        {"setTime", 30}, 
+        {"setMaxNum", 35} 
+    };
+    
+    // Enumerate through the tokens. The first token is always the specific RPC
+    for (auto const& [key, val] : rpcTable)
     {
-        cout<<*t<<endl;
+        std::cout << key << ':' << val << std::endl;
     }
 
     return true;
