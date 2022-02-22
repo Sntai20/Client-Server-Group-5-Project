@@ -6,7 +6,9 @@ Socket::Socket(int domain, int type, int protocal)
     CreateSocket(domain, type, protocal);
 }
 
-Socket::~Socket(){}
+Socket::Socket(){
+    Socket::optionValue = 1;
+}
 
 bool Socket::CreateSocket(int domain, int type, int protocal)
 {
@@ -21,7 +23,7 @@ bool Socket::CreateSocket(int domain, int type, int protocal)
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
-        // TODO: std::cerr << "\nSocket failed! open socket error\n" << endl;
+        cout << "\nSocket failed! open socket error" << endl;
     } // end try-catch
     
     try
@@ -32,28 +34,8 @@ bool Socket::CreateSocket(int domain, int type, int protocal)
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
-        // TODO: std::cerr << "\nsetsockopt\n" << endl;
+        cout << "\nsetsockopt" << endl;
     } // end try-catch
 
     return 0;
-}
-
-// Returns the current counter value, and increments it.
-int Socket::Increment() 
-{
-    return counter_++;
-}
-
-// Returns the current counter value, and decrements it.
-// counter can not be less than 0, return 0 in this case
-int Socket::Decrement() 
-{
-    if (counter_ == 0) 
-    {
-        return counter_;
-    }
-    else 
-    {
-        return counter_--;
-    }
 }

@@ -41,34 +41,14 @@ void* myThreadFun(void* vargp)
 
 }
 
-// RPCServer::RPCServer()
-// {
-//     RPCServer(const char* serverIP, int port);
-// };
-
 /**
  * @brief Construct a new RPCServer::RPCServer object
  * 
- * @param serverIP 
- * @param port 
  */
-// RPCServer::RPCServer(const char* serverIP, int port)
-// {
-//     m_rpcCount = 0;
-//     m_serverIP = (char*)serverIP;
-//     m_port = port;
-// };
-
-/**
- * @brief Construct a new RPCServer::RPCServer object
- * 
- * @param socket 
- */
-// RPCServer::RPCServer(int socket)
-// {
-//     m_socket = socket;
-//     m_rpcCount = 0;
-// };
+RPCServer::RPCServer()
+{
+    m_rpcCount = 0;
+};
 
 /**
  * @brief Destroy the RPCServer::RPCServer object
@@ -83,41 +63,20 @@ void* myThreadFun(void* vargp)
  */
 bool RPCServer::StartServer()
 {
-    int opt = 1;
-    
-    try
-    {
-        // Creating socket file descriptor
-        (m_server_fd = socket(AF_INET, SOCK_STREAM, 0));
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << endl;
-    } // end try-catch
-
-   try
-   {
-       // Forcefully attaching socket to the port
-       setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
-   }
-   catch(const std::exception& e)
-   {
-       std::cerr << e.what() << endl;
-   } // end try-catch
-
     m_address.sin_family = AF_INET;
     m_address.sin_addr.s_addr = INADDR_ANY;
     m_address.sin_port = htons(m_port);
-
+    
     try
     {
+        clientServerConnection.CreateSocket(m_address.sin_family, SOCK_STREAM, 0);
         // Forcefully attaching socket to the port 8080
-        bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address));
+        bind(clientServerConnection.SocketFileDescriptor, (struct sockaddr*)&m_address, sizeof(m_address));
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
-        // TODO: perror("\nBind failed.\n");
+        cout << "\nBind failed." << endl;
     } // end try-catch
 
     this->SetServerStatus(true);

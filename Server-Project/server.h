@@ -6,17 +6,10 @@
  * @version 0.1
  * @date 2022-02-11
  */  
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include <unistd.h>
-// #include <sys/types.h>
-// #include <sys/socket.h>
-// #include <netinet/in.h>
 #include <iostream>
-// #include <arpa/inet.h>
 #include <vector>
 #include <string>
+#include "../Common/socket.cpp"
 #include "../BingoGame/bingoname.h"
 
 using namespace std;
@@ -25,14 +18,13 @@ using namespace std;
  * @brief This RPCServer class contains all the methods to use the server, 
  * including the RPCs.
  * 
- * @param serverIP The IP addressed assigned to the server.
- * @param port The destination port used to listen on.
  * @return An instance of an RPCServer.
  */
 class RPCServer
 {
 public:
     // Empty default Constructor is not recommended.
+    RPCServer();
 
     // Destructor breaks the unit test.
     // ~RPCServer();
@@ -46,11 +38,30 @@ public:
     // Examines the buffer and essentially controls connect/disconnect/status.
     bool ProcessRPC();
 
-    // Extracts tokens from a string vector sent by the client.
+    /**
+     * @brief Extracts tokens from a string vector sent by the client.
+     * 
+     * @param buffer 
+     * @param a 
+     */
     // void ParseTokens(char* buffer, vector<string>& a);
 
+    /**
+     * @brief The IP addressed assigned to the server.
+     * 
+     * @param serverIP 
+     * @return true 
+     * @return false 
+     */
     bool SetIPAddress(char* serverIP);
 
+    /**
+     * @brief Set the destination port used to listen on.
+     * 
+     * @param port 
+     * @return true 
+     * @return false 
+     */
     bool SetPort(int port);
 
     bool GetServerStatus();
@@ -62,6 +73,8 @@ public:
 
     // Setups up the Bingo Game.
     BingoGame Bingo;
+
+    Socket clientServerConnection;
 
 private:
     int m_rpcCount;

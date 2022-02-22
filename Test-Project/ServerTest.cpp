@@ -48,13 +48,6 @@ namespace
 
     // When you have a test fixture, you define a test using TEST_F instead of TEST.
 
-    // Tests the default c'tor.
-    // TEST_F(ServerTest, DefaultConstructor) 
-    // {
-    //     // You can access data in the test fixture here.
-    //     EXPECT_EQ(0, myServer_.optionValue);
-    // }
-
     // Tests StartServer().
     TEST_F(ServerTest, StartServer) 
     {
