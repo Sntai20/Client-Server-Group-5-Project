@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file bingogame.h
  * @author Group 5

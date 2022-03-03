@@ -14,3 +14,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add source to this project's executable.
 add_executable (Server "main.cpp")
+
+# Add pthread
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries("Server" PRIVATE Threads::Threads)

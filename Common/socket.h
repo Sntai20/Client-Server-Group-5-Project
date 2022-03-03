@@ -14,10 +14,7 @@ using namespace std;
 class Socket
 {
 public:
-
-    // Creates a counter that starts at 0.
-    Socket() : counter_(0) {}
-
+    Socket();
     // Returns an intialized socket.
     Socket(int domain, int type, int protocal);
 
@@ -29,14 +26,6 @@ public:
 
     // Returns 0 if the socket was created, otherwise the return value is 1.
     bool CreateSocket(int domain, int type, int protocal);
-    int optionValue = 0;
-
-    // Returns the current counter value, and increments it.
-    int Increment();
-
-    // Returns the current counter value, and decrements it.
-    int Decrement();
-
+    int optionValue;
 private:
-    int counter_;
 };

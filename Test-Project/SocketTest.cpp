@@ -17,7 +17,7 @@ namespace
     // Tests the default optionValue.
     TEST_F(SocketTest, optionValue) 
     {
-        int expectedResult = 0;
+        int expectedResult = 1;
         EXPECT_EQ(mySocket_.optionValue, expectedResult);
     }
 } // End of SocketTest

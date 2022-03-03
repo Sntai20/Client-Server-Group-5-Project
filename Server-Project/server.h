@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file server.h
  * @author Group 5
@@ -5,18 +6,13 @@
  * @version 0.1
  * @date 2022-02-11
  */  
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include <unistd.h>
-// #include <sys/types.h>
-// #include <sys/socket.h>
-// #include <netinet/in.h>
 #include <iostream>
-// #include <arpa/inet.h>
 #include <vector>
 #include <string>
-#include "../BingoGame/bingoname.h"
+#include <map>
+#include "../Common/socket.cpp"
+#include "../BingoGame/bingogame.h"
+#include <pthread.h> 
 
 using namespace std;
 
@@ -24,43 +20,35 @@ using namespace std;
  * @brief This RPCServer class contains all the methods to use the server, 
  * including the RPCs.
  * 
- * @param serverIP The IP addressed assigned to the server.
- * @param port The destination port used to listen on.
  * @return An instance of an RPCServer.
  */
 class RPCServer
 {
 public:
-    // Constructor
-    RPCServer(const char* serverIP, int port);
-
-    RPCServer(int socket);
-
-    // Destructor
-    ~RPCServer();
-
-    // Creates a server on a Port that was passed in, and creates a socket.
-    bool StartServer();
-
-    // Accepts a new connection by listening on it's address.
-    bool ListenForClient();
-
-    // Examines the buffer and essentially controls connect/disconnect/status.
-    bool ProcessRPC();
-
-    // Extracts tokens from a string vector sent by the client.
-    void ParseTokens(char* buffer, vector<string>& a);
-
-    // Setups up the Bingo Game.
-    BingoGame Bingo;
+    RPCServer(); // Empty default Constructor is not recommended.
+    // ~RPCServer(); Destructor breaks the unit test.
+    bool StartServer(); // Creates a server on a Port that was passed in, and creates a socket.
+    bool ListenForClient(); // Accepts a new connection by listening on it's address.
+    bool ProcessRPC(); // Examines the buffer and essentially controls connect/disconnect/status.
+    bool MultiThreadedProcessRPC();
+    // void ParseTokens(char* buffer, vector<string>& a); // Extracts tokens from a string vector sent by the client.
+    bool SetIPAddress(char* serverIP);
+    bool SetPort(int port);
+    bool GetServerStatus();
+    bool SetServerStatus(bool onOrOff);
+    int GetSocket();
+    int GetRPCCount();
+    BingoGame Bingo; // Abstracts the Bingo Game.
+    Socket clientServerConnection; // Abstracts the socket connection.
 
 private:
     int m_rpcCount;
     int m_server_fd;
-    int m_socket;
+    int incomingSock;
     char* m_serverIP;
     int m_port;
     struct sockaddr_in m_address;
+    bool m_ServerStatus = false;
 
     // First one in this function should be a connect, and it
     // will continue try to process RPC's until a Disconnect happens

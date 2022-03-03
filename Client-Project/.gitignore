@@ -56,3 +56,6 @@ ipch/
 
 # Visual Studio Code
 /.vscode/
+
+# Apple Files
+*.DS_Store

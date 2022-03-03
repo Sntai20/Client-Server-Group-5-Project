@@ -1,32 +1,3 @@
-// Copyright 2005, Google Inc.
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-//     * Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above
-// copyright notice, this list of conditions and the following disclaimer
-// in the documentation and/or other materials provided with the
-// distribution.
-//     * Neither the name of Google Inc. nor the names of its
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 // A sample program demonstrating using Google C++ testing framework.
 
 // In this example, we use a more advanced feature of Google Test called
@@ -59,8 +30,10 @@
 // in a test fixture.
 //
 // </TechnicalDetails>
-#include "../Server-Project/sampleServer.h"
+#include "../Server-Project/server.h"
+#include "../Server-Project/server.cpp"
 #include "gtest/gtest.h"
+
 
 // Start of ServerTest
 namespace 
@@ -69,97 +42,67 @@ namespace
     class ServerTest : public testing::Test 
     {
         protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
-
-        // virtual void SetUp() will be called before each test is run.  You should define
-        // it if you need to initialize the variables. Otherwise, this can be skipped.
-        void SetUp() override 
-        {
-            q1_.Enqueue(1);
-            q2_.Enqueue(2);
-            q2_.Enqueue(3);
-        }
-
-        /* virtual void TearDown() will be called after each test is run. You should define 
-         * it if there is cleanup work to do.  Otherwise, you don't have to provide it.
-         */ 
-        
-        // virtual void TearDown() {
-        // }
-
-        // A helper function that some test uses.
-        static int Double(int n) 
-        {
-            return 2 * n;
-        }
-
-        // A helper function for testing Queue::Map().
-        void MapTester(const Queue<int>* q) 
-        {
-            // Creates a new queue, where each element is twice as big as the
-            // corresponding one in q.
-            const Queue<int>* const new_q = q->Map(Double);
-
-            // Verifies that the new queue has the same size as q.
-            ASSERT_EQ(q->Size(), new_q->Size());
-
-            // Verifies the relationship between the elements of the two queues.
-            for (const QueueNode<int>* n1 = q->Head(), *n2 = new_q->Head();
-                n1 != nullptr; n1 = n1->next(), n2 = n2->next()) 
-                {
-                EXPECT_EQ(2 * n1->element(), n2->element());
-            }
-
-            delete new_q;
-        }
-
         // Declares the variables your tests want to use.
-        Queue<int> q0_;
-        Queue<int> q1_;
-        Queue<int> q2_;
-
-        // Declares the variables your tests want to use.
-		Socket s_;
+		RPCServer* myServer_ = new RPCServer();
     };
 
     // When you have a test fixture, you define a test using TEST_F instead of TEST.
 
-    // Tests the default c'tor.
-    TEST_F(ServerTest, DefaultConstructor) 
+    // Tests StartServer().
+    TEST_F(ServerTest, StartServer) 
     {
-        // You can access data in the test fixture here.
-        EXPECT_EQ(0u, q0_.Size());
+        bool expectedResult;
+        expectedResult = myServer_->StartServer();
+        EXPECT_EQ(true, expectedResult);
     }
 
-    // Tests Dequeue().
-    TEST_F(ServerTest, Dequeue) 
+    // Tests GetServerStatus().
+    TEST_F(ServerTest, GetServerStatus) 
     {
-        int* n = q0_.Dequeue();
-        EXPECT_TRUE(n == nullptr);
-
-        n = q1_.Dequeue();
-        ASSERT_TRUE(n != nullptr);
-        EXPECT_EQ(1, *n);
-        EXPECT_EQ(0u, q1_.Size());
-        delete n;
-
-        n = q2_.Dequeue();
-        ASSERT_TRUE(n != nullptr);
-        EXPECT_EQ(2, *n);
-        EXPECT_EQ(1u, q2_.Size());
-        delete n;
+        bool expectedResult;
+        myServer_->StartServer();
+        expectedResult = myServer_->GetServerStatus();
+        EXPECT_EQ(true, expectedResult);
     }
 
-    // Tests the Queue::Map() function.
-    TEST_F(ServerTest, Map) 
+    // Tests GetRPCCount().
+    TEST_F(ServerTest, GetRPCCount) 
     {
-        MapTester(&q0_);
-        MapTester(&q1_);
-        MapTester(&q2_);
+        bool expectedResult;
+        expectedResult = myServer_->GetRPCCount();
+        EXPECT_EQ(false, expectedResult);
     }
-    
-    // Tests my understanding of gtests.
-    TEST_F(ServerTest, optionValue) 
+
+    // Tests the ListenForClient() function.
+    TEST_F(ServerTest, ListenForClient) 
     {
-		EXPECT_EQ(0, s_.optionValue);
+        bool expectedResult;
+        expectedResult = myServer_->ListenForClient();
+        EXPECT_EQ(true, expectedResult);
+        
+        close(myServer_->GetSocket()); // Close connection.
+        close(myServer_->clientServerConnection.SocketFileDescriptor); // Close handle.
+    }
+
+    // Tests the ProcessRPC function.
+    TEST_F(ServerTest, ProcessRPC) 
+    {
+        bool expectedResult;
+        expectedResult = myServer_->ProcessRPC();
+		EXPECT_EQ(true, expectedResult);
 	}
+
+    // Tests my understanding of gtests.
+    // TEST_F(ServerTest, ParseTokens) 
+    // {
+    //     std::vector<std::string> arrayTokens;
+    //     // const char* connectRPC = "connect;MIKE;MIKE;";
+    //     // char buffer[1024] = { 0 };
+    //     char buffer{"connect;MIKE;MIKE;"};
+    //     // strcpy_s(buffer, 1024, connectRPC);
+
+    //     myServer_.ParseTokens(buffer, arrayTokens);
+        
+	// 	EXPECT_EQ("MIKE", arrayTokens.end);
+	// }
 }  // End of ServerTest
