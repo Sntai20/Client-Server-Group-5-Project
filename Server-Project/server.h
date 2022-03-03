@@ -12,6 +12,7 @@
 #include <map>
 #include "../Common/socket.cpp"
 #include "../BingoGame/bingogame.h"
+#include <pthread.h> 
 
 using namespace std;
 
