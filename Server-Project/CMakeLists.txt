@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add pthread
-add_compile_options(-pthread)
+set(CMAKE_CXX_FLAGS_INIT "-pthread")
 
 # Add source to this project's executable.
 add_executable (Server "main.cpp")
