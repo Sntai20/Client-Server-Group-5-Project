@@ -29,6 +29,7 @@ public:
     bool StartServer(); // Creates a server on a Port that was passed in, and creates a socket.
     bool ListenForClient(); // Accepts a new connection by listening on it's address.
     bool ProcessRPC(); // Examines the buffer and essentially controls connect/disconnect/status.
+    bool MultiThreadedProcessRPC();
     // void ParseTokens(char* buffer, vector<string>& a); // Extracts tokens from a string vector sent by the client.
     bool SetIPAddress(char* serverIP);
     bool SetPort(int port);

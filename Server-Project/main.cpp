@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @author Group 5
- * @brief Server side C/C++ program to demonstrate Socket programming for Bingo game.
+ * @brief Server side C++ program to demonstrate Socket programming for Bingo game.
  * @version 0.1
  * @date 2022-02-11
  */  
@@ -28,9 +28,13 @@ int main(int argc, char* argv[])
 
     while (statusOk)
     {
-        statusOk = myServer->ListenForClient();
-        cout << "\nServer is waiting!" << endl;
-        statusOk = myServer->ProcessRPC(); // Launch thread
+        /**
+         * @brief ListenForClient is used to call the MultiThreadedProcessRPC. 
+         * MultiThreadedProcessRPC starts the threads and to process the client 
+         * connections.
+         */
+        statusOk = myServer->ListenForClient(); 
+        cout << "Server is online listening for client connections!" << endl;
     }
 
     delete myServer;

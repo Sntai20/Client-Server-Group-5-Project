@@ -6,18 +6,6 @@
  * @date 2022-02-11
  */  
 #include "server.h"
-#include "LocalContext.h"
-
-/**
- * @brief Struct to maintain the global context for threads.
- * 
- */
-typedef struct _GlobalContext 
-{
-    int g_rpcCount;
-} GlobalContext;
-
-GlobalContext globalObj; // We need to protect this, as we don't want bad data
 
 /**
  * @brief Construct a new RPCServer::RPCServer object
@@ -63,7 +51,6 @@ bool RPCServer::StartServer()
  */
 bool RPCServer::ListenForClient()
 {
-    // TODO: Add multi threading to the listener.
     const int BACKLOG = 10;
     int addrlen = sizeof(m_address);
 
@@ -77,7 +64,91 @@ bool RPCServer::ListenForClient()
         std::cerr << e.what() << endl;
     } // end try-catch
 
-    this->ProcessRPC();
+    /* TODO: Add multi threading to the listener. We probably want 
+     * to queue the incoming connections and have a thread to process
+     * an individual connection. The client and thread would be a 
+     * one to one relationship. Each client connection would be 
+     * processed by one thread on the server.
+     */
+    this->MultiThreadedProcessRPC();
+    // this->ProcessRPC();
+    return true;
+}
+
+/** Multi thread things start here.
+ * @brief Use this struct to safely write to the counter. Each
+ * thread will lock the counter, increment the count, then unlock
+ * the counter so the next thread can use it.
+ * 
+ */
+struct ThreadInfo 
+{
+	pthread_mutex_t lock;
+	int counter;	
+};
+
+/**
+ * @brief A thread will use this method to safely update the counter.
+ * 
+ * @param arg 
+ * @return void* 
+ */
+void* increment(void *arg) 
+{ 
+	ThreadInfo* info = static_cast<ThreadInfo*>(arg);
+	pthread_mutex_lock(&info->lock);
+
+	std::cout << "Thread Started ... " << std::endl;
+
+	for (int i = 0; i < 100000; ++i) 
+		info->counter++;
+
+	std::cout << "Thread Finished ... " << std::endl;
+	pthread_mutex_unlock(&info->lock); 
+	return nullptr; 
+} 
+
+/**
+ * @brief Create the threads and pass in the increment method to the thread.
+ * 
+ * @return true 
+ * @return false 
+ */
+bool RPCServer::MultiThreadedProcessRPC()
+{
+    cout << "Process all the RPCs. Send the RPC to a thread from here." << endl;
+    
+    ThreadInfo thInfo;
+	thInfo.counter = 0;
+    
+	if (pthread_mutex_init(&thInfo.lock, nullptr) != 0) 
+	{ 
+		std::cout << "pthread_mutex_init failed!" << std::endl;
+		return 1; 
+	} 
+
+	cout << "The first connection is processed by thread 1." << endl;
+    pthread_t threadWorker1; 
+	if (pthread_create(&threadWorker1, nullptr, &increment, &thInfo) != 0) 
+	{
+		std::cout << "pthread_create for threadWorker1 failed! " << std::endl;
+		return 2;
+	}
+
+	cout << "The second connection is processed by thread 2." << endl;
+    pthread_t threadWorker2; 
+	if (pthread_create(&threadWorker2, nullptr, &increment, &thInfo) != 0) 
+	{
+		std::cout << "pthread_create for threadWorker2 failed! " << std::endl;
+		return 3;
+	}
+
+	pthread_join(threadWorker1, nullptr); 
+	pthread_join(threadWorker2, nullptr); 
+
+	std::cout << "Threads finished. Counter = " << thInfo.counter << std::endl;
+	pthread_mutex_destroy(&thInfo.lock); 
+
     return true;
 }
 
@@ -89,7 +160,7 @@ bool RPCServer::ListenForClient()
  */
 bool RPCServer::ProcessRPC()
 {
-    cout << "Process all the RPCs" << endl;
+    cout << "Process all the RPCs. Send the RPC to a thread from here." << endl;
     // Enumerate through the tokens. The first token is always the specific RPC
     // vector<string> data = { "connect", "disconnect", "status", "setBoard", "markBoard", "setTime", "setMaxNum" };
     // for (vector<string>::iterator t=data.begin(); t!=data.end(); ++t) 
@@ -367,25 +438,4 @@ bool RPCServer::Disconnect()
     send(this->incomingSock, szBuffer, strlen(szBuffer) + 1, 0);
 
     return true;
-}
-
-/**
- * @brief A normal C function that is executed as a thread
- * when its name is specified in pthread_create()
- * 
- * @param vargp 
- * @return void* 
- */
-void* myThreadFun(void* vargp)
-{
-
-    sleep(1);
-
-    int socket = *(int *) vargp;
-    cout << "Printing GeeksQuiz from Thread \n" << endl;
-    // TODO: RPCServer *rpcImplObj = new RPCServer(socket);
-    // TODO: rpcImplObj->ProcessRPC();   // This will go until client disconnects;
-    cout << "Done with Thread" << endl;
-
-    return NULL;
 }
