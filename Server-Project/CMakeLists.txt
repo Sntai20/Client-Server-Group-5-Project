@@ -13,7 +13,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add pthread
-set(CMAKE_CXX_FLAGS_INIT "-pthread")
+set(GCC_COVERAGE_LINK_FLAGS "-pthread")
+add_definitions(${GCC_COVERAGE_LINK_FLAGS})
 
 # Add source to this project's executable.
 add_executable (Server "main.cpp")
