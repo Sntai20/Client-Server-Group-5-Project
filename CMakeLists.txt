@@ -8,7 +8,9 @@ project ("Client-Server-Group-5-Project")
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-link_libraries(ws2_32 wsock32)
+IF (WIN32)
+    link_libraries(ws2_32 wsock32)
+ENDIF()
 
 # Add source to this project's executable.
 add_subdirectory ("Server-Project")
