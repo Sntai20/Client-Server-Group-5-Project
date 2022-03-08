@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     int port = atoi(argv[2]);
     bool statusOk = true;
 
-    RPCServer* myServer = new RPCServer();
+    Server* myServer = new Server();
     myServer->SetIPAddress(serverIP);
     myServer->SetPort(port);
 

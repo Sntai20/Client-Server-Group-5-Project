@@ -43,7 +43,7 @@ namespace
     {
         protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
         // Declares the variables your tests want to use.
-		RPCServer* myServer_ = new RPCServer();
+		Server* myServer_ = new Server();
     };
 
     // When you have a test fixture, you define a test using TEST_F instead of TEST.
@@ -81,7 +81,7 @@ namespace
         EXPECT_EQ(true, expectedResult);
         
         close(myServer_->GetSocket()); // Close connection.
-        close(myServer_->clientServerConnection.SocketFileDescriptor); // Close handle.
+        close(myServer_->SocketFileDescriptor); // Close handle.
     }
 
     // Tests the ProcessRPC function.
