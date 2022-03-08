@@ -12,6 +12,9 @@
 #include <map>
 #include "../Common/socket.cpp"
 #include "../BingoGame/bingogame.h"
+#ifdef _WIN32
+#include <Ws2tcpip.h>
+#endif
 #include <pthread.h> 
 
 using namespace std;
