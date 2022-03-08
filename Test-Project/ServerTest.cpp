@@ -43,7 +43,11 @@ namespace
     {
         protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
         // Declares the variables your tests want to use.
-		Server* myServer_ = new Server();
+        // vector<char> argv {"server", "127.0.0.1", "10320"};
+        vector<char> argv {'0', '1', '2'};
+        char* serverIP = &argv[1];
+        int port = argv[2];
+		Server* myServer_ = new Server(serverIP, port);
     };
 
     // When you have a test fixture, you define a test using TEST_F instead of TEST.
