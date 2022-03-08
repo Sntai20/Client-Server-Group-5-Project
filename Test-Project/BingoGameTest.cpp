@@ -31,6 +31,7 @@ namespace
     // Tests the default setBoard method.
     TEST_F(BingoGameTest, setBoard) 
     {
+	myBingoGame_.setMaxNum("50");
         string inputString = "1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50";
         EXPECT_TRUE(myBingoGame_.setBoard(inputString));
     }
