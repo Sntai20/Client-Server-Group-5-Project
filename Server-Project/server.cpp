@@ -8,10 +8,10 @@
 #include "server.h"
 
 /**
- * @brief Construct a new RPCServer::RPCServer object
+ * @brief Construct a new Server::Server object
  * 
  */
-RPCServer::RPCServer()
+Server::Server()
 {
     m_rpcCount = 0;
 };
@@ -22,16 +22,21 @@ RPCServer::RPCServer()
  * @return true 
  * @return false 
  */
-bool RPCServer::StartServer()
+bool Server::StartServer()
 {
     m_address.sin_family = AF_INET;
     m_address.sin_addr.s_addr = INADDR_ANY;
     m_address.sin_port = htons(m_port);
+    int optionValue = 1;
+    const int BACKLOG = 10;
+    
     try
     {
-        clientServerConnection.CreateSocket(m_address.sin_family, SOCK_STREAM, 0);
+        this->SocketFileDescriptor = socket(m_address.sin_family, SOCK_STREAM, 0);
         // Forcefully attaching socket to the port 8080
-        bind(clientServerConnection.SocketFileDescriptor, (struct sockaddr*)&m_address, sizeof(m_address));
+        bind(this->SocketFileDescriptor, (struct sockaddr*)&m_address, sizeof(m_address));
+        // Forcefully attaching socket to the port
+        setsockopt(this->SocketFileDescriptor, SOL_SOCKET, SO_REUSEADDR | SO_REUSEADDR, (const void*)&optionValue, sizeof(int));
     }
     catch(const std::exception& e)
     {
@@ -49,15 +54,15 @@ bool RPCServer::StartServer()
  * @return true 
  * @return false 
  */
-bool RPCServer::ListenForClient()
+bool Server::ListenForClient()
 {
     const int BACKLOG = 10;
     int addrlen = sizeof(m_address);
 
     try
     {
-        listen(m_server_fd, BACKLOG);
-        (incomingSock = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
+        listen(SocketFileDescriptor, BACKLOG);
+        (incomingSock = accept(SocketFileDescriptor, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
     }
     catch(const std::exception& e)
     {
@@ -114,7 +119,7 @@ void* increment(void *arg)
  * @return true 
  * @return false 
  */
-bool RPCServer::MultiThreadedProcessRPC()
+bool Server::MultiThreadedProcessRPC()
 {
     cout << "Process all the RPCs. Send the RPC to a thread from here." << endl;
     
@@ -158,7 +163,7 @@ bool RPCServer::MultiThreadedProcessRPC()
  * @return true 
  * @return false 
  */
-bool RPCServer::ProcessRPC()
+bool Server::ProcessRPC()
 {
     cout << "Process all the RPCs. Send the RPC to a thread from here." << endl;
     // Enumerate through the tokens. The first token is always the specific RPC
@@ -187,7 +192,7 @@ bool RPCServer::ProcessRPC()
 
     return true;
 }
-// bool RPCServer::ProcessRPC()
+// bool Server::ProcessRPC()
 // {
 //     const char* rpcs[] = { "connect", "disconnect", "status" };
 //     char buffer[1024] = { 0 };
@@ -291,7 +296,7 @@ bool RPCServer::ProcessRPC()
  * @param buffer 
  * @param a 
  */
-// void RPCServer::ParseTokens(char* buffer, std::vector<std::string>& arrayToken)
+// void Server::ParseTokens(char* buffer, std::vector<std::string>& arrayToken)
 // {
 //     char* token;
 //     char* rest = (char*)buffer;
@@ -309,7 +314,7 @@ bool RPCServer::ProcessRPC()
  * @param buffer 
  * @param a 
  */
-// void RPCServer::ParseTokens(char* buffer, vector<string>& a)
+// void Server::ParseTokens(char* buffer, vector<string>& a)
 // {
 //     char* token;
 //     string rest{buffer};
@@ -330,7 +335,7 @@ bool RPCServer::ProcessRPC()
  * @return true 
  * @return false 
  */
-bool RPCServer::StatusRPC()
+bool Server::StatusRPC()
 {
     
     // TODO: Implement.
@@ -344,7 +349,7 @@ bool RPCServer::StatusRPC()
 * @return true 
 * @return false 
 */
-bool RPCServer::SetIPAddress(char* serverIP)
+bool Server::SetIPAddress(char* serverIP)
 {
     m_serverIP = serverIP;
     return true;
@@ -357,27 +362,27 @@ bool RPCServer::SetIPAddress(char* serverIP)
  * @return true 
  * @return false 
  */
-bool RPCServer::SetPort(int port)
+bool Server::SetPort(int port)
 {
     m_port = port;
     return true;
 }
 
-bool RPCServer::GetServerStatus(){
+bool Server::GetServerStatus(){
     return this->m_ServerStatus;
 }
 
-bool RPCServer::SetServerStatus(bool onOrOff){
+bool Server::SetServerStatus(bool onOrOff){
     this->m_ServerStatus = onOrOff;
     return true;
 }
 
-int RPCServer::GetSocket()
+int Server::GetSocket()
 {
     return this->incomingSock;
 }
 
-int RPCServer::GetRPCCount()
+int Server::GetRPCCount()
 {
     return this->m_rpcCount;
     
@@ -391,7 +396,7 @@ int RPCServer::GetRPCCount()
  * @return true 
  * @return false 
  */
-bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
+bool Server::Connect(std::vector<std::string>& arrayTokens)
 {
     // TODO: Authentication
     const int USERNAMETOKEN = 1;
@@ -428,7 +433,7 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
  * @return true 
  * @return false 
  */
-bool RPCServer::Disconnect()
+bool Server::Disconnect()
 {
     char szBuffer[16];
     strcpy(szBuffer, "disconnect");

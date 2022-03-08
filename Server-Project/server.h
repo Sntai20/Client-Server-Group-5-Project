@@ -10,26 +10,37 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "../Common/socket.cpp"
 #include "../BingoGame/bingogame.h"
+#include <stdlib.h>
+#include <string>
+#include <unistd.h>
+#include <sys/types.h>
 #ifdef _WIN32
 #include <Ws2tcpip.h>
+#include <Winsock2.h>
+#include <windows.h>
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #endif
+#include <iostream>
 #include <pthread.h> 
+
 
 using namespace std;
 
 /**
- * @brief This RPCServer class contains all the methods to use the server, 
+ * @brief This Server class contains all the methods to use the server, 
  * including the RPCs.
  * 
- * @return An instance of an RPCServer.
+ * @return An instance of an Server.
  */
-class RPCServer
+class Server
 {
 public:
-    RPCServer(); // Empty default Constructor is not recommended.
-    // ~RPCServer(); Destructor breaks the unit test.
+    Server(); // Empty default Constructor is not recommended.
+    // ~Server(); Destructor breaks the unit test.
     bool StartServer(); // Creates a server on a Port that was passed in, and creates a socket.
     bool ListenForClient(); // Accepts a new connection by listening on it's address.
     bool ProcessRPC(); // Examines the buffer and essentially controls connect/disconnect/status.
@@ -41,8 +52,8 @@ public:
     bool SetServerStatus(bool onOrOff);
     int GetSocket();
     int GetRPCCount();
+    int SocketFileDescriptor;
     BingoGame Bingo; // Abstracts the Bingo Game.
-    Socket clientServerConnection; // Abstracts the socket connection.
 
 private:
     int m_rpcCount;

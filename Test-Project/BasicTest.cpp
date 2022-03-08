@@ -1,6 +1,5 @@
 #include "BingoGameTest.cpp"
 #include "ClientTest.cpp"
-#include "SocketTest.cpp"
 #include "ServerTest.cpp"
 #include "gtest/gtest.h"
 
