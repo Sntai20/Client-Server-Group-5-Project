@@ -9,10 +9,16 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#ifdef _WIN32
+#include <Winsock2.h>
+#include <windows.h>
+#include <Ws2tcpip.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <iostream>
 #include <arpa/inet.h>
+#endif
+#include <iostream>
 #include <iterator>
 #include <vector>
 #include <string.h> // std::strtok uses this library.
