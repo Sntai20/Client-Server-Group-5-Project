@@ -6,14 +6,51 @@
  * @date 2022-02-11
  */  
 #include "server.h"
+#include <queue>
 
 /**
- * @brief Construct a new RPCServer::RPCServer object
+ * @brief Construct a new Server::Server object
  * 
  */
-RPCServer::RPCServer()
-{
+Server::Server(char *serverIP, int port)
+{   
+    SetIPAddress(serverIP);
+    SetPort(port);
     m_rpcCount = 0;
+};
+
+// Data contract between producer and consumer.
+struct Item
+{
+	int age;
+	std::string firstName;
+	std::string lastName;
+	std::string password;
+	std::string message;
+	std::string token;
+};
+
+/**
+ * @brief A condition variable is a named queue on which processes 
+ * can wait for some condition to become true.
+ * 
+ */
+std::condition_variable cond; 
+std::queue<Item> queue;
+std::mutex mut;
+
+enum serverStatus { systemError, connected, disconnected };
+enum rpcStatus { notReady, ready, processing, processed };
+
+// Create a map of the RPC tokens (strings, int) pairs
+std::map<std::string, rpcStatus> rpcTable 
+{ 
+    {"connect", ready}, 
+    {"disconnect", ready}, 
+    {"status", ready}, 
+    {"markBoard", ready}, 
+    {"setTime", ready}, 
+    {"setMaxNum", ready} 
 };
 
 /**
@@ -22,24 +59,26 @@ RPCServer::RPCServer()
  * @return true 
  * @return false 
  */
-bool RPCServer::StartServer()
+bool Server::StartServer()
 {
-    m_address.sin_family = AF_INET;
-    m_address.sin_addr.s_addr = INADDR_ANY;
-    m_address.sin_port = htons(m_port);
+    cout << "start the server" << endl;
+    
+    // m_address.sin_family = AF_INET;
+    // m_address.sin_addr.s_addr = INADDR_ANY;
+    // m_address.sin_port = htons(m_port);
     try
     {
-        clientServerConnection.CreateSocket(m_address.sin_family, SOCK_STREAM, 0);
-        // Forcefully attaching socket to the port 8080
-        bind(clientServerConnection.SocketFileDescriptor, (struct sockaddr*)&m_address, sizeof(m_address));
+        bool statusOk = clientServerConnection.CreateSocket(AF_INET, SOCK_STREAM, 0);
+        //  clientServerConnection.CreateSocket(m_address, SOCK_STREAM, 0);
+        cout << "statusOk " << statusOk << endl;
+        this->SetServerStatus(statusOk); // Set the server status to on.
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
         cout << "\nBind failed." << endl;
     } // end try-catch
-
-    this->SetServerStatus(true); // Set the server status to on.
+    
     return true;
 }
 
@@ -49,30 +88,162 @@ bool RPCServer::StartServer()
  * @return true 
  * @return false 
  */
-bool RPCServer::ListenForClient()
+bool Server::ListenForClient()
 {
+    serverStatus currentServerStatus;
     const int BACKLOG = 10;
-    int addrlen = sizeof(m_address);
 
     try
     {
-        listen(m_server_fd, BACKLOG);
-        (incomingSock = accept(m_server_fd, (struct sockaddr*)&m_address, (socklen_t*)&addrlen));
+        // listen(m_server_fd, BACKLOG);
+        listen(clientServerConnection.SocketFileDescriptor, BACKLOG);
+        cout << "listen" << endl;
+        
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << endl;
     } // end try-catch
-
-    /* TODO: Add multi threading to the listener. We probably want 
-     * to queue the incoming connections and have a thread to process
-     * an individual connection. The client and thread would be a 
-     * one to one relationship. Each client connection would be 
-     * processed by one thread on the server.
-     */
-    this->MultiThreadedProcessRPC();
-    // this->ProcessRPC();
+    
     return true;
+}
+
+/**
+ * @brief This method is used to process RPCs from a client.
+ * 
+ * @return true 
+ * @return false 
+ */
+bool Server::ProcessRPC()
+{
+    // Call the ProcessRPC function
+    cout << "ProcessRPC" << endl;
+    const char* rpcs[] = { "connect", "disconnect", "status" };
+    char buffer[1024] = { 0 };
+    std::vector<std::string> arrayTokens;
+    
+    bool bConnected = false;
+    bool bStatusOk = true;
+    const int RPCTOKEN = 0;
+    bool bContinue = true;
+
+    while ((bContinue) && (bStatusOk))
+    {
+        
+        
+        //printf("%s\n", buffer);
+
+        arrayTokens.clear();
+        cout << "bContinue" << endl;
+        // Call the ParseTokens function
+        cout << "Call ParseTokens" << endl;
+        // this->ParseTokens(buffer, arrayTokens);
+
+        // TODO:
+        // Enumerate through the tokens. The first token is always the
+        // specific RPC
+        for (vector<string>::iterator t = arrayTokens.begin(); t != arrayTokens.end(); ++t)
+        {
+            printf("\nDebugging our tokens.\n");
+            // printf("\nToken = %s\n", t);
+        }
+
+        // string statements are not supported with a switch, so using if/else logic to dispatch
+        string aString = arrayTokens[RPCTOKEN];
+
+        if ((bConnected == false) && (aString == "connect"))
+        {
+            // Connect RPC
+            bStatusOk = Connect(arrayTokens);
+            if (bStatusOk == true)
+                bConnected = true;
+            cout << "\nClient is connected!" << endl;
+
+            // Let the client know about connection
+            const char* message = "\nYou are now connected to the server!\n";
+            send(clientServerConnection.incomingSock, message, strlen(message) + 1, 0);
+
+            // Call hard-coded RPC functions with set values until they are implemented
+            // After client is connected, Set the board
+            // while (!Bingo.setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
+            // {
+            //     // Board not succesfully set: prompt user for new input (mandatory valid input required)
+            // }
+            
+            // // Board is marked if the current number in the server is valid
+            // Bingo.markBoard();
+
+            // while (!Bingo.setMaxNum("5")) 
+            // {
+            //     // max num not succesfully set: prompt user for new input (mandatory valid input required)
+            // }
+
+            // while (!Bingo.setTime("5")) 
+            // {
+            //     // Time not succesfully set: prompt user for new input (mandatory valid input required)
+            // }
+
+            // Get the client response
+            // TODO: Replace with c++ version. read(this->m_socket, buffer, sizeof(buffer));
+            cout << "A message from connected client: " << buffer << endl;
+        }
+        else if ((bConnected == true) && (aString == "disconnect"))
+        {
+            // Terminating the endless loop
+            bStatusOk = Disconnect();
+            cout << "\nClient is disconnected now!" << endl;
+            // We are going to leave this loop, as we are done
+            bContinue = false;
+        }
+        else if ((bConnected == true) && (aString == "status"))
+        {
+            // Status RPC
+            bStatusOk = StatusRPC();
+        }
+        else
+        {
+            // Not in our list, perhaps, print out what was sent
+            // TODO: Log or throw an exception.
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @brief This method is used to parse the tokens sent by the client.
+ * Extracts tokens from a string vector sent by the client.
+ * @param buffer 
+ * @param a 
+ */
+// void Server::ParseTokens(char* buffer, vector<string>& a)
+// {
+//     // Call the ParseTokens function
+//     cout << "ParseTokens" << endl;
+//     char* token;
+//     string rest{buffer};
+//     char const * const delimiter{";"};
+//     char * psz_token{strtok(rest.data(), delimiter)};
+//     while(nullptr != psz_token)
+//     {
+//         cout << psz_token << endl;
+//         psz_token = strtok(nullptr, delimiter);
+//         cout << token << endl;
+//         a.push_back(token);
+//     }
+// }
+void Server::ParseTokens(char * buffer, std::vector<std::string> & a)
+{
+    char* token;
+    char* rest = (char *) buffer;
+
+    while ((token = strtok_r(rest, ";", &rest)))
+    {
+        printf("%s\n", token);
+        a.push_back(token);
+    }
+
+    return;
 }
 
 /** Multi thread things start here.
@@ -99,6 +270,7 @@ void* increment(void *arg)
 	pthread_mutex_lock(&info->lock);
 
 	std::cout << "Thread Started ... " << std::endl;
+    // Server::ParseTokens();
 
 	for (int i = 0; i < 100000; ++i) 
 		info->counter++;
@@ -114,8 +286,9 @@ void* increment(void *arg)
  * @return true 
  * @return false 
  */
-bool RPCServer::MultiThreadedProcessRPC()
+bool Server::MultiThreadedProcessRPC()
 {
+    rpcStatus currentRPCState;
     cout << "Process all the RPCs. Send the RPC to a thread from here." << endl;
     
     ThreadInfo thInfo;
@@ -146,183 +319,12 @@ bool RPCServer::MultiThreadedProcessRPC()
 	pthread_join(threadWorker1, nullptr); 
 	pthread_join(threadWorker2, nullptr); 
 
-	std::cout << "Threads finished. Counter = " << thInfo.counter << std::endl;
+	// std::cout << "Threads finished. Counter = " << thInfo.counter << std::endl;
 	pthread_mutex_destroy(&thInfo.lock); 
 
     return true;
 }
 
-/**
- * @brief This method is used to process RPCs from a client.
- * 
- * @return true 
- * @return false 
- */
-bool RPCServer::ProcessRPC()
-{
-    cout << "Process all the RPCs. Send the RPC to a thread from here." << endl;
-    // Enumerate through the tokens. The first token is always the specific RPC
-    // vector<string> data = { "connect", "disconnect", "status", "setBoard", "markBoard", "setTime", "setMaxNum" };
-    // for (vector<string>::iterator t=data.begin(); t!=data.end(); ++t) 
-    // {
-    //     cout<<*t<<endl;
-    // }
-
-    // Create a map of three (strings, int) pairs
-    std::map<std::string, int> rpcTable 
-    { 
-        {"connect", 10}, 
-        {"disconnect", 15}, 
-        {"status", 20}, 
-        {"markBoard", 25}, 
-        {"setTime", 30}, 
-        {"setMaxNum", 35} 
-    };
-    
-    // Enumerate through the tokens. The first token is always the specific RPC
-    for (auto const& [key, val] : rpcTable)
-    {
-        std::cout << key << ':' << val << std::endl;
-    }
-
-    return true;
-}
-// bool RPCServer::ProcessRPC()
-// {
-//     const char* rpcs[] = { "connect", "disconnect", "status" };
-//     char buffer[1024] = { 0 };
-//     std::vector<std::string> arrayTokens;
-//     int valread = 0;
-//     bool bConnected = false;
-//     bool bStatusOk = true;
-//     const int RPCTOKEN = 0;
-//     bool bContinue = true;
-
-//     while ((bContinue) && (bStatusOk))
-//     {
-//         // Should be blocked when a new RPC has not called us yet
-//         if ((valread = read(this->incomingSock, buffer, sizeof(buffer))) <= 0)
-//         {
-//             // TODO: printf("\nErrno is %d\n", errno);
-//             break;
-//         }
-//         //printf("%s\n", buffer);
-
-//         arrayTokens.clear();
-//         // this->ParseTokens(buffer, arrayTokens);
-
-//         /* // TODO:
-//         // Enumerate through the tokens. The first token is always the
-//         // specific RPC
-//         for (vector<string>::iterator t = arrayTokens.begin(); t !=
-//          arrayTokens.end(); ++t)
-//         {
-//             printf("\nDebugging our tokens.\n");
-//             printf("\nToken = %s\n", t);
-//         }
-//         */
-
-//         // string statements are not supported with a switch, so using if/else logic to dispatch
-//         string aString = arrayTokens[RPCTOKEN];
-
-//         if ((bConnected == false) && (aString == "connect"))
-//         {
-//             // Connect RPC
-//             bStatusOk = Connect(arrayTokens);
-//             if (bStatusOk == true)
-//                 bConnected = true;
-//             cout << "\nClient is connected!" << endl;
-
-//             // Let the client know about connection
-//             const char* message = "\nYou are now connected to the server!\n";
-//             send(this->incomingSock, message, strlen(message) + 1, 0);
-
-//             // Call hard-coded RPC functions with set values until they are implemented
-//             // After client is connected, Set the board
-//             // while (!Bingo.setBoard("1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50")) 
-//             // {
-//             //     // Board not succesfully set: prompt user for new input (mandatory valid input required)
-//             // }
-            
-//             // // Board is marked if the current number in the server is valid
-//             // Bingo.markBoard();
-
-//             // while (!Bingo.setMaxNum("5")) 
-//             // {
-//             //     // max num not succesfully set: prompt user for new input (mandatory valid input required)
-//             // }
-
-//             // while (!Bingo.setTime("5")) 
-//             // {
-//             //     // Time not succesfully set: prompt user for new input (mandatory valid input required)
-//             // }
-
-//             // Get the client response
-//             // TODO: Replace with c++ version. read(this->m_socket, buffer, sizeof(buffer));
-//             cout << "A message from connected client: " << buffer << endl;
-//         }
-//         else if ((bConnected == true) && (aString == "disconnect"))
-//         {
-//             // Terminating the endless loop
-//             bStatusOk = Disconnect();
-//             cout << "\nClient is disconnected now!" << endl;
-//             // We are going to leave this loop, as we are done
-//             bContinue = false;
-//         }
-//         else if ((bConnected == true) && (aString == "status"))
-//         {
-//             // Status RPC
-//             bStatusOk = StatusRPC();
-//         }
-//         else
-//         {
-//             // Not in our list, perhaps, print out what was sent
-//             // TODO: Log or throw an exception.
-//         }
-//     }
-
-//     return true;
-// }
-
-
-/**
- * @brief This method is used to parse the tokens sent by the client.
- * 
- * @param buffer 
- * @param a 
- */
-// void RPCServer::ParseTokens(char* buffer, std::vector<std::string>& arrayToken)
-// {
-//     char* token;
-//     char* rest = (char*)buffer;
-
-//     while ((token = strtok_r(rest, ";", &rest)))
-//     {
-//         cout << token << endl;
-//         arrayToken.push_back(token);
-//     }
-// }
-
-/**
- * @brief This method is used to parse the tokens sent by the client.
- * Extracts tokens from a string vector sent by the client.
- * @param buffer 
- * @param a 
- */
-// void RPCServer::ParseTokens(char* buffer, vector<string>& a)
-// {
-//     char* token;
-//     string rest{buffer};
-//     char const * const delimiter{";"};
-//     char * psz_token{strtok(rest.data(), delimiter)};
-//     while(nullptr != psz_token)
-//     {
-//         cout << psz_token << endl;
-//         psz_token = strtok(nullptr, delimiter);
-//         cout << token << endl;
-//         a.push_back(token);
-//     }
-// }
 
 /**
  * @brief This method provides the RPC status.
@@ -330,7 +332,7 @@ bool RPCServer::ProcessRPC()
  * @return true 
  * @return false 
  */
-bool RPCServer::StatusRPC()
+bool Server::StatusRPC()
 {
     
     // TODO: Implement.
@@ -344,9 +346,9 @@ bool RPCServer::StatusRPC()
 * @return true 
 * @return false 
 */
-bool RPCServer::SetIPAddress(char* serverIP)
+bool Server::SetIPAddress(char* serverIP)
 {
-    m_serverIP = serverIP;
+    clientServerConnection.m_serverIP = serverIP;
     return true;
 }
 
@@ -357,27 +359,27 @@ bool RPCServer::SetIPAddress(char* serverIP)
  * @return true 
  * @return false 
  */
-bool RPCServer::SetPort(int port)
+bool Server::SetPort(int port)
 {
-    m_port = port;
+    clientServerConnection.m_port = port;
     return true;
 }
 
-bool RPCServer::GetServerStatus(){
+bool Server::GetServerStatus(){
     return this->m_ServerStatus;
 }
 
-bool RPCServer::SetServerStatus(bool onOrOff){
+bool Server::SetServerStatus(bool onOrOff){
     this->m_ServerStatus = onOrOff;
     return true;
 }
 
-int RPCServer::GetSocket()
+int Server::GetSocket()
 {
-    return this->incomingSock;
+    return clientServerConnection.incomingSock;
 }
 
-int RPCServer::GetRPCCount()
+int Server::GetRPCCount()
 {
     return this->m_rpcCount;
     
@@ -391,7 +393,7 @@ int RPCServer::GetRPCCount()
  * @return true 
  * @return false 
  */
-bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
+bool Server::Connect(std::vector<std::string>& arrayTokens)
 {
     // TODO: Authentication
     const int USERNAMETOKEN = 1;
@@ -415,7 +417,7 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
     // Send Response back on our socket
     int nlen = strlen(szBuffer);
     szBuffer[nlen] = 0;
-    send(this->incomingSock, szBuffer, strlen(szBuffer) + 1, 0);
+    send(clientServerConnection.incomingSock, szBuffer, strlen(szBuffer) + 1, 0);
 
     // TODO: Replace with c++ version. read(this->m_socket, szBuffer, sizeof(szBuffer) <= 0);
 
@@ -428,14 +430,49 @@ bool RPCServer::Connect(std::vector<std::string>& arrayTokens)
  * @return true 
  * @return false 
  */
-bool RPCServer::Disconnect()
+bool Server::Disconnect()
 {
     char szBuffer[16];
     strcpy(szBuffer, "disconnect");
     // Send Response back on our socket
     int nlen = strlen(szBuffer);
     szBuffer[nlen] = 0;
-    send(this->incomingSock, szBuffer, strlen(szBuffer) + 1, 0);
+    send(clientServerConnection.incomingSock, szBuffer, strlen(szBuffer) + 1, 0);
 
     return true;
 }
+
+// Call the ProcessRPC function
+        // cout << "Call ProcessRPC" << endl;
+        // this->ProcessRPC();
+
+        // this is probably the connect function.
+        // const char* rpcs[] = { "connect", "disconnect", "status" };
+        // char buffer[1024] = { 0 };
+        // std::vector<std::string> arrayTokens;
+        // int valread = 0;
+        // valread = read(this->incomingSock, buffer, sizeof(buffer)) <= 0;
+        // // cout << valread;
+        // arrayTokens.clear();
+
+        // this->ParseTokens(buffer, arrayTokens);
+        // string aString = arrayTokens[RPCTOKEN]
+
+        // // Enumerate through the tokens. The first token is always the
+        // // specific RPC
+        // for (vector<string>::iterator t=arrayTokens.begin(); t!=arrayTokens.end(); ++t) 
+        // {
+        //     cout<<*t<<endl;
+        //     if (*t != "connect")
+        //     {
+        //         currentServerStatus = disconnected;
+        //         std::cout << "disconnected" << endl;
+        //     } else  {
+        //         currentServerStatus = connected;
+        //         std::cout << "connected" << endl;
+        //     }
+            
+        // }
+        
+
+        // Server::Connect()

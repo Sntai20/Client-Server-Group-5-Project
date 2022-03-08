@@ -19,22 +19,36 @@ int main(int argc, char* argv[])
     int port = atoi(argv[2]);
     bool statusOk = true;
 
-    RPCServer* myServer = new RPCServer();
-    myServer->SetIPAddress(serverIP);
-    myServer->SetPort(port);
+    Server* myServer = new Server(serverIP, port);
+    // myServer->SetIPAddress(serverIP);
+    // myServer->SetPort(port);
 
     statusOk = myServer->StartServer(); // Print when server is working
     cout << "\nServer is up!" << endl;
 
     while (statusOk)
     {
+        cout << "server is okay" << endl;
         /**
          * @brief ListenForClient is used to call the MultiThreadedProcessRPC. 
          * MultiThreadedProcessRPC starts the threads and to process the client 
          * connections.
          */
         statusOk = myServer->ListenForClient(); 
-        cout << "Server is online listening for client connections!" << endl;
+        cout << "Server is online listening for client connections!" << endl; 
+        statusOk = myServer->ProcessRPC();
+        /* TODO: Add multi threading to the listener. We probably want 
+        * to queue the incoming connections and have a thread to process
+        * an individual connection. The client and thread would be a 
+        * one to one relationship. Each client connection would be 
+        * processed by one thread on the server.
+        * 
+        * Process the incoming RPC.
+        */
+        // while (currentServerStatus == connected)
+        // {
+        //     this->MultiThreadedProcessRPC();
+        // }
     }
 
     delete myServer;

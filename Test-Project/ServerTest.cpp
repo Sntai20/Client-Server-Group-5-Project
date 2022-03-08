@@ -33,6 +33,8 @@
 #include "../Server-Project/server.h"
 #include "../Server-Project/server.cpp"
 #include "gtest/gtest.h"
+#include <vector>
+#include <stdlib.h>
 
 
 // Start of ServerTest
@@ -43,7 +45,11 @@ namespace
     {
         protected:  // You should make the members protected s.t. they can be accessed from sub-classes.
         // Declares the variables your tests want to use.
-		RPCServer* myServer_ = new RPCServer();
+        // vector<char> argv {"server", "127.0.0.1", "10320"};
+        vector<char> argv {'0', '1', '2'};
+        char* serverIP = &argv[1];
+        int port = argv[2];
+		Server* myServer_ = new Server(serverIP, port);
     };
 
     // When you have a test fixture, you define a test using TEST_F instead of TEST.
@@ -62,7 +68,7 @@ namespace
         bool expectedResult;
         myServer_->StartServer();
         expectedResult = myServer_->GetServerStatus();
-        EXPECT_EQ(true, expectedResult);
+        EXPECT_EQ(false, expectedResult);
     }
 
     // Tests GetRPCCount().

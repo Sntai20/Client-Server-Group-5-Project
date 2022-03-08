@@ -27,5 +27,10 @@ public:
     // Returns 0 if the socket was created, otherwise the return value is 1.
     bool CreateSocket(int domain, int type, int protocal);
     int optionValue;
+    struct sockaddr_in m_address;
+    int incomingSock;
+    char* m_serverIP;
+    int m_port;
+    
 private:
 };
