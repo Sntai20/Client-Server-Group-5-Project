@@ -12,8 +12,22 @@ namespace
         // Declares the variables your tests want to use.
 		BingoGame myBingoGame_;
     };
-
+    
     // When you have a test fixture, you define a test using TEST_F instead of TEST.
+    // Tests the default setTime method.
+    TEST_F(BingoGameTest, setTime)
+    {
+        string inputString = "5";
+        EXPECT_TRUE(myBingoGame_.setTime(inputString));
+    }
+
+    // Tests the default setMaxNum method.
+    TEST_F(BingoGameTest, setMaxNum)
+    {
+        string inputString = "50";
+        EXPECT_TRUE(myBingoGame_.setMaxNum(inputString));
+    }
+    
     // Tests the default setBoard method.
     TEST_F(BingoGameTest, setBoard) 
     {
@@ -28,17 +42,5 @@ namespace
         EXPECT_EQ(true, true);
     }
 
-    // Tests the default setTime method.
-    TEST_F(BingoGameTest, setTime) 
-    {
-        string inputString = "5";
-        EXPECT_TRUE(myBingoGame_.setTime(inputString));
-    }
 
-    // Tests the default setMaxNum method.
-    TEST_F(BingoGameTest, setMaxNum) 
-    {
-        string inputString = "50";
-        EXPECT_TRUE(myBingoGame_.setMaxNum(inputString));
-    }
 } // End of BingoGameTest
