@@ -17,14 +17,13 @@ namespace
     // Tests the default setBoard method.
     TEST_F(BingoGameTest, setBoard) 
     {
-        string inputString = "bingoExample";
+        string inputString = "1,2,3,4,5,8,7,9,19,14,12,13,15,11,35,32,23,24,25,26,28,39,37,46,50";
         EXPECT_EQ(myBingoGame_.setBoard(inputString), true);
     }
 
     // Tests the default markBoard method.
     TEST_F(BingoGameTest, markBoard) 
     {
-        string inputString = "bingoExample";
         myBingoGame_.markBoard();
         EXPECT_EQ(true, true);
     }
@@ -32,14 +31,14 @@ namespace
     // Tests the default setTime method.
     TEST_F(BingoGameTest, setTime) 
     {
-        string inputString = "bingoExample";
+        string inputString = "5";
         EXPECT_EQ(myBingoGame_.setTime(inputString), true);
     }
 
     // Tests the default setMaxNum method.
     TEST_F(BingoGameTest, setMaxNum) 
     {
-        string inputString = "bingoExample";
+        string inputString = "50";
         EXPECT_EQ(myBingoGame_.setMaxNum(inputString), true);
     }
 } // End of BingoGameTest
