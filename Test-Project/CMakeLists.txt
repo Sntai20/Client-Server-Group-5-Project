@@ -1,6 +1,6 @@
 # CMakeList.txt : CMake project for ClientProject, include source and define
 # project specific logic here.
-cmake_minimum_required (VERSION 3.22)
+cmake_minimum_required (VERSION 3.20)
 
 # Set the project name.
 project ("Test-Project" CXX)
@@ -11,6 +11,9 @@ enable_language(CXX)
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+IF (WIN32)
+    link_libraries(ws2_32 wsock32)
+ENDIF()
 
 # Add source to this project's executable.
 add_executable (BasicTest "BasicTest.cpp")
