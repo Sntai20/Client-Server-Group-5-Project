@@ -247,3 +247,53 @@ bool BingoGame::setMaxNum(string inputString)
         << boardSize << "." << endl;
     return false;
 }
+
+/* This function can only be used during a bingo game. It will check the current
+ * board for horizontal, vertical, and diagonal bingos. It will return true if at
+ * least one bingo was detected, otherwise it will return false.
+ * The function takes in no parameters.
+ */
+bool BingoGame::checkBingo() {
+
+    // check horizontal bingos
+    for (int i = 0; i < boardSize; i+=5) {
+        if (markedNumbers[i] == 1) {
+            if (markedNumbers[i] == markedNumbers[i + 1] &&
+                    markedNumbers[i] == markedNumbers[i + 2] &&
+                    markedNumbers[i] == markedNumbers[i + 3] &&
+                    markedNumbers[i] == markedNumbers[i + 4]) {
+                    return true;
+            }
+        }
+    }
+
+    // check vertical bingos
+    for (int i = 0; i < 5; i++) {
+        if (markedNumbers[i] == 1) {
+            if (markedNumbers[i] == markedNumbers[i + 5] &&
+                markedNumbers[i] == markedNumbers[i + 10] &&
+                markedNumbers[i] == markedNumbers[i + 15] &&
+                markedNumbers[i] == markedNumbers[i + 20]) {
+                return true;
+            }
+        }
+    }
+
+    // check diagonal bingo (left to right)
+    if (markedNumbers[0] == 1 &&
+        markedNumbers[0] == markedNumbers[6] &&
+        markedNumbers[0] == markedNumbers[12] &&
+        markedNumbers[0] == markedNumbers[18] &&
+        markedNumbers[0] == markedNumbers[24]){
+        return true;
+    }
+    // check diagonal bingo (right to left)
+    if (markedNumbers[4] == 1 &&
+        markedNumbers[4] == markedNumbers[8] &&
+        markedNumbers[4] == markedNumbers[12] &&
+        markedNumbers[4] == markedNumbers[16] &&
+        markedNumbers[4] == markedNumbers[20]){
+        return true;
+    }
+    return false;
+}
