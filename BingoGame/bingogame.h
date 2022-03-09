@@ -47,6 +47,9 @@ public:
     // Takes in a string and sets the max number the server will call for the
     // rest of the game.
     bool setMaxNum(string inputString);
+    
+    // Checks if there is a bingo in the current board
+    bool checkBingo();
 
 private:
     // size of a 5x5 bingo board
