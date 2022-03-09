@@ -28,7 +28,7 @@ namespace
         EXPECT_TRUE(myBingoGame_.setMaxNum(inputString));
     }
     
-    // Tests the default setBoard method.
+    // Tests the default setBoard method while setting the max number to 50.
     TEST_F(BingoGameTest, setBoard) 
     {
 	myBingoGame_.setMaxNum("50");
