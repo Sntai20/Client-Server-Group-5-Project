@@ -43,5 +43,12 @@ namespace
         EXPECT_EQ(true, true);
     }
 
+    // Tests the default checkBingo method.
+    TEST_F(BingoGameTest, checkBingo)
+    {
+        myBingoGame_.checkBingo();
+        EXPECT_FALSE(myBingoGame_.checkBingo());
+    }
+	
 
 } // End of BingoGameTest
