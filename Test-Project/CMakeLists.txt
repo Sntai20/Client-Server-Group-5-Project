@@ -1,6 +1,6 @@
 # CMakeList.txt : CMake project for ClientProject, include source and define
 # project specific logic here.
-cmake_minimum_required (VERSION 3.20)
+cmake_minimum_required (VERSION 3.16)
 
 # Set the project name.
 project ("Test-Project" CXX)

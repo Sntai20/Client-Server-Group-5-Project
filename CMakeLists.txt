@@ -1,6 +1,6 @@
 ﻿# CMakeList.txt : CMake project for Server-Project, include source and define
 # project specific logic here.
-cmake_minimum_required (VERSION 3.20)
+cmake_minimum_required (VERSION 3.16)
 
 # Set the project name.
 project ("Client-Server-Group-5-Project")
