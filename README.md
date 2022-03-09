@@ -7,6 +7,7 @@ The bingo simulator will have the following Remote Procedure Calls (RPCs):
 
 - setBoard
 - markBoard
+- checkBingo
 - setTime
 - setMaxNum
 - Connect
@@ -28,10 +29,6 @@ The client connects to the server.
 
 - Working unit tests for the socket class
 - Authentication for multiple users
-- setBoard
-- markBoard
-- setTime
-- setMaxNum
 
 ## Build
 
