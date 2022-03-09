@@ -50,5 +50,4 @@ namespace
         EXPECT_FALSE(myBingoGame_.checkBingo());
     }
 	
-
 } // End of BingoGameTest
