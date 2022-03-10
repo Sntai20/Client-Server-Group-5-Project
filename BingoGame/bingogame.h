@@ -22,7 +22,6 @@
 #endif
 #include <iostream>
 
-
 using namespace std;
 
 class BingoGame
@@ -38,7 +37,7 @@ public:
     bool setBoard(string inputString);
 
     // Checks if the current number displayed by the system matches a number in the player's bingo board.
-    void markBoard();
+    bool markBoard();
 
     // Sets the number of seconds the server will wait between each bingo
     // number re-roll for the rest of the game.
@@ -47,9 +46,10 @@ public:
     // Takes in a string and sets the max number the server will call for the
     // rest of the game.
     bool setMaxNum(string inputString);
-    
+
     // Checks if there is a bingo in the current board
     bool checkBingo();
+    char* printDelimiterBoard(char returnString[],int row);
 
 private:
     // size of a 5x5 bingo board
@@ -64,8 +64,15 @@ private:
     int maxNum = 0;
     // delay between each server call
     int inputDelay = 0;
+    // number of rows in a printed bingo board
+    static const int numRows = 7;
+    // number of bingo squares per row
+    static const int numPerRow = 5;
+
     bool checkUnique();
     void printBoard();
+    char* getBingoString(char returnString[],int row);
+
 
 };
 
@@ -84,10 +91,10 @@ BingoGame::~BingoGame()
 
 /**
  * @brief This method is used to set the board values.
- * 
- * @param inputString 
- * @return true 
- * @return false 
+ *
+ * @param inputString
+ * @return true
+ * @return false
  */
 
 /* This function can only be used before a bingo game. It will take in a string and
@@ -139,6 +146,56 @@ bool BingoGame::checkUnique() {
     return true;
 }
 
+
+/* Public utility function to print the current state of the board.
+ * If a number is marked off, print a star instead of the number.
+ * Used by the server to send bingo board to client.
+ */
+char* BingoGame::printDelimiterBoard(char returnString[], int row) {
+
+    if (row == 0 || row == numRows - 1) {
+        strcpy(returnString, (char*)"|========================|\r\n");
+    } else if (row < numRows - 1) {
+
+        for (int i = 1; i < numRows; i++) {
+            if (i == row) {
+                char* functionString = getBingoString(returnString, row);
+
+                strcpy(returnString, functionString);
+            }
+        }
+    }
+    return returnString;
+}
+
+char* BingoGame::getBingoString(char returnString[], int row) {
+
+    for (int i = (row * numPerRow) - numPerRow; i < row * numPerRow; i++) {
+        std::string s = std::to_string(numbers[i]);
+        char const *number = s.c_str();
+        if (markedNumbers[i] == 0) {
+
+            if (numbers[i] < 10 && numbers[i] > -10) {
+                strcat(returnString, (char*)"| 0");
+                strcat(returnString, number);
+
+            } else {
+                strcat(returnString, (char*)"| ");
+                strcat(returnString, number);
+            }
+        } else {
+            strcat(returnString, (char*)"|  *");
+        }
+        if ((i + 1) % numPerRow == 0) {
+            strcat(returnString, (char*)" | \r\n");
+        } else {
+            strcat(returnString, (char*)" ");
+        }
+    }
+
+    return returnString;
+}
+
 /* Private utility function to print the current state of the board.
  * If a number is marked off, print a star instead of the number.
  */
@@ -168,16 +225,16 @@ void BingoGame::printBoard() {
 
 /**
  * @brief This method is used to mark the board values.
- * 
+ *
  */
- /* This function can only be used during a bingo game. It will check
-  * if the current number displayed by the system matches a number in
-  * the player's bingo board. If it matches, the virtual board will be
-  * updated to cross off the number. If it does not match, output a
-  * string to the client saying that the server number is not on the player's
-  * board. A new bingo board is printed if a number was successfully marked.
-  */
-void BingoGame::markBoard()
+/* This function can only be used during a bingo game. It will check
+ * if the current number displayed by the system matches a number in
+ * the player's bingo board. If it matches, the virtual board will be
+ * updated to cross off the number. If it does not match, output a
+ * string to the client saying that the server number is not on the player's
+ * board. A new bingo board is printed if a number was successfully marked.
+ */
+bool BingoGame::markBoard()
 {
     // TODO: Implement server generating random numbers every interval
     //       to update serverNum (temp value until implemented)
@@ -193,18 +250,20 @@ void BingoGame::markBoard()
     }
     if (found) {
         printBoard();
+        return true;
     } else {
         cout << "Number called by the server not found in current bingo board.\n";
+        return false;
     }
 
 }
 
 /**
  * @brief This method is used to set the time.
- * 
- * @param inputString 
- * @return true 
- * @return false 
+ *
+ * @param inputString
+ * @return true
+ * @return false
  */
 /* This function can only be used before a bingo game. It takes in a string
  * and sets the number of seconds the server will wait between each bingo
@@ -217,7 +276,7 @@ bool BingoGame::setTime(string inputString)
     inputDelay = stoi(inputString);
     if (inputDelay <= maxDelay) {
         cout << "Successfully set! The delay between each server call will be " << inputDelay
-            << " seconds." << endl;
+             << " seconds." << endl;
         return true;
     }
     cout << "The delay provided was invalid. Please enter a new number less than or"
@@ -227,10 +286,10 @@ bool BingoGame::setTime(string inputString)
 
 /**
  * @brief This method is used to set the maximum number.
- * 
- * @param inputString 
- * @return true 
- * @return false 
+ *
+ * @param inputString
+ * @return true
+ * @return false
  */
 /* This function can only be used before a bingo game. It takes in a string
  * and sets the max number the server will call for the rest of the game.
@@ -243,11 +302,11 @@ bool BingoGame::setMaxNum(string inputString)
     maxNum = stoi(inputString);
     if (maxNum > boardSize) {
         cout << "Successfully set! The max number that the server will call will be " << maxNum
-            << "." << endl;
+             << "." << endl;
         return true;
     }
     cout << "The max number provided was invalid. Please enter a new number greater than "
-        << boardSize << "." << endl;
+         << boardSize << "." << endl;
     return false;
 }
 
@@ -262,10 +321,10 @@ bool BingoGame::checkBingo() {
     for (int i = 0; i < boardSize; i+=5) {
         if (markedNumbers[i] == 1) {
             if (markedNumbers[i] == markedNumbers[i + 1] &&
-                    markedNumbers[i] == markedNumbers[i + 2] &&
-                    markedNumbers[i] == markedNumbers[i + 3] &&
-                    markedNumbers[i] == markedNumbers[i + 4]) {
-                    return true;
+                markedNumbers[i] == markedNumbers[i + 2] &&
+                markedNumbers[i] == markedNumbers[i + 3] &&
+                markedNumbers[i] == markedNumbers[i + 4]) {
+                return true;
             }
         }
     }
