@@ -50,6 +50,7 @@ public:
     // Checks if there is a bingo in the current board
     bool checkBingo();
     char* printDelimiterBoard(char returnString[],int row);
+    bool checkUnique(string inputString);
 
 private:
     // size of a 5x5 bingo board
@@ -68,12 +69,8 @@ private:
     static const int numRows = 7;
     // number of bingo squares per row
     static const int numPerRow = 5;
-
-    bool checkUnique();
     void printBoard();
     char* getBingoString(char returnString[],int row);
-
-
 };
 
 // Constructor zeroes out board numbers
@@ -109,36 +106,59 @@ bool BingoGame::setBoard(string inputString)
 {
     istringstream stringStream(inputString);
     string token;
+    bool isBoardSet = true;
     int i = 0;
-    while (getline(stringStream, token, ',') && i < boardSize){
+
+    while (getline(stringStream, token, ',') && i < boardSize)
+    {
         numbers[i] = stoi(token);
         i++;
     }
 
-    if (i != boardSize) {
-        return false;
+    if (i != boardSize) 
+    {
+        isBoardSet = false;
     }
-    if (checkUnique()) {
+    if (!checkUnique(inputString)) 
+    {
+        cout << "Invalid board setup provided. Please try again.\n";
+        isBoardSet = false;
+    } else {
         cout << "Board successfully set!\n";
         printBoard();
-        return true;
+        isBoardSet = true;
     }
-    cout << "Invalid board setup provided. Please try again.\n";
-    return false;
+    
+    return isBoardSet;
 }
 
 /* Helper function to test if all numbers in the board are unique.
  * Returns false if there is a duplicate number, otherwise returns
  * true.
  */
-bool BingoGame::checkUnique() {
+bool BingoGame::checkUnique(string inputString) 
+{
+    istringstream stringStream(inputString);
+    string token;
+    int i = 0;
 
-    for (int i = 0; i < boardSize; i++) {
-        if (numbers[i] > maxNum) {
-            return false;
-        }
-        for (int j = 0; j < i; j++) {
-            if (numbers[i] == numbers[j]) {
+    while (getline(stringStream, token, ',') && i < boardSize)
+    {
+        numbers[i] = stoi(token);
+        i++;
+    }
+
+    for (int i = 0; i < boardSize; i++) 
+    {
+        // This might be a bug.
+        // if (numbers[i] > maxNum) 
+        // {
+        //     return false;
+        // }
+        for (int j = 0; j < i; j++) 
+        {
+            if (numbers[i] == numbers[j]) 
+            {
                 return false;
             }
         }
