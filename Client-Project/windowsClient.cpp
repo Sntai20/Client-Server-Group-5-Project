@@ -76,6 +76,7 @@ int main()
     signal(SIGKILL,s_handle);
     signal(SIGQUIT,s_handle);
 
+
     std::cout<<"\t\tWelcome to group 5's bingo simulator!";
 
     std::cout<<"\n\n\t\tEnter IP address to connect to or enter [c] to connect to localhost: \n";
@@ -123,7 +124,7 @@ int main()
     char RecvdData[100] = "";
     strcpy(RecvdData,"");
     int ret;
-    char* successfulLogin = "Successfully logged in!";
+    char* successfulLogin = (char*)"Successfully logged in!";
     while (strncmp(RecvdData, successfulLogin, strlen(successfulLogin)) != 0) {
         std::cout<<"\nPlease enter your login credentials in the following format: [connect;username;password].\n";
         strcpy(buf,"");
@@ -141,9 +142,7 @@ int main()
         }
     }
 
-
     printMenu();
-
     while(true)
     {
         strcpy(buf,"");
@@ -156,7 +155,7 @@ int main()
             break;
         }
 
-        Sleep(5);
+        Sleep(25);
         res = send(sock,buf,sizeof(buf),0);
 
         if(res==0)
@@ -177,8 +176,15 @@ int main()
             break;
         }
 
+        // expect extra lines of output from server for setBoard and markBoard RPCs
         ret = recv(sock,RecvdData,sizeof(RecvdData),0);
-        if(ret > 0)
+        if (strncmp(buf, "setBoard", 8) == 0 || strncmp(buf, "markBoard", 9) == 0 ) {
+            for (int i = 0; i < 8 ; i++) {
+                recv(sock,RecvdData,sizeof(RecvdData),0);
+                std::cout<<RecvdData;
+                strcpy(RecvdData,"");
+            }
+        } else if(ret > 0)
         {
             std::cout<<std::endl<<RecvdData;
             strcpy(RecvdData,"");
