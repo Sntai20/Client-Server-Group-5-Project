@@ -24,7 +24,6 @@ char* processParameter(char* buf) {
         if(start < end && *start) {
             *end = 0;
             token = start + 1;
-            printf("token: %s\n", token);
             start = buf = end;
             break;
         }
@@ -156,6 +155,16 @@ DWORD WINAPI receive_cmds(LPVOID lpParam)
 
                 } else {
                     strcpy(message, (char*)"Invalid bingo setup provided. Please try again.");
+                    strcpy(sendData, message);
+                    Sleep(10);
+                    send(current_client,sendData,sizeof(sendData),0);
+                    for (int i = 0; i < 7; i++) {
+
+                        while (send(current_client,sendData,sizeof(sendData),0) < 0){
+                            send(current_client,sendData,sizeof(sendData),0);
+                        }
+                        strcpy(sendData, "");
+                    }
                 }
                 strcpy(sendData, message);
                 Sleep(10);
