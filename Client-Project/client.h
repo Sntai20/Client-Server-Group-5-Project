@@ -6,6 +6,16 @@
  * @version 0.1
  * @date 2022-02-11
  */  
+
+#include <cstdio>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <vector>
+#include <iterator>
+#include <iostream>
+#include <cstring>
+#include <termio.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -32,9 +42,31 @@ class Client
 private:
     /* data */
 public:
-    // Client(/* args */);
-    // ~Client();
+    //Initialize data
     int sock = 0;
-    void ParseTokens(char* buffer, vector<string>& a);
-    bool ConnectToServer(const char* serverAddress, int port);
+    struct sockaddr_in serv_addr;
+
+    //Global variables for supported RPCs calls from client
+    const string CONNECT = "connect",
+        DISCONNECT = "disconnect",
+        SETMAXNUM = "setMaxNum",
+        CALC_EXPR = "calculateExpression",
+        CALC_STAT = "calculateStats",
+        CALC_CONV = "conversion";
+    const char* logoffRPC = "disconnect;";
+    char buffer[1024] = { 0 };
+    char connected;
+    char disconnected;
+    const int SLEEP_TIME = 10;
+    bool bConnect = false;
+
+    string getCredentials();
+    void ParseTokens(char* buffer, std::vector<std::string>& a);
+    bool ConnectToServer(const char* serverAddress, int port, int& sock);
+    void userInterface();
+    bool validateInteger(string input);
+    // void processSetMaxNum();
+    void processCalcExpression();
+    void processCalcStats();
+    void processConversion();
 };

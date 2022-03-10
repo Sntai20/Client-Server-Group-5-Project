@@ -46,9 +46,9 @@ private:
     // password pairs
 
     //SUPPORTED RPCs
-    //Conversion parted added and fixed by Jusmin 3/2/22
     const string CONNECT = "connect",
                   DISCONNECT = "disconnect",
+                  SETMAXNUM = "setMaxNum",
                   CALC_EXPR = "calculateExpression",
                   CALC_STAT = "calculateStats",
                   CALC_CONV = "conversion";
@@ -115,8 +115,7 @@ private:
 /**
  * Constructor
  */
-GameManager::GameManager(int socket, const string& filename) :
-        m_authenticator(filename)
+GameManager::GameManager(int socket, const string& filename) : m_authenticator(filename)
 {
     m_socket = socket;
     m_authenticated = false;
@@ -137,9 +136,7 @@ GameManager::~GameManager()
 /**
  * ProcessRPC will examine buffer and will essentially control
  */
-bool GameManager::ProcessRPC(pthread_mutex_t *g_contextLock,
-                               pthread_mutex_t *g_screenLock,
-                               GlobalContext *g_globalContext)
+bool GameManager::ProcessRPC(pthread_mutex_t *g_contextLock, pthread_mutex_t *g_screenLock, GlobalContext *g_globalContext)
 {
     const int BUFFER_SIZE = 1024;
     char buffer[BUFFER_SIZE] = { 0 };
@@ -269,21 +266,20 @@ bool GameManager::ProcessConnectRPC(std::vector<std::string>& arrayTokens, pthre
     const int PASSWORDTOKEN = 2;
     char szBuffer[80];
 
-    //if user entered empty strings for credentials, send failure
-    if (arrayTokens.size() < 3)
+    // if user entered empty strings for credentials, send failure
+    /*if (arrayTokens.size() < 3)
     {
         strcpy(szBuffer, GENERAL_FAIL.c_str());
         sendBuffer(szBuffer, g_screenLock);
         return false;
-    }
+    }*/
 
     // Strip out tokens 1 and 2 (username, password)
     string userNameString = arrayTokens[USERNAMETOKEN];
     string passwordString = arrayTokens[PASSWORDTOKEN];
 
     // Authenticate based on parsed credentials
-    m_authenticated =
-            m_authenticator.authenticate(userNameString, passwordString);
+    m_authenticated = m_authenticator.authenticate(userNameString, passwordString);
 
     if (m_authenticated)
         strcpy(szBuffer, SUCCESS.c_str());
@@ -328,11 +324,17 @@ bool GameManager::ProcessCal(vector<std::string> &arrayTokens, pthread_mutex_t *
     char szBuffer[BUFFER_SIZE] = {0};
 
     Calculator myCalc;
+    BingoGame myBingoGame;
 
     //Calculate expression
     try
     {
-       if (arrayTokens[0] == CALC_EXPR && arrayTokens.size() == 2)
+        if (arrayTokens[0] == SETMAXNUM && arrayTokens.size() == 2)
+        {
+            result = myBingoGame.setMaxNum(arrayTokens[1]);
+            result = result + ";" + SUCCESS;
+        }
+       else if (arrayTokens[0] == CALC_EXPR && arrayTokens.size() == 2)
        {
            result = myCalc.calculateExpression(arrayTokens[1]);
            result = result + ";" + SUCCESS;
@@ -367,7 +369,7 @@ bool GameManager::ProcessCal(vector<std::string> &arrayTokens, pthread_mutex_t *
         result = "0;" + GENERAL_FAIL;
     }
 
-    //Copy result to buffer and send buffer to client
+    // Copy result to buffer and send buffer to client
     strcpy(szBuffer, result.c_str());
     sendBuffer(szBuffer, g_screenLock);
 
@@ -381,11 +383,11 @@ bool GameManager::ProcessCal(vector<std::string> &arrayTokens, pthread_mutex_t *
  */
 void GameManager::ParseTokens(char * buffer, std::vector<std::string> & a)
 {
-    //Declare variables to facilitate the parsing of input buffer
+    // Declare variables to facilitate the parsing of input buffer
     char* token;
     char* rest = (char *) buffer;
 
-    //Loop through the input buffer, and extract strings using the ';' delimiter
+    // Loop through the input buffer, and extract strings using the ';' delimiter
     while ((token = strtok_r(rest, ";", &rest)))
     {
         a.push_back(token);
@@ -412,8 +414,7 @@ const
 /**
  * printServerStats will print out the status of server in each thread
  */
-void GameManager::printServerStats(const GlobalContext *g_globalContext,
-                                     const string &phase) const
+void GameManager::printServerStats(const GlobalContext *g_globalContext, const string &phase) const
 {
     auto input = phase.c_str();
     printf("\n");

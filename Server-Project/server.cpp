@@ -71,7 +71,7 @@ Server::~Server()
  */
 bool Server::StartServer()
 {
-    int optval = 1;
+    int opt = 1;
     const int BACKLOG = 1000;
 
     // Creating socket file descriptor
@@ -82,40 +82,21 @@ bool Server::StartServer()
     }
 
     // Forcefully attaching socket to the port passed in to the constructor
-    //if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
-    // if(setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEADDR, (const void*)&opt, sizeof(opt)))
-    // if(setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, (const void*)&opt, sizeof(opt)))
-    // {
-    //     perror("setsockopt");
-    //     exit(EXIT_FAILURE);
-    // }
+    if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+    {
+         perror("setsockopt");
+         exit(EXIT_FAILURE);
+    }
 
-    // m_address.sin_family = AF_INET;
-    // m_address.sin_addr.s_addr = INADDR_ANY;
-    // m_address.sin_port = htons(m_port);
-    // Forcefully attaching socket to the port passed in to the constructor
-    // bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address));
-    // if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)) < 0)
-    // if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)))
-    // {
-    //     perror("bind failed");
-    //     exit(EXIT_FAILURE);
-    // }
-
-    setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
-
-     struct sockaddr_in serv_addr, m_address;
-     bzero((char *) &serv_addr, sizeof(serv_addr));
-     serv_addr.sin_family = AF_INET;  
-     serv_addr.sin_addr.s_addr = INADDR_ANY;  
-     serv_addr.sin_port = htons(m_port);
-     bind(m_server_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr));
-    //  if (bind(m_server_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
-    //  {
-    //       std::cerr << "bind error" << std::endl;
-    //       return 2;
-    //  }
-
+     m_address.sin_family = AF_INET;
+     m_address.sin_addr.s_addr = INADDR_ANY;
+     m_address.sin_port = htons(m_port);
+     // Forcefully attaching socket to the port passed in to the constructor
+     if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)) < 0)
+     {
+         perror("bind failed");
+         exit(EXIT_FAILURE);
+     }
 
     if (listen(m_server_fd, BACKLOG) < 0)
     {
@@ -174,20 +155,18 @@ bool Server::ListenForClient()
     {
         perror("accept");
         exit(EXIT_FAILURE);
+    } 
+    else
+    {
+        printf("Socket: %d: Accepted Connection\n", m_socket);
+        //create thread object
+        pthread_t thread_id;
+        printf("Socket: %d: Launching Thread\n", m_socket);
+
+        pthread_create(&thread_id, nullptr, startThread, (void*)&m_socket);
+        pthread_detach(thread_id);
+
     }
-    //
-//     else
-//     {
-//        printf("Socket: %d: Accepted Connection\n", m_socket);
-// //
-// //        //create thread object
-//         pthread_t thread_id;
-//         printf("Socket: %d: Launching Thread\n", m_socket);
-
-//         pthread_create(&thread_id, nullptr, startThread, (void*)&m_socket);
-//         pthread_detach(thread_id);
-
-//     }
-
+    
     return true;
 }
