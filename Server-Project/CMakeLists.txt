@@ -17,6 +17,7 @@ ENDIF()
 
 # Add source to this project's executable.
 add_executable (Server "main.cpp")
+add_executable (WindowsServer "windowsserver.cpp")
 
 # Add pthread
 set(THREADS_PREFER_PTHREAD_FLAG ON)
