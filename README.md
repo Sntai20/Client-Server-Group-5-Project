@@ -24,27 +24,44 @@ The client connects to the server.
 - Disconnect RPC.
 - Simple Exception Handling
 - Multi-threaded Server
-
-## Coming Soon
-
-- Working unit tests for the socket class
-- Authentication for multiple users
+- Working unit tests
+- Authentication
 
 ## Build
 
-To build, navigate to the `./Client-Server-Group-5-Project/`
+To build, navigate to the `~/Client-Server-Group-5-Project/`
 
-`cmake -S . -B build`
+`cmake --preset macos-default`
 
-`cmake --build build`
+Available configure presets:
+
+- "linux-default"   - Use this preset for Linux Debug
+- "macos-default"   - Use this preset for macOS Debug
+- "windows-default" - Use this preset for Windows x64 Debug
 
 ## Run the Code
 
-To run the code use the Server-Project and Client-Project Folders. Start the server first, then the client.
+To run the code, navigate to the build Project Folder `~/Client-Server-Group-5-Project/out/build/macos-default/`. To run the code use the Server-Project and Client-Project Folders. Start the server first, then the client.
 
-To run the server `./build/server 127.0.0.1 10320`
+To run the server `./server 127.0.0.1 10320`
 
-To run the client `./build/client 127.0.0.1 10320`
+To run the client `./client 127.0.0.1 10320`
+
+## TODO
+
+- [x] Update README.MD
+- [ ] generate random numbers on the server on each interval and send them to the client
+- [ ] update markBoard RPC to use this random number instead of a hard-coded value
+- [ ] create global context class/struct with mutexes
+- [ ] clean up code
+- [ ] either allow client to restart game after a bingo is detected or end client connection
+- [ ] screenshot of 4+ clients connected and running RPCs at the same time testing that output is correct for multiple clients connecting at the same time (for example, clients with different setTime calls should get numbers at different intervals)
+- [ ] update final PDF to reflect global context and include additional features
+- [ ] optional things to do to get the "exceeds expectations" grade (based on what we have already):
+- [ ] update google tests/CMake/github site to work for the windows version
+- [ ] include compatibility for max/linux
+- [ ] restrict RPC calls setMaxNum, setTime, and setBoard to only before the game starts
+- [ ] restrict RPC calls checkBingo, markBoard to only during a game
 
 ### Visual Studio Code Extensions
 
