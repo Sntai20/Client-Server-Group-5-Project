@@ -260,7 +260,11 @@ int main(int argc, char *argv[])
             // strcpy(sendData, message);
             // Sleep(10);
             // send(current_client,sendData,sizeof(sendData),0);
-            write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            if (response < 0)
+            {
+                std::cout << "Response is less than zero," << std::endl;
+            }
 
         }
                 // else if (relationalOperation(s1,"checkBingo")) // call checkBingo function
@@ -286,7 +290,11 @@ int main(int argc, char *argv[])
                     strcpy(sendData,(char*)"Invalid RPC. \n");
                     // Sleep(10);
                     // send(current_client,sendData,sizeof(sendData),0);
-                    write(incomingSock, sendData, MSG_REPLY_LENGTH);
+                    ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
+                    if (response < 0)
+                    {
+                        std::cout << "Response is less than zero," << std::endl;
+                    }
                 }   
      }
 
