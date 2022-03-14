@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @author Group 5
+ * @brief Client side C++ 17 program to demonstrate Socket programming for Bingo game.
+ * @version 0.1
+ * @date 2022-02-11
+ */  
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -11,6 +18,10 @@
 constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
 
+/**
+ * @brief Welcome menu for the user and provides instructions.
+ * 
+ */
 void printMenu() 
 {
     std::cout << "\n=========Menu of RPCs with instructions on how to play=========\n";
@@ -30,6 +41,13 @@ void printMenu()
 
 }
 
+/**
+ * @brief This is the entry for the client program.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char *argv[])
 {
     if (argc != 2)
@@ -110,6 +128,6 @@ int main(int argc, char *argv[])
         }
     } // End of While loop.
 
-    close(sockfd);
+    close(sockfd); // Close the socket handle.
     return 0;
 }
