@@ -91,7 +91,11 @@ int main(int argc, char *argv[])
         std::cout << "server: got connection from = " 
                 << inet_ntoa(cli_addr.sin_addr)
                 << " and port = " << ntohs(cli_addr.sin_port) << std::endl;
-        write(incomingSock, "You are connected!", MSG_REPLY_LENGTH);
+        ssize_t response = write(incomingSock, "You are connected!", MSG_REPLY_LENGTH);
+        if (response < 0)
+        {
+            std::cout << "Response is less than zero," << std::endl;
+        }
 
         std::string buffer (MAX_BUFFER, 0);
         if (read(incomingSock, &buffer[0], MAX_BUFFER-1) < 0)
@@ -116,7 +120,12 @@ int main(int argc, char *argv[])
             strcpy(sendData,"Disconnected!\n");
             // Sleep(10);
             // send(current_client,sendData,sizeof(sendData),0);
-            write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            if (response < 0)
+            {
+                std::cout << "Response is less than zero," << std::endl;
+            }
+            
 
             // close the socket associated with this client and end this thread
             // closesocket(current_client);
@@ -137,7 +146,11 @@ int main(int argc, char *argv[])
             strcpy(sendData, (char*)"setMaxNum");
             // Sleep(10);
             // send(current_client,sendData,sizeof(sendData),0);
-            write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            if (response < 0)
+            {
+                std::cout << "Response is less than zero," << std::endl;
+            }
         }
         else if(relationalOperation(s1,"setTime"))
         { // call setTime function
@@ -157,7 +170,11 @@ int main(int argc, char *argv[])
             strcpy(sendData, (char*)"setTime");
             // Sleep(10);
             // send(current_client,sendData,sizeof(sendData),0);
-            write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            if (response < 0)
+            {
+                std::cout << "Response is less than zero," << std::endl;
+            }
         }
         else if(relationalOperation(s1,"setBoard"))
         { // call setBoard function
@@ -204,7 +221,12 @@ int main(int argc, char *argv[])
             // Sleep(10);
             // send(current_client,sendData,sizeof(sendData),0);
             strcpy(sendData, (char*)"setBoard");
-            write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            if (response < 0)
+            {
+                std::cout << "Response is less than zero," << std::endl;
+            }
+            
         } 
         else if(relationalOperation(s1,"markBoard"))
         { // call markBoard function
