@@ -82,17 +82,19 @@ int main(int argc, char *argv[])
     printMenu();
     while (true)
     {
-        std::cout<<"\nEnter message to send ->\n";
-
         strcpy(buf,"");
-        std::cout<<"\nEnter message to send ->\n";
-        fgets(buf,sizeof(buf),stdin);
-
+        std::cout<<"\nEnter message to send -> \t";
+        // Unused char* fgets
+        char* UserInput = fgets(buf,sizeof(buf),stdin);
+        if (sizeof(UserInput) < 3 )
+        {
+            std::cout << "Please enter a valid option." << std::endl;
+        }
         // if disconnect is entered, disconnect the client.
-        if (strncmp(buf, "disconnect", 10) == 0 ) {
+        if (strncmp(buf, "disconnect", 10) == 0 ) 
+        {
             break;
         }
-
         if (write(sockfd, buf, strlen(buf)) < 0) 
         {
             std::cerr << "write to socket" << std::endl;
@@ -104,8 +106,7 @@ int main(int argc, char *argv[])
             close(sockfd);
             break;
         }
-        
-    }
+    } // End of While loop.
 
     close(sockfd);
     return 0;
