@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @author Group 5
+ * @brief Server side C++ program to demonstrate Socket programming for Bingo game.
+ * @version 0.1
+ * @date 2022-02-11
+ */  
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +21,14 @@ constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
 constexpr unsigned int MSG_REPLY_LENGTH = 18;
 
+/**
+ * @brief This function compares strings to see if they match.
+ * 
+ * @param s1 
+ * @param s2 
+ * @return true 
+ * @return false 
+ */
 bool relationalOperation(std::string s1, std::string s2)
 {
     if (s1 != s2)
@@ -32,6 +47,12 @@ bool relationalOperation(std::string s1, std::string s2)
         return true;
 }
 
+/**
+ * @brief This function is used to parse the input parameters.
+ * 
+ * @param buffer 
+ * @return char* 
+ */
 char* processParameter(char* buffer) 
 {
     char* token;
@@ -72,6 +93,13 @@ char* setBoard() // call setBoard function
     return result;
 }
 
+/**
+ * @brief This is the entry for the server program.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char *argv[])
 {
     // client bingo board
