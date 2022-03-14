@@ -43,9 +43,9 @@ Available configure presets:
 
 To run the code, navigate to the build Project Folder `~/Client-Server-Group-5-Project/out/build/macos-default/`. To run the code use the Server-Project and Client-Project Folders. Start the server first, then the client.
 
-To run the server `./server 127.0.0.1 10320`
+To run the server `./server`
 
-To run the client `./client 127.0.0.1 10320`
+To run the client `./client localhost`
 
 ## TODO
 
@@ -53,13 +53,13 @@ To run the client `./client 127.0.0.1 10320`
 - [ ] generate random numbers on the server on each interval and send them to the client
 - [ ] update markBoard RPC to use this random number instead of a hard-coded value
 - [ ] create global context class/struct with mutexes
-- [ ] clean up code
-- [ ] either allow client to restart game after a bingo is detected or end client connection
+- [x] clean up code
+- [x] either allow client to restart game after a bingo is detected or end client connection
 - [ ] screenshot of 4+ clients connected and running RPCs at the same time testing that output is correct for multiple clients connecting at the same time (for example, clients with different setTime calls should get numbers at different intervals)
 - [ ] update final PDF to reflect global context and include additional features
 - [ ] optional things to do to get the "exceeds expectations" grade (based on what we have already):
 - [ ] update google tests/CMake/github site to work for the windows version
-- [ ] include compatibility for max/linux
+- [x] include compatibility for max/linux
 - [ ] restrict RPC calls setMaxNum, setTime, and setBoard to only before the game starts
 - [ ] restrict RPC calls checkBingo, markBoard to only during a game
 

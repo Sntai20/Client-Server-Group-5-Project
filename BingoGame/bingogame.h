@@ -6,23 +6,10 @@
  * @version 0.1
  * @date 2022-02-11
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sstream>
-#include <unistd.h>
-#include <sys/types.h>
-#ifdef _WIN32
-#include <Winsock2.h>
-#include <windows.h>
-#else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#endif
 #include <iostream>
-
-using namespace std;
+#include <stdio.h>
+#include <string.h>
 
 class BingoGame
 {
@@ -34,23 +21,23 @@ public:
     ~BingoGame();
 
     // Creating the Bingo board.
-    bool setBoard(string inputString);
+    bool setBoard(std::string inputString);
 
     // Checks if the current number displayed by the system matches a number in the player's bingo board.
     bool markBoard();
 
     // Sets the number of seconds the server will wait between each bingo
     // number re-roll for the rest of the game.
-    bool setTime(string inputString);
+    bool setTime(std::string inputString);
 
     // Takes in a string and sets the max number the server will call for the
     // rest of the game.
-    bool setMaxNum(string inputString);
+    bool setMaxNum(std::string inputString);
 
     // Checks if there is a bingo in the current board
     bool checkBingo();
     char* printDelimiterBoard(char returnString[],int row);
-    bool checkUnique(string inputString);
+    bool checkUnique(std::string inputString);
 
 private:
     // size of a 5x5 bingo board
@@ -102,10 +89,10 @@ BingoGame::~BingoGame()
  * through calling a private function on successful setup (see markBoard bingo board).
  *
  */
-bool BingoGame::setBoard(string inputString)
+bool BingoGame::setBoard(std::string inputString)
 {
-    istringstream stringStream(inputString);
-    string token;
+    std::istringstream stringStream(inputString);
+    std::string token;
     bool isBoardSet = true;
     int i = 0;
 
@@ -121,10 +108,10 @@ bool BingoGame::setBoard(string inputString)
     }
     if (!checkUnique(inputString)) 
     {
-        cout << "Invalid board setup provided. Please try again.\n";
+        std::cout << "Invalid board setup provided. Please try again.\n" << std::endl;
         isBoardSet = false;
     } else {
-        cout << "Board successfully set!\n";
+        std::cout << "Board successfully set!\n" << std::endl;
         printBoard();
         isBoardSet = true;
     }
@@ -136,10 +123,10 @@ bool BingoGame::setBoard(string inputString)
  * Returns false if there is a duplicate number, otherwise returns
  * true.
  */
-bool BingoGame::checkUnique(string inputString) 
+bool BingoGame::checkUnique(std::string inputString) 
 {
-    istringstream stringStream(inputString);
-    string token;
+    std::istringstream stringStream(inputString);
+    std::string token;
     int i = 0;
 
     while (getline(stringStream, token, ',') && i < boardSize)
@@ -188,9 +175,11 @@ char* BingoGame::printDelimiterBoard(char returnString[], int row) {
     return returnString;
 }
 
-char* BingoGame::getBingoString(char returnString[], int row) {
+char* BingoGame::getBingoString(char returnString[], int row) 
+{
 
-    for (int i = (row * numPerRow) - numPerRow; i < row * numPerRow; i++) {
+    for (int i = (row * numPerRow) - numPerRow; i < row * numPerRow; i++) 
+    {
         std::string s = std::to_string(numbers[i]);
         char const *number = s.c_str();
         if (markedNumbers[i] == 0) {
@@ -219,28 +208,34 @@ char* BingoGame::getBingoString(char returnString[], int row) {
 /* Private utility function to print the current state of the board.
  * If a number is marked off, print a star instead of the number.
  */
-void BingoGame::printBoard() {
+void BingoGame::printBoard() 
+{
 
-    cout << "|========================| \n";
+    std::cout << "|========================| \n";
     for (int i = 0; i < boardSize; i++) {
 
         if (markedNumbers[i] == 0) {
-            if (numbers[i] < 10 && numbers[i] > -10) {
-                cout << "| 0" << numbers[i];
-            } else {
-                cout << "| " << numbers[i];
+            if (numbers[i] < 10 && numbers[i] > -10) 
+            {
+                std::cout << "| 0" << numbers[i];
+            } else 
+            {
+                std::cout << "| " << numbers[i];
             }
-        } else {
-            cout << "|  *";
+        } 
+        else 
+        {
+            std::cout << "|  *";
         }
         if ((i + 1) % 5 == 0) {
-            cout << " | \n";
-        } else {
-            cout << " ";
+            std::cout << " | \n";
+        } else 
+        {
+            std::cout << " ";
         }
 
     }
-    cout << "|========================|";
+    std::cout << "|========================|";
 }
 
 /**
@@ -272,7 +267,7 @@ bool BingoGame::markBoard()
         printBoard();
         return true;
     } else {
-        cout << "Number called by the server not found in current bingo board.\n";
+        std::cout << "Number called by the server not found in current bingo board.\n";
         return false;
     }
 
@@ -291,16 +286,17 @@ bool BingoGame::markBoard()
  * to confirm changes or to inform the user that the input value was invalid,
  * and no changes were made. The time set must be 10 seconds or less.
  */
-bool BingoGame::setTime(string inputString)
+bool BingoGame::setTime(std::string inputString)
 {
     inputDelay = stoi(inputString);
-    if (inputDelay <= maxDelay) {
-        cout << "Successfully set! The delay between each server call will be " << inputDelay
-             << " seconds." << endl;
+    if (inputDelay <= maxDelay) 
+    {
+        std::cout << "Successfully set! The delay between each server call will be " << inputDelay
+             << " seconds." << std::endl;
         return true;
     }
-    cout << "The delay provided was invalid. Please enter a new number less than or"
-            " equal to " << maxDelay << "." << endl;
+    std::cout << "The delay provided was invalid. Please enter a new number less than or"
+            " equal to " << maxDelay << "." << std::endl;
     return false;
 }
 
@@ -317,16 +313,17 @@ bool BingoGame::setTime(string inputString)
  * that the input value was invalid, and no changes were made. The provided
  * number must be at least 25, the size of a bingo board.
  */
-bool BingoGame::setMaxNum(string inputString)
+bool BingoGame::setMaxNum(std::string inputString)
 {
     maxNum = stoi(inputString);
-    if (maxNum > boardSize) {
-        cout << "Successfully set! The max number that the server will call will be " << maxNum
-             << "." << endl;
+    if (maxNum > boardSize) 
+    {
+        std::cout << "Successfully set! The max number that the server will call will be " << maxNum
+             << "." << std::endl;
         return true;
     }
-    cout << "The max number provided was invalid. Please enter a new number greater than "
-         << boardSize << "." << endl;
+    std::cout << "The max number provided was invalid. Please enter a new number greater than "
+         << boardSize << "." << std::endl;
     return false;
 }
 

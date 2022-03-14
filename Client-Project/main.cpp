@@ -13,7 +13,6 @@ constexpr unsigned int MAX_BUFFER = 128;
 
 void printMenu() 
 {
-
     std::cout << "\n=========Menu of RPCs with instructions on how to play=========\n";
     std::cout << "The following RPCs must be called prior to setting a board:\n";
     std::cout << "setMaxNum: sets the max number the server will call (must be greater than 25)\n";
@@ -71,17 +70,20 @@ int main(int argc, char *argv[])
     }
 
     std::string readBuffer (MAX_BUFFER, 0);
-    if (read(sockfd, &readBuffer[0], MAX_BUFFER-1) < 0)
-    {
-        std::cerr << "read from socket failed" << std::endl;
-        return 5;
-    }
-    std::cout << readBuffer << std::endl;
+    
 
     char buf[100];
     printMenu();
     while (true)
     {
+        // Read the responses sent from the server.
+        if (read(sockfd, &readBuffer[0], MAX_BUFFER-1) < 0)
+        {
+            std::cerr << "read from socket failed" << std::endl;
+            return 5;
+        }
+        std::cout << readBuffer << std::endl;
+
         strcpy(buf,"");
         std::cout<<"\nEnter message to send -> \t";
         // Unused char* fgets
