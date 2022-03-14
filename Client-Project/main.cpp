@@ -11,7 +11,8 @@
 constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
 
-void printMenu() {
+void printMenu() 
+{
 
     std::cout << "\n=========Menu of RPCs with instructions on how to play=========\n";
     std::cout << "The following RPCs must be called prior to setting a board:\n";
