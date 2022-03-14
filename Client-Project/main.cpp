@@ -78,15 +78,33 @@ int main(int argc, char *argv[])
     }
     std::cout << readBuffer << std::endl;
 
+    char buf[100];
     printMenu();
-
-    std::string writeBuffer (MAX_BUFFER, 0);
-    std::cout << "What message for the server? : ";
-    getline(std::cin, writeBuffer);
-    if (write(sockfd, writeBuffer.c_str(), strlen(writeBuffer.c_str())) < 0) 
+    while (true)
     {
-        std::cerr << "write to socket" << std::endl;
-        return 4;
+        std::cout<<"\nEnter message to send ->\n";
+
+        strcpy(buf,"");
+        std::cout<<"\nEnter message to send ->\n";
+        fgets(buf,sizeof(buf),stdin);
+
+        // if disconnect is entered, disconnect the client.
+        if (strncmp(buf, "disconnect", 10) == 0 ) {
+            break;
+        }
+
+        if (write(sockfd, buf, strlen(buf)) < 0) 
+        {
+            std::cerr << "write to socket" << std::endl;
+            return 4;
+        } 
+        else if (write(sockfd, buf, strlen(buf)) == 0) 
+        {
+            std::cout << "\nServer has terminated connection!" << std::endl;
+            close(sockfd);
+            break;
+        }
+        
     }
 
     close(sockfd);
