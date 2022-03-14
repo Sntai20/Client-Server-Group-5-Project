@@ -16,12 +16,13 @@ constexpr unsigned int MSG_REPLY_LENGTH = 18;
 
 bool relationalOperation(std::string s1, std::string s2)
 {
- 
     if (s1 != s2)
     {
         std::cout << s1 << " is not equal to " << s2 << std::endl;
-        if (s1 > s2)
+        if (s1 > s2){
             std::cout << s1 << " is greater than " << s2 << std::endl;
+            return false;
+        }
         else
             std::cout << s2 << " is greater than " << s1 << std::endl;
         return false;
@@ -137,12 +138,9 @@ int main(int argc, char *argv[])
         for (std::vector<std::string>::iterator t=data.begin(); t != data.end(); ++t) 
         {
             std::cout << *t << std::endl;
-            if (!relationalOperation(s1, *t)) 
-            {
-                strcpy(sendData,(char*)"Invalid RPC. \n");
-            }
-
-            if (relationalOperation(s1, *t)) 
+            bool isTheSame = false;
+            isTheSame = relationalOperation(s1, *t);
+            if (isTheSame) 
             { 
                 if (relationalOperation(s1,"disconnect")) // disconnect this user
                 {
@@ -166,12 +164,17 @@ int main(int argc, char *argv[])
                 strcpy(sendData, result);          
                 
             }   // End of string compare.          
+            // else if (!isTheSame) 
+            // {
+            //     strcpy(sendData,(char*)"Invalid RPC. \n");
+            // }
             // Send data to client.
             ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
             if (response < 0)
             {
                 std::cout << "Response is less than zero," << std::endl;
             }
+            strcpy(sendData,(char*)""); // clear out the sendData buffer.
         }  // End of For loop.       
      } // End of While loop. 
 
