@@ -58,7 +58,7 @@ private:
     // delay between each server call
     int inputDelay = 0;
     // number displayed by the server
-    int serverNumber = 0;
+    int serverNumber = 1;
     // number of rows in a printed bingo board
     static const int numRows = 7;
     // number of bingo squares per row
