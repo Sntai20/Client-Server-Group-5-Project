@@ -6,8 +6,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iostream>
+#include "../BingoGame/bingogame.h"
 #include <arpa/inet.h>
-
+#include <vector>
 
 constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
@@ -52,30 +53,51 @@ char* processParameter(char* buffer)
     return token;
 }
 
+char* setMaxNum() // call setMaxNum function
+{
+    char* result = (char*)"message";
+    return result;
+}
+
+char* setTime() // call setTime function
+{
+    char* result = (char*)"message";
+    return result;
+}
+
+char* setBoard() // call setBoard function
+{
+    char* result = (char*)"message";
+    return result;
+}
+
 int main(int argc, char *argv[])
 {
-     int sockfd =  socket(AF_INET, SOCK_STREAM, 0);
-     if (sockfd < 0) 
-     {
-          std::cerr << "open socket error" << std::endl;
-          return 1;
-     }
+    // client bingo board
+    BingoGame bingoBoard = BingoGame();
+    
+    int sockfd =  socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) 
+    {
+        std::cerr << "open socket error" << std::endl;
+        return 1;
+    }
 
-     int optval = 1;
-     setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
+    int optval = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
 
-     struct sockaddr_in serv_addr, cli_addr;
-     bzero((char *) &serv_addr, sizeof(serv_addr));
-     serv_addr.sin_family = AF_INET;  
-     serv_addr.sin_addr.s_addr = INADDR_ANY;  
-     serv_addr.sin_port = htons(SERVER_PORT);
-     if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
-     {
-          std::cerr << "bind error" << std::endl;
-          return 2;
-     }
+    struct sockaddr_in serv_addr, cli_addr;
+    bzero((char *) &serv_addr, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;  
+    serv_addr.sin_addr.s_addr = INADDR_ANY;  
+    serv_addr.sin_port = htons(SERVER_PORT);
+    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+    {
+        std::cerr << "bind error" << std::endl;
+        return 2;
+    }
 
-     listen(sockfd, 5);
+    listen(sockfd, 5);
     socklen_t clilen = sizeof(cli_addr);
     int incomingSock = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
     if (incomingSock < 0)
@@ -84,219 +106,74 @@ int main(int argc, char *argv[])
         return 3;
     }
 
-     while (true)
-     {
-        
-
-        std::cout << "server: got connection from = " 
+    std::cout << "server: got connection from = " 
                 << inet_ntoa(cli_addr.sin_addr)
                 << " and port = " << ntohs(cli_addr.sin_port) << std::endl;
+
+     while (true)
+     {
+        std::string buffer (MAX_BUFFER, 0);
+        char sendData[100]; // buffer to hold our sent data
+        char* result;
+        std::string rest{buffer};
+        std::string s1(rest.data());
+
         ssize_t response = write(incomingSock, "You are connected!", MSG_REPLY_LENGTH);
         if (response < 0)
         {
             std::cout << "Response is less than zero," << std::endl;
         }
 
-        std::string buffer (MAX_BUFFER, 0);
         if (read(incomingSock, &buffer[0], MAX_BUFFER-1) < 0)
         {
             std::cerr << "read from socket error" << std::endl;
             return 4;
         }
         std::cout << "Got the message:" << buffer << std::endl;
-        // buffer to hold our sent data
-        char sendData[100];
-        
-        std::string rest{buffer};
-        //  if(strstr(buffer,"disconnect"))
-        std::string s1(rest.data());
-        std::string s2("disconnect");
 
-        if (relationalOperation(s1, s2)) // disconnect this user
-        { 
-            
-            printf("\nReceived disconnect RPC\n");
+        // Enumerate through the tokens. The first token is always the specific RPC
+        std::vector<std::string> data = { "connect", "disconnect", "setBoard", "markBoard", "setTime", "setMaxNum" };
 
-            strcpy(sendData,"Disconnected!\n");
-            // Sleep(10);
-            // send(current_client,sendData,sizeof(sendData),0);
-            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
-            if (response < 0)
+        for (std::vector<std::string>::iterator t=data.begin(); t != data.end(); ++t) 
+        {
+            std::cout << *t << std::endl;
+            if (!relationalOperation(s1, *t)) 
             {
-                std::cout << "Response is less than zero," << std::endl;
-            }
-            
-
-            // close the socket associated with this client and end this thread
-            // closesocket(current_client);
-            // ExitThread(0);
-        }
-        else if(relationalOperation(s1, "setMaxNum")) // call setMaxNum function
-        { 
-            printf("\nReceived setMaxNum RPC\n");
-            // char* parameter = processParameter(buf);
-            // bool success = bingoBoard.setMaxNum((string)parameter);
-            char message [100];
-            // if (success) {
-            //     strcpy(message, (char*)"Successfully set! The max number that the server will call will be ");
-            //     strcat(message, parameter);
-            // } else {
-            //     strcpy(message, (char*)"The max number provided was invalid. Please enter a new number greater than 25.");
-            // }
-            strcpy(sendData, (char*)"setMaxNum");
-            // Sleep(10);
-            // send(current_client,sendData,sizeof(sendData),0);
-            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
-            if (response < 0)
-            {
-                std::cout << "Response is less than zero," << std::endl;
-            }
-        }
-        else if(relationalOperation(s1,"setTime"))
-        { // call setTime function
-            printf("\nReceived setTime RPC\n");
-            // char* parameter = processParameter(buf);
-            // bool success = bingoBoard.setTime((string)parameter);
-            // char message [100];
-            // if (success) {
-            //     strcpy(message, (char*)"Successfully set! The delay between each server call will be ");
-            //     strcat(message, parameter);
-            //     strcat(message, (char*)" seconds.");
-            // } else {
-            //     strcpy(message, (char*)
-            //             "The delay provided was invalid. Please enter a new number less than or"
-            //             " equal to 10 seconds.");
-            // }
-            strcpy(sendData, (char*)"setTime");
-            // Sleep(10);
-            // send(current_client,sendData,sizeof(sendData),0);
-            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
-            if (response < 0)
-            {
-                std::cout << "Response is less than zero," << std::endl;
-            }
-        }
-        else if(relationalOperation(s1,"setBoard"))
-        { // call setBoard function
-            printf("\nReceived setBoard RPC\n");
-            // char* parameter = processParameter(buf);
-            // bool success = bingoBoard.setBoard((string)parameter);
-            // char message [100];
-            // if (success) 
-            // {
-            //     strcpy(message, (char*)"Successfully set bingo board!");
-            //     strcpy(sendData, message);
-            //     Sleep(10);
-            //     send(current_client,sendData,sizeof(sendData),0);
-
-            //     char bingoLine [100];
-            //     // print bingo board line by line
-            //     for (int i = 0; i < 7; i++) 
-            //     {
-            //         strcpy(sendData, bingoBoard.printDelimiterBoard(bingoLine,i));
-            //         while (send(current_client,sendData,sizeof(sendData),0) < 0)
-            //         {
-            //             send(current_client,sendData,sizeof(sendData),0);
-            //         }
-            //         strcpy(bingoLine, "");
-            //         strcpy(sendData, "");
-            //     }
-            // } 
-            // else 
-            // {
-            //     strcpy(sendData, (char*)"Invalid bingo setup provided. Please try again.");
-            //     // Sleep(10);
-            //     // send(current_client,sendData,sizeof(sendData),0);
-            //     write(incomingSock, sendData, MSG_REPLY_LENGTH);
-            //     for (int i = 0; i < 7; i++) 
-            //     {
-            //         while (send(current_client,sendData,sizeof(sendData),0) < 0)
-            //         {
-            //             send(current_client,sendData,sizeof(sendData),0);
-            //         }
-            //         strcpy(sendData, "");
-            //     }
-            // }
-            // strcpy(sendData, message);
-            // Sleep(10);
-            // send(current_client,sendData,sizeof(sendData),0);
-            strcpy(sendData, (char*)"setBoard");
-            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
-            if (response < 0)
-            {
-                std::cout << "Response is less than zero," << std::endl;
-            }
-            
-        } 
-        else if(relationalOperation(s1,"markBoard"))
-        { // call markBoard function
-            printf("\nReceived markBoard RPC\n");
-            // char* parameter = processParameter(buf);
-            // bool success = bingoBoard.markBoard();
-            // char message [100];
-            // if (success) {
-            //     strcpy(message, (char*)"Successfully marked bingo board!");
-            //     strcpy(sendData, message);
-            //     Sleep(10);
-            //     send(current_client,sendData,sizeof(sendData),0);
-
-            //     char bingoLine [100];
-            //     // print bingo board line by line
-            //     for (int i = 0; i < 7; i++) {
-            //         strcpy(sendData, bingoBoard.printDelimiterBoard(bingoLine,i));
-            //         while (send(current_client,sendData,sizeof(sendData),0) < 0){
-            //             send(current_client,sendData,sizeof(sendData),0);
-            //         }
-            //         strcpy(bingoLine, "");
-            //         strcpy(sendData, "");
-            //     }
-            strcpy(sendData, (char*)"Successfully marked bingo board!");
-            // write(incomingSock, sendData, MSG_REPLY_LENGTH);
-            // } 
-            // else 
-            // {
-            //     strcpy(sendData, (char*)"Number called by the server not found in current bingo board.");
-            // }
-            // strcpy(sendData, message);
-            // Sleep(10);
-            // send(current_client,sendData,sizeof(sendData),0);
-            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
-            if (response < 0)
-            {
-                std::cout << "Response is less than zero," << std::endl;
+                strcpy(sendData,(char*)"Invalid RPC. \n");
             }
 
-        }
-                // else if (relationalOperation(s1,"checkBingo")) // call checkBingo function
-                // { 
-                //     printf("\nReceived checkBingo RPC\n");
-                //     // bool success = bingoBoard.checkBingo();
-                //     bool replaceMe = true;
-                //     // bool success = replaceMe;
-                //     char message [100];
-                //     // if (success) {
-                //     //     strcpy(message, (char*)"Bingo detected! Game will now end...");
-                //     //     //TODO: MAKE GAME END AND OFFER TO PLAY AGAIN OR DISCONNECT CLIENT
-                //     // } else {
-                //         strcpy(message, (char*)"No bingo detected. Please try again later!");
-                //     // }
-                //     strcpy(sendData, message);
-                //     // Sleep(10);
-                //     // send(current_client,sendData,sizeof(sendData),0);
-                //     write(incomingSock, sendData, MSG_REPLY_LENGTH);
-                // }
-                else
+            if (relationalOperation(s1, *t)) 
+            { 
+                if (relationalOperation(s1,"disconnect")) // disconnect this user
                 {
-                    strcpy(sendData,(char*)"Invalid RPC. \n");
-                    // Sleep(10);
-                    // send(current_client,sendData,sizeof(sendData),0);
-                    ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
-                    if (response < 0)
-                    {
-                        std::cout << "Response is less than zero," << std::endl;
-                    }
-                }   
-     }
+                    std::cout << "\nReceived disconnect RPC" << std::endl;
+                    close(incomingSock);
+                }
+                std::cout << "\nReceived " << *t << " RPC" << std::endl;
+                strcpy(sendData,"*t");
+                
+                if(relationalOperation(s1, "setMaxNum")){
+                    result = setMaxNum();
+                }  
+                if(relationalOperation(s1, "setTime")){
+                    result = setTime();
+                } 
+                if(relationalOperation(s1, "setBoard")){
+                    result = setBoard();
+                }     
+
+                // Copy the bingo game result to the sendData buffer to be sent to the client.
+                strcpy(sendData, result);          
+                
+            }   // End of string compare.          
+            // Send data to client.
+            ssize_t response = write(incomingSock, sendData, MSG_REPLY_LENGTH);
+            if (response < 0)
+            {
+                std::cout << "Response is less than zero," << std::endl;
+            }
+        }  // End of For loop.       
+     } // End of While loop. 
 
      close(incomingSock);
      close(sockfd);

@@ -13,7 +13,6 @@ constexpr unsigned int MAX_BUFFER = 128;
 
 void printMenu() 
 {
-
     std::cout << "\n=========Menu of RPCs with instructions on how to play=========\n";
     std::cout << "The following RPCs must be called prior to setting a board:\n";
     std::cout << "setMaxNum: sets the max number the server will call (must be greater than 25)\n";
