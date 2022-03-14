@@ -11,6 +11,25 @@
 constexpr unsigned int SERVER_PORT = 50544;
 constexpr unsigned int MAX_BUFFER = 128;
 
+void printMenu() {
+
+    std::cout << "\n=========Menu of RPCs with instructions on how to play=========\n";
+    std::cout << "The following RPCs must be called prior to setting a board:\n";
+    std::cout << "setMaxNum: sets the max number the server will call (must be greater than 25)\n";
+    std::cout << "setTime: sets the time interval the server will wait between new numbers (must be less than 10)\n\n";
+    std::cout << "To set up a board, the following RPC must be called:\n";
+    std::cout << "setBoard: sets the bingo board to a comma separated list of unique numbers.\n"
+                 "Input array must be at least 25 numbers long. Game will start after a valid setup.\n\n";
+    std::cout << "During the bingo game, the following RPC can be called to mark the board:\n";
+    std::cout << "markBoard: marks off the board if the number displayed from the server matches"
+                 " a number on the board.\n";
+    std::cout << "During the bingo game, the user may call the following RPC to check if there is a bingo:\n";
+    std::cout << "checkBingo: checks if a horizontal, vertical or diagonal bingo is on the board."
+                 " Ends the game if a valid bingo is detected.\n";
+
+
+}
+
 int main(int argc, char *argv[])
 {
     if (argc != 2)
@@ -18,6 +37,10 @@ int main(int argc, char *argv[])
         std::cerr << "Error! usage: ./client localhost" << std::endl;
 	return 6;
     }
+
+    std::cout<<"\t\tWelcome to group 5's bingo simulator!";
+
+    std::cout<<"\n\n\t\tEnter IP address to connect to or enter [c] to connect to localhost: \n";
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) 
@@ -53,6 +76,8 @@ int main(int argc, char *argv[])
         return 5;
     }
     std::cout << readBuffer << std::endl;
+
+    printMenu();
 
     std::string writeBuffer (MAX_BUFFER, 0);
     std::cout << "What message for the server? : ";
