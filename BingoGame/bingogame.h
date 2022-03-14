@@ -38,6 +38,11 @@ public:
     bool checkBingo();
     char* printDelimiterBoard(char returnString[],int row);
     bool checkUnique(std::string inputString);
+    
+    void setNum(int newNumber);
+    int getMaxNum();
+    int getTime();
+
 
 private:
     // size of a 5x5 bingo board
@@ -52,6 +57,8 @@ private:
     int maxNum = 0;
     // delay between each server call
     int inputDelay = 0;
+    // number displayed by the server
+    int serverNumber = 0;
     // number of rows in a printed bingo board
     static const int numRows = 7;
     // number of bingo squares per row
@@ -71,6 +78,19 @@ BingoGame::BingoGame()
 
 BingoGame::~BingoGame()
 {
+    
+}
+// Function for server to update encapsulated value sent to client
+void BingoGame::setNum(int newNumber) {
+    serverNumber = newNumber;
+}
+// Function for server to return encapsulated value
+int BingoGame::getMaxNum() {
+    return maxNum;
+}
+// Function for server to return encapsulated value
+int BingoGame::getTime() {
+    return inputDelay;
 }
 
 /**
@@ -251,13 +271,11 @@ void BingoGame::printBoard()
  */
 bool BingoGame::markBoard()
 {
-    // TODO: Implement server generating random numbers every interval
-    //       to update serverNum (temp value until implemented)
-    int serverNum = 1;
+
     bool found = false;
 
     for (int i = 0; i < boardSize; i++) {
-        if (numbers[i] == serverNum) {
+        if (numbers[i] == serverNumber) {
             markedNumbers[i] = 1;
             found = true;
             break;
